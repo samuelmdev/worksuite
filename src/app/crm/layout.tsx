@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation'
 import { CRMProvider } from '../lib/crm-context'
 import { useLocale } from '../lib/locale'
 import type { TranslationKey } from '../lib/translations'
+import ModuleAccessShell from '../components/ModuleAccessShell'
 
 const navigation: { nameKey: TranslationKey; href: string; icon: typeof Home }[] = [
   { nameKey: 'common.overview', href: '/crm', icon: Home },
@@ -34,6 +35,9 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <CRMProvider>
+      <ModuleAccessShell
+        children={children}
+        withSidebar={
       <div className="flex h-screen bg-gray-50 dark:bg-slate-900">
       {/* Desktop Sidebar */}
       <motion.div
@@ -176,6 +180,8 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
     </div>
+        }
+      />
     </CRMProvider>
   )
 }

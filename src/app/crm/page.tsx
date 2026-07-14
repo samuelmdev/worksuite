@@ -41,8 +41,7 @@ export default function CRMIndexPage() {
   // Refresh data when page becomes visible (fixes back button issue)
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (!document.hidden && (clients.length === 0 || Object.keys(stats).length === 0)) {
-        console.log('CRM Overview: Page became visible, refreshing data...')
+      if (!document.hidden && clients.length === 0 && !loading.clients) {
         refreshAll().catch(error => {
           console.error('CRM Overview: Error refreshing on visibility change:', error)
         })
@@ -50,8 +49,7 @@ export default function CRMIndexPage() {
     }
 
     const handleFocus = () => {
-      if (clients.length === 0 || Object.keys(stats).length === 0) {
-        console.log('CRM Overview: Window focused, refreshing data...')
+      if (clients.length === 0 && !loading.clients) {
         refreshAll().catch(error => {
           console.error('CRM Overview: Error refreshing on focus:', error)
         })
@@ -65,7 +63,7 @@ export default function CRMIndexPage() {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('focus', handleFocus)
     }
-  }, [clients.length, stats, refreshAll])
+  }, [clients.length, loading.clients, refreshAll])
 
   // Fetch today's tasks
   const fetchTodayTasks = async () => {
@@ -91,7 +89,7 @@ export default function CRMIndexPage() {
   const fetchClientActivities = async () => {
     try {
       setLoadingActivities(true)
-      const activities = await activityService.getAllClientActivities(20)
+      const activities = await activityService.getAllClientActivitiesOrg(20)
       setClientActivities(activities)
     } catch (err) {
       console.error('Error fetching client activities:', err)
@@ -124,6 +122,11 @@ export default function CRMIndexPage() {
 
   const monthLabel = new Date().toLocaleDateString(locale === 'fi' ? 'fi-FI' : 'en-US', { month: 'long', year: 'numeric' })
 
+  const formatChange = (value: number | undefined) => {
+    const pct = value ?? 0
+    return `${pct > 0 ? '+' : ''}${pct}%`
+  }
+
   const statsConfig: {
     titleKey: TranslationKey
     value: string
@@ -137,10 +140,8 @@ export default function CRMIndexPage() {
     {
       titleKey: 'crm.stats.activeClients',
       value: stats.total_clients?.toString() || '0',
-      change: stats.client_change_percentage ? 
-        `${stats.client_change_percentage > 0 ? '+' : ''}${stats.client_change_percentage}%` : 
-        '0%',
-      changeType: (stats.client_change_percentage || 0) >= 0 ? 'positive' : 'negative',
+      change: formatChange(stats.client_change_percentage),
+      changeType: (stats.client_change_percentage ?? 0) >= 0 ? 'positive' : 'negative',
       icon: Users,
       color: 'blue',
       link: '/crm/clients?status=active',
@@ -149,10 +150,8 @@ export default function CRMIndexPage() {
     {
       titleKey: 'crm.stats.activeContracts',
       value: stats.active_contracts?.toString() || '0',
-      change: stats.contract_change_percentage ? 
-        `${stats.contract_change_percentage > 0 ? '+' : ''}${stats.contract_change_percentage}%` : 
-        '0%',
-      changeType: (stats.contract_change_percentage || 0) >= 0 ? 'positive' : 'negative',
+      change: formatChange(stats.contract_change_percentage),
+      changeType: (stats.contract_change_percentage ?? 0) >= 0 ? 'positive' : 'negative',
       icon: TrendingUp,
       color: 'green',
       link: '/crm/contracts?status=active',
@@ -161,10 +160,8 @@ export default function CRMIndexPage() {
     {
       titleKey: 'crm.stats.pendingTasks',
       value: stats.pending_tasks?.toString() || '0',
-      change: stats.tasks_change_percentage ? 
-        `${stats.tasks_change_percentage > 0 ? '+' : ''}${stats.tasks_change_percentage}%` : 
-        '0%',
-      changeType: (stats.tasks_change_percentage || 0) >= 0 ? 'positive' : 'negative',
+      change: formatChange(stats.tasks_change_percentage),
+      changeType: (stats.tasks_change_percentage ?? 0) >= 0 ? 'positive' : 'negative',
       icon: CheckSquare,
       color: 'purple',
       link: '/crm/tasks?status=pending',
@@ -180,10 +177,8 @@ export default function CRMIndexPage() {
           maximumFractionDigits: 0,
         }).format(stats.monthly_revenue) : 
         '$0',
-      change: stats.revenue_change_percentage ? 
-        `${stats.revenue_change_percentage > 0 ? '+' : ''}${stats.revenue_change_percentage}%` : 
-        '0%',
-      changeType: (stats.revenue_change_percentage || 0) >= 0 ? 'positive' : 'negative',
+      change: formatChange(stats.revenue_change_percentage),
+      changeType: (stats.revenue_change_percentage ?? 0) >= 0 ? 'positive' : 'negative',
       icon: DollarSign,
       color: 'violet',
       link: (() => {

@@ -58,21 +58,28 @@ export default function ClientActivityTimeline({
 
   const getActivityIcon = (action: string, entityType: string) => {
     switch (action) {
+      case 'call':
       case 'call_made':
       case 'call_received':
         return <Phone className="w-4 h-4" />
+      case 'email':
       case 'email_sent':
       case 'email_received':
         return <Mail className="w-4 h-4" />
+      case 'meeting':
       case 'meeting_scheduled':
       case 'meeting_completed':
         return <Calendar className="w-4 h-4" />
       case 'meeting_cancelled':
         return <AlertCircle className="w-4 h-4" />
+      case 'note':
+        return <FileText className="w-4 h-4" />
+      case 'task':
       case 'proposal_sent':
         return <FileText className="w-4 h-4" />
       case 'contract_signed':
         return <CheckCircle className="w-4 h-4" />
+      case 'follow_up':
       case 'follow_up_scheduled':
         return <Clock className="w-4 h-4" />
       case 'created':
@@ -156,8 +163,8 @@ export default function ClientActivityTimeline({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">{t('crm.timeline.title')}</h3>
-          <p className="text-sm text-gray-500">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{t('crm.timeline.title')}</h3>
+          <p className="text-sm text-gray-500 dark:text-slate-400">
             {activities.length === 1
               ? t('crm.timeline.activityCountOne', { count: activities.length })
               : t('crm.timeline.activityCount', { count: activities.length })}
@@ -177,11 +184,11 @@ export default function ClientActivityTimeline({
       {/* Timeline */}
       {activities.length === 0 ? (
         <div className="text-center py-12">
-          <div className="mx-auto w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+          <div className="mx-auto w-12 h-12 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
             <Clock className="w-6 h-6 text-gray-400" />
           </div>
-          <h4 className="text-lg font-medium text-gray-900 mb-2">{t('crm.timeline.empty.title')}</h4>
-          <p className="text-gray-500 mb-4">
+          <h4 className="text-lg font-medium text-gray-900 dark:text-slate-100 mb-2">{t('crm.timeline.empty.title')}</h4>
+          <p className="text-gray-500 dark:text-slate-400 mb-4">
             {t('crm.timeline.empty.desc')}
           </p>
           {showAddButton && (
@@ -199,10 +206,10 @@ export default function ClientActivityTimeline({
             <div key={date}>
               {/* Date Header */}
               <div className="flex items-center mb-4">
-                <h4 className="text-sm font-medium text-gray-900 bg-gray-50 px-3 py-1 rounded-full">
+                <h4 className="text-sm font-medium text-gray-900 dark:text-slate-100 bg-gray-50 dark:bg-slate-800 px-3 py-1 rounded-full">
                   {formatDateHeader(date)}
                 </h4>
-                <div className="flex-1 h-px bg-gray-200 ml-4"></div>
+                <div className="flex-1 h-px bg-gray-200 dark:bg-slate-700 ml-4"></div>
               </div>
 
               {/* Activities for this date */}
@@ -213,7 +220,7 @@ export default function ClientActivityTimeline({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="flex items-start space-x-3 p-4 bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors"
+                    className="flex items-start space-x-3 p-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-gray-300 dark:hover:border-slate-600 transition-colors"
                   >
                     {/* Icon */}
                     <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${getActivityColor(activity.action)}`}>
@@ -224,15 +231,15 @@ export default function ClientActivityTimeline({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h5 className="text-sm font-medium text-gray-900">
+                          <h5 className="text-sm font-medium text-gray-900 dark:text-slate-100">
                             {activity.title}
                           </h5>
                           {activity.description && (
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
                               {activity.description}
                             </p>
                           )}
-                          <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                          <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500 dark:text-slate-500">
                             <span>{t('crm.timeline.by', { name: activity.user_name })}</span>
                             <span>•</span>
                             <span>{formatTimeAgo(activity.created_at)}</span>

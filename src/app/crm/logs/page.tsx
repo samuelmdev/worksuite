@@ -121,7 +121,7 @@ export default function ClientLogsPage() {
       } else {
         console.log('Loading logs for all clients')
         // Load logs for all clients
-        allLogs = await activityService.getAllClientActivities(1000)
+        allLogs = await activityService.getAllClientActivitiesOrg(1000)
         console.log('Loaded logs for all clients:', allLogs.length)
       }
       

@@ -1,12 +1,68 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { User, Bell, Shield, Database, Palette, Building, Code, Download, CreditCard, Link, Lock, Users, Plus, Trash2, Edit, Crown } from 'lucide-react'
+import { User, Bell, Shield, Database, Palette, Building, Code, Download, CreditCard, Link as LinkIcon, Lock, Users, Plus, Trash2, Crown } from 'lucide-react'
 import RoleGuard from '../components/RoleGuard'
 import { useAuth } from '../lib/auth-context-multi-org'
 import { useLocale } from '../lib/locale'
 import type { TranslationKey } from '../lib/translations'
+
+type SettingsSection = {
+  titleKey: TranslationKey
+  descKey: TranslationKey
+  icon: typeof User
+  color: string
+  href: string
+}
+
+function getIconStyles(color: string) {
+  const bg =
+    color === 'blue' || color === 'cyan' ? 'bg-cyan-200 dark:bg-cyan-900' :
+    color === 'green' || color === 'emerald' ? 'bg-green-200 dark:bg-green-900' :
+    color === 'red' ? 'bg-red-200 dark:bg-red-900' :
+    color === 'violet' ? 'bg-violet-200 dark:bg-violet-900' :
+    color === 'orange' ? 'bg-orange-200 dark:bg-orange-900' :
+    color === 'indigo' ? 'bg-indigo-200 dark:bg-indigo-900' :
+    'bg-pink-200 dark:bg-pink-900'
+
+  const text =
+    color === 'blue' || color === 'cyan' ? 'text-cyan-600 dark:text-cyan-400' :
+    color === 'green' || color === 'emerald' ? 'text-green-600 dark:text-emerald-400' :
+    color === 'red' ? 'text-red-600 dark:text-red-400' :
+    color === 'violet' ? 'text-violet-600 dark:text-violet-400' :
+    color === 'orange' ? 'text-orange-600 dark:text-orange-400' :
+    color === 'indigo' ? 'text-indigo-600 dark:text-indigo-400' :
+    'text-pink-600 dark:text-pink-400'
+
+  return { bg, text }
+}
+
+function SettingsLinkCard({ section, t }: { section: SettingsSection; t: (key: TranslationKey) => string }) {
+  const Icon = section.icon
+  const { bg, text } = getIconStyles(section.color)
+
+  return (
+    <Link href={section.href} className="block h-full">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-black/50 border border-gray-200 dark:border-slate-700 p-6 h-full transition-[box-shadow,border-color] duration-200 hover:shadow-lg dark:hover:shadow-black/30 hover:border-cyan-300 dark:hover:border-cyan-700 cursor-pointer">
+        <div className="flex items-start space-x-4">
+          <div className={`p-3 rounded-lg ${bg}`}>
+            <Icon className={`w-6 h-6 ${text}`} />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-2">
+              {t(section.titleKey)}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              {t(section.descKey)}
+            </p>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
 
 export default function SettingsPage() {
   const { user, currentOrganization } = useAuth()
@@ -16,16 +72,16 @@ export default function SettingsPage() {
   const [showNewOrgModal, setShowNewOrgModal] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const settingsSections: { titleKey: TranslationKey; descKey: TranslationKey; icon: typeof User; color: string; href: string }[] = [
+  const settingsSections: SettingsSection[] = [
     { titleKey: 'settings.section.profile', descKey: 'settings.section.profileDesc', icon: User, color: 'blue', href: '/settings/profile' },
     { titleKey: 'settings.section.notifications', descKey: 'settings.section.notificationsDesc', icon: Bell, color: 'green', href: '/settings/notifications' },
     { titleKey: 'settings.section.security', descKey: 'settings.section.securityDesc', icon: Shield, color: 'red', href: '/settings/security' },
     { titleKey: 'settings.section.appearance', descKey: 'settings.section.appearanceDesc', icon: Palette, color: 'violet', href: '/settings/appearance' },
     { titleKey: 'settings.section.billing', descKey: 'settings.section.billingDesc', icon: CreditCard, color: 'orange', href: '/settings/billing' },
-    { titleKey: 'settings.section.integrations', descKey: 'settings.section.integrationsDesc', icon: Link, color: 'pink', href: '/settings/integrations' },
+    { titleKey: 'settings.section.integrations', descKey: 'settings.section.integrationsDesc', icon: LinkIcon, color: 'pink', href: '/settings/integrations' },
   ]
 
-  const adminSettings: { titleKey: TranslationKey; descKey: TranslationKey; icon: typeof User; color: string; href: string }[] = [
+  const adminSettings: SettingsSection[] = [
     { titleKey: 'settings.section.userManagement', descKey: 'settings.section.userManagementDesc', icon: User, color: 'blue', href: '/settings/users' },
     { titleKey: 'settings.section.workspace', descKey: 'settings.section.workspaceDesc', icon: Building, color: 'cyan', href: '/settings/workspace' },
     { titleKey: 'settings.section.api', descKey: 'settings.section.apiDesc', icon: Code, color: 'emerald', href: '/settings/api' },
@@ -123,46 +179,9 @@ export default function SettingsPage() {
                 {t('settings.general')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {settingsSections.map((section, index) => {
-                  const Icon = section.icon
-                  return (
-                    <motion.div
-                      key={section.titleKey}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-black/50 border border-gray-200 dark:border-slate-700 p-6 hover:shadow-none transition-shadow cursor-pointer"
-                    >
-                      <div className="flex items-start space-x-4">
-                        <div className={`p-3 rounded-lg ${
-                          section.color === 'blue' ? 'bg-cyan-200 dark:bg-cyan-900' :
-                          section.color === 'green' ? 'bg-green-200 dark:bg-green-900' :
-                          section.color === 'red' ? 'bg-red-200 dark:bg-red-900' :
-                          section.color === 'violet' ? 'bg-violet-200 dark:bg-violet-900' :
-                          section.color === 'orange' ? 'bg-orange-200 dark:bg-orange-900' :
-                          'bg-pink-200 dark:bg-pink-900'
-                        }`}>
-                          <Icon className={`w-6 h-6 ${
-                            section.color === 'blue' ? 'text-cyan-600 dark:text-cyan-400' :
-                            section.color === 'green' ? 'text-green-600 dark:text-green-400' :
-                            section.color === 'red' ? 'text-red-600 dark:text-red-400' :
-                            section.color === 'violet' ? 'text-violet-600 dark:text-violet-400' :
-                            section.color === 'orange' ? 'text-orange-600 dark:text-orange-400' :
-                            'text-pink-600 dark:text-pink-400'
-                          }`} />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-2">
-                            {t(section.titleKey)}
-                          </h3>
-                          <p className="text-gray-600 dark:text-gray-400 text-sm">
-                            {t(section.descKey)}
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )
-                })}
+                {settingsSections.map((section) => (
+                  <SettingsLinkCard key={section.titleKey} section={section} t={t} />
+                ))}
               </div>
             </div>
 
@@ -278,64 +297,13 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {adminSettings.map((section, index) => {
-                    const Icon = section.icon
-                    return (
-                      <motion.div
-                        key={section.titleKey}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: (index + 4) * 0.1 }}
-                        className="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-black/50 border border-gray-200 dark:border-slate-700 p-6 hover:shadow-none transition-shadow cursor-pointer"
-                      >
-                        <div className="flex items-start space-x-4">
-                          <div className={`p-3 rounded-lg ${
-                            section.color === 'blue' ? 'bg-cyan-200 dark:bg-cyan-900' :
-                            section.color === 'cyan' ? 'bg-cyan-200 dark:bg-cyan-900' :
-                            section.color === 'emerald' ? 'bg-emerald-200 dark:bg-emerald-900' :
-                            section.color === 'orange' ? 'bg-orange-200 dark:bg-orange-900' :
-                            section.color === 'indigo' ? 'bg-indigo-200 dark:bg-indigo-900' :
-                            'bg-red-200 dark:bg-red-900'
-                          }`}>
-                            <Icon className={`w-6 h-6 ${
-                              section.color === 'blue' ? 'text-cyan-600 dark:text-cyan-400' :
-                              section.color === 'cyan' ? 'text-cyan-600 dark:text-cyan-400' :
-                              section.color === 'emerald' ? 'text-emerald-600 dark:text-emerald-400' :
-                              section.color === 'orange' ? 'text-orange-600 dark:text-orange-400' :
-                              section.color === 'indigo' ? 'text-indigo-600 dark:text-indigo-400' :
-                              'text-red-600 dark:text-red-400'
-                            }`} />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-2">
-                              {t(section.titleKey)}
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-400 text-sm">
-                              {t(section.descKey)}
-                            </p>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )
-                  })}
+                  {adminSettings.map((section) => (
+                    <SettingsLinkCard key={section.titleKey} section={section} t={t} />
+                  ))}
                 </div>
               </div>
             )}
 
-            {/* Coming Soon Notice */}
-            <div className="bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg p-6">
-              <div className="flex items-center space-x-3">
-                <Shield className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
-                <div>
-                  <h3 className="text-lg font-semibold text-cyan-900 dark:text-cyan-100">
-                    {t('settings.comingSoon.title')}
-                  </h3>
-                  <p className="text-cyan-700 dark:text-cyan-300 text-sm mt-1">
-                    {t('settings.comingSoon.descLong')}
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

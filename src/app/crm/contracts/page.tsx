@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
-import { Plus, Search, Edit, Trash2, DollarSign, Calendar, Building, Filter, Loader2, FileText, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import { Plus, Search, Trash2, DollarSign, Calendar, Building, Filter, Loader2, FileText, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 import RoleGuard from '../../components/RoleGuard'
 import ContractModal from '../../components/ContractModal'
 import ConfirmDialog from '../../components/ConfirmDialog'
@@ -62,6 +62,7 @@ export default function CRMContractsPage() {
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [filterType, setFilterType] = useState<string>('all')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalMode, setModalMode] = useState<'create' | 'view' | 'edit'>('create')
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null)
   const [loading, setLoading] = useState(true)
@@ -166,11 +167,13 @@ export default function CRMContractsPage() {
 
   const handleAddContract = () => {
     setSelectedContract(null)
+    setModalMode('create')
     setIsModalOpen(true)
   }
 
-  const handleEditContract = (contract: Contract) => {
+  const handleViewContract = (contract: Contract) => {
     setSelectedContract(contract)
+    setModalMode('view')
     setIsModalOpen(true)
   }
 
@@ -219,7 +222,8 @@ export default function CRMContractsPage() {
   const handleModalClose = () => {
     setIsModalOpen(false)
     setSelectedContract(null)
-    loadContracts() // Reload contracts when modal closes
+    setModalMode('create')
+    loadContracts()
   }
 
   const getStatusIcon = (status: string) => {
@@ -387,7 +391,8 @@ export default function CRMContractsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="p-6 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+                  onClick={() => handleViewContract(contract)}
+                  className="p-6 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -435,13 +440,13 @@ export default function CRMContractsPage() {
                       )}
                     </div>
                     
-                    <div className="flex items-center space-x-2 ml-4">
+                    <div className="flex items-center space-x-2 ml-4" onClick={(e) => e.stopPropagation()}>
                       <button
-                        onClick={() => handleEditContract(contract)}
+                        onClick={() => handleViewContract(contract)}
                         className="p-2 text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
-                        title={t('common.edit')}
+                        title={t('common.view')}
                       >
-                        <Edit className="w-4 h-4" />
+                        <FileText className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteContract(contract)}
@@ -465,7 +470,7 @@ export default function CRMContractsPage() {
           onSave={handleSaveContract}
           clients={clients as any}
           contract={selectedContract}
-          mode={selectedContract ? 'edit' : 'create'}
+          mode={modalMode}
         />
 
         {/* Delete Confirmation Dialog */}

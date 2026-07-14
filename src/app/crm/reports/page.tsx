@@ -1,10 +1,9 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
 import { 
-  Download, 
   FileSpreadsheet, 
   FileText, 
   Calendar, 
@@ -13,19 +12,29 @@ import {
   DollarSign, 
   CheckSquare,
   BarChart3,
-  PieChart,
-  Activity,
-  Filter,
   RefreshCw,
   Loader2
 } from 'lucide-react'
 import RoleGuard from '../../components/RoleGuard'
 import { useCRM } from '../../lib/crm-context'
+import { useAuth } from '../../lib/auth-context-multi-org'
 import { TasksService } from '../../../lib/tasks-service'
-import { ContractsService } from '../../../lib/contracts-service'
-import { exportToExcel, exportToPDF, getExportFilename } from '../../../lib/export-utils'
+import { ContractsService } from '../../../lib/contracts-service-multi-org'
+import { exportTableToExcel, exportTableToPDF, type ExportColumn } from '../../../lib/export-utils'
+import type { Client } from '../../components/ClientModal'
+import type { Contract } from '../../../lib/contracts-service-multi-org'
+import type { Task } from '../../../lib/tasks-service'
 import { useLocale } from '../../lib/locale'
 import type { TranslationKey } from '../../lib/translations'
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs = 15000): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Request timeout')), timeoutMs)
+    promise
+      .then((value) => { clearTimeout(timer); resolve(value) })
+      .catch((err) => { clearTimeout(timer); reject(err) })
+  })
+}
 
 const reportTabs: { id: 'overview' | 'clients' | 'contracts' | 'tasks' | 'revenue'; labelKey: TranslationKey; icon: typeof BarChart3 }[] = [
   { id: 'overview', labelKey: 'crm.reportsPage.tab.overview', icon: BarChart3 },
@@ -39,6 +48,46 @@ const revenuePeriods: { id: 'annual' | 'monthly' | 'predicted'; labelKey: Transl
   { id: 'annual', labelKey: 'crm.reportsPage.revenue.annual' },
   { id: 'monthly', labelKey: 'crm.reportsPage.revenue.monthly' },
   { id: 'predicted', labelKey: 'crm.reportsPage.revenue.predicted' },
+]
+
+const overviewExportColumns: ExportColumn<{ metric: string; value: string | number }>[] = [
+  { header: 'Metric', value: (row) => row.metric },
+  { header: 'Value', value: (row) => row.value },
+]
+
+const clientReportColumns: ExportColumn<Client>[] = [
+  { header: 'Name', value: (row) => row.name },
+  { header: 'Email', value: (row) => row.email },
+  { header: 'Company', value: (row) => row.company },
+  { header: 'Phone', value: (row) => row.phone || '' },
+  { header: 'Created', value: (row) => new Date(row.createdAt).toLocaleDateString() },
+]
+
+const contractReportColumns: ExportColumn<Contract>[] = [
+  { header: 'Contract', value: (row) => row.name },
+  { header: 'Client', value: (row) => row.clients?.name || 'No client' },
+  { header: 'Type', value: (row) => row.type.replace('_', ' ') },
+  { header: 'Status', value: (row) => row.status },
+  {
+    header: 'Value',
+    value: (row) => `$${(row.monthly_value || row.value || 0).toLocaleString()}`,
+  },
+  {
+    header: 'Start Date',
+    value: (row) => (row.start_date ? new Date(row.start_date).toLocaleDateString() : 'N/A'),
+  },
+]
+
+const taskReportColumns: ExportColumn<Task>[] = [
+  { header: 'Task', value: (row) => row.title },
+  { header: 'Client', value: (row) => row.client_name || 'No client' },
+  { header: 'Type', value: (row) => row.task_type.replace('_', ' ') },
+  { header: 'Priority', value: (row) => row.priority },
+  { header: 'Status', value: (row) => row.status.replace('_', ' ') },
+  {
+    header: 'Due Date',
+    value: (row) => (row.due_date ? new Date(row.due_date).toLocaleDateString() : 'No due date'),
+  },
 ]
 
 interface ReportData {
@@ -58,10 +107,16 @@ interface ReportData {
 
 export default function CRMReportsPage() {
   const { clients, stats, loading } = useCRM()
+  const { currentOrganization } = useAuth()
   const { t } = useLocale()
   const searchParams = useSearchParams()
+  const clientsRef = useRef(clients)
+  const statsRef = useRef(stats)
+  clientsRef.current = clients
+  statsRef.current = stats
   const [reportData, setReportData] = useState<ReportData | null>(null)
   const [loadingReports, setLoadingReports] = useState(false)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const [dateRange, setDateRange] = useState({
     start: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0],
     end: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString().split('T')[0]
@@ -78,16 +133,6 @@ export default function CRMReportsPage() {
     const monthParam = searchParams.get('month')
     const yearParam = searchParams.get('year')
     
-    console.log('URL Parameters received:', {
-      sectionParam,
-      periodParam,
-      monthParam,
-      yearParam,
-      currentDate: new Date().toISOString().split('T')[0],
-      currentMonth: new Date().getMonth(),
-      currentMonthName: new Date().toLocaleDateString('en-US', { month: 'long' })
-    })
-    
     if (sectionParam === 'revenue') {
       setSelectedReport('revenue')
       
@@ -102,18 +147,6 @@ export default function CRMReportsPage() {
         const startDate = new Date(year, month, 1)
         const endDate = new Date(year, month + 1, 0)
         
-        console.log('Date range calculation:', {
-          yearParam,
-          monthParam,
-          year,
-          month,
-          monthName: new Date(year, month).toLocaleDateString('en-US', { month: 'long' }),
-          startDate: startDate.toISOString().split('T')[0],
-          endDate: endDate.toISOString().split('T')[0],
-          currentDate: new Date().toISOString().split('T')[0],
-          currentMonth: new Date().getMonth()
-        })
-        
         setDateRange({
           start: startDate.toISOString().split('T')[0],
           end: endDate.toISOString().split('T')[0]
@@ -126,95 +159,60 @@ export default function CRMReportsPage() {
     }
   }, [searchParams])
 
-  // Fetch comprehensive report data
-  const fetchReportData = async () => {
-    setLoadingReports(true)
-    try {
-      console.log('Fetching report data...', { selectedReport, revenuePeriod })
-      
-      // Initialize with empty arrays as fallbacks
-      let contracts: any[] = []
-      let tasks: any[] = []
-      
-      // Try to fetch contracts
-      try {
-        console.log('Fetching contracts...')
-        contracts = await ContractsService.getContracts()
-        console.log('Contracts fetched:', contracts.length)
-      } catch (contractError) {
-        console.warn('Could not fetch contracts:', contractError)
-        contracts = []
-      }
-      
-      // Try to fetch tasks
-      try {
-        console.log('Fetching tasks...')
-        tasks = await TasksService.getTasks()
-        console.log('Tasks fetched:', tasks.length)
-      } catch (taskError) {
-        console.warn('Could not fetch tasks:', taskError)
-        tasks = []
-      }
+  const buildReportData = (
+    clientList: typeof clients,
+    contracts: any[],
+    tasks: any[],
+    crmStats: typeof stats
+  ): ReportData => {
+    const totalClients = clientList.length
+    const activeContracts = contracts.filter((c) => c.status === 'active').length
+    const pendingTasks = tasks.filter((t) => t.status === 'pending').length
+    const completedTasks = tasks.filter((t) => t.status === 'completed').length
+    const totalTasks = tasks.length
+    const taskCompletion = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
+    const monthlyRevenue = contracts
+      .filter((c) => c.status === 'active' && c.monthly_value)
+      .reduce((sum, c) => sum + (c.monthly_value || 0), 0)
 
-      // Calculate additional stats
-      const totalClients = clients.length
-      const activeContracts = contracts.filter(c => c.status === 'active').length
-      const pendingTasks = tasks.filter(t => t.status === 'pending').length
-      const completedTasks = tasks.filter(t => t.status === 'completed').length
-      const totalTasks = tasks.length
-      const taskCompletion = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
-
-      // Calculate monthly revenue from active contracts
-      const monthlyRevenue = contracts
-        .filter(c => c.status === 'active' && c.monthly_value)
-        .reduce((sum, c) => sum + (c.monthly_value || 0), 0)
-
-      console.log('Setting report data with:', {
+    return {
+      clients: clientList,
+      contracts,
+      tasks,
+      stats: {
         totalClients,
         activeContracts,
         pendingTasks,
         monthlyRevenue,
+        clientGrowth: crmStats.client_change_percentage || 0,
+        contractGrowth: crmStats.contract_change_percentage || 0,
         taskCompletion,
-        contractsCount: contracts.length,
-        contractsWithMonthlyValue: contracts.filter(c => c.monthly_value).length,
-        activeContractsWithMonthlyValue: contracts.filter(c => c.status === 'active' && c.monthly_value).length
-      })
+      },
+    }
+  }
 
-      setReportData({
-        clients,
-        contracts,
-        tasks,
-        stats: {
-          totalClients,
-          activeContracts,
-          pendingTasks,
-          monthlyRevenue,
-          clientGrowth: stats.client_change_percentage || 0,
-          contractGrowth: stats.contract_change_percentage || 0,
-          taskCompletion
-        }
-      })
+  const fetchReportData = useCallback(async () => {
+    const orgId = currentOrganization?.id
+    if (!orgId) return
+
+    setLoadingReports(true)
+    setFetchError(null)
+
+    try {
+      const [contracts, tasks] = await Promise.all([
+        withTimeout(ContractsService.getContracts(orgId)).catch(() => [] as any[]),
+        withTimeout(TasksService.getTasks()).catch(() => [] as any[]),
+      ])
+
+      setReportData(buildReportData(clientsRef.current, contracts, tasks, statsRef.current))
     } catch (error) {
       console.error('Error fetching report data:', error)
-      // Set minimal data even if there's an error
-      setReportData({
-        clients: clients || [],
-        contracts: [],
-        tasks: [],
-        stats: {
-          totalClients: clients?.length || 0,
-          activeContracts: 0,
-          pendingTasks: 0,
-          monthlyRevenue: 0,
-          clientGrowth: stats.client_change_percentage || 0,
-          contractGrowth: stats.contract_change_percentage || 0,
-          taskCompletion: 0
-        }
-      })
+      setFetchError(error instanceof Error ? error.message : 'Failed to load reports')
+      setReportData(buildReportData(clientsRef.current, [], [], statsRef.current))
     } finally {
       setLoadingReports(false)
     }
-  }
+  }, [currentOrganization?.id])
 
   // Revenue calculation functions
   const calculateAnnualRevenue = (contracts: any[]) => {
@@ -340,18 +338,14 @@ export default function CRMReportsPage() {
   }
 
   useEffect(() => {
-    if (clients && stats) {
-      fetchReportData()
-    }
-  }, [clients, stats])
+    setReportData(null)
+    setFetchError(null)
+  }, [currentOrganization?.id])
 
-  // Refetch data when switching to revenue section
   useEffect(() => {
-    if (selectedReport === 'revenue' && clients && stats) {
-      console.log('Revenue section selected, refetching data...')
-      fetchReportData()
-    }
-  }, [selectedReport])
+    if (!currentOrganization?.id || loading.clients) return
+    fetchReportData()
+  }, [currentOrganization?.id, loading.clients, fetchReportData])
 
 return (
 <RoleGuard allowedRoles={["admin", "manager"]}>
@@ -427,6 +421,11 @@ return (
 
           {/* Report Content */}
           <div className="p-6">
+            {fetchError && (
+              <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+                {fetchError}. Showing available data.
+              </div>
+            )}
             {!reportData ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-8 h-8 text-cyan-600 animate-spin mr-3" />
@@ -556,19 +555,9 @@ return (
                                 { metric: 'Monthly Revenue', value: `$${reportData.stats.monthlyRevenue.toLocaleString()}` },
                                 { metric: 'Client Growth', value: `${reportData.stats.clientGrowth}%` },
                                 { metric: 'Contract Growth', value: `${reportData.stats.contractGrowth}%` },
-                                { metric: 'Task Completion Rate', value: `${reportData.stats.taskCompletion}%` }
+                                { metric: 'Task Completion Rate', value: `${reportData.stats.taskCompletion}%` },
                               ]
-                              exportToExcel(overviewData.map(item => ({
-                                id: item.metric,
-                                name: item.metric,
-                                email: item.value.toString(),
-                                phone: '',
-                                company: '',
-                                address: '',
-                                notes: '',
-                                createdAt: new Date().toISOString(),
-                                updatedAt: new Date().toISOString()
-                              })), 'overview_report')
+                              exportTableToExcel(overviewData, overviewExportColumns, 'overview_report', 'Overview')
                             }}
                             className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
                           >
@@ -581,19 +570,12 @@ return (
                                 { metric: 'Total Clients', value: reportData.stats.totalClients },
                                 { metric: 'Active Contracts', value: reportData.stats.activeContracts },
                                 { metric: 'Pending Tasks', value: reportData.stats.pendingTasks },
-                                { metric: 'Monthly Revenue', value: `$${reportData.stats.monthlyRevenue.toLocaleString()}` }
+                                { metric: 'Monthly Revenue', value: `$${reportData.stats.monthlyRevenue.toLocaleString()}` },
+                                { metric: 'Client Growth', value: `${reportData.stats.clientGrowth}%` },
+                                { metric: 'Contract Growth', value: `${reportData.stats.contractGrowth}%` },
+                                { metric: 'Task Completion Rate', value: `${reportData.stats.taskCompletion}%` },
                               ]
-                              exportToPDF(overviewData.map(item => ({
-                                id: item.metric,
-                                name: item.metric,
-                                email: item.value.toString(),
-                                phone: '',
-                                company: '',
-                                address: '',
-                                notes: '',
-                                createdAt: new Date().toISOString(),
-                                updatedAt: new Date().toISOString()
-                              })), 'overview_report')
+                              exportTableToPDF(overviewData, overviewExportColumns, 'overview_report', 'CRM Overview Report')
                             }}
                             className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                           >
@@ -615,14 +597,28 @@ return (
                       </h3>
                       <div className="flex gap-3">
                         <button
-                          onClick={() => exportToExcel(reportData?.clients || clients || [], 'clients_report')}
+                          onClick={() =>
+                            exportTableToExcel(
+                              reportData?.clients || clients || [],
+                              clientReportColumns,
+                              'clients_report',
+                              'Clients'
+                            )
+                          }
                           className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
                         >
                           <FileSpreadsheet className="w-4 h-4 mr-2" />
                           Export Excel
                         </button>
                         <button
-                          onClick={() => exportToPDF(reportData?.clients || clients || [], 'clients_report')}
+                          onClick={() =>
+                            exportTableToPDF(
+                              reportData?.clients || clients || [],
+                              clientReportColumns,
+                              'clients_report',
+                              'Client Report'
+                            )
+                          }
                           className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                         >
                           <FileText className="w-4 h-4 mr-2" />
@@ -679,40 +675,28 @@ return (
                       </h3>
                       <div className="flex gap-3">
                         <button
-                          onClick={() => {
-                            const contractData = (reportData?.contracts || []).map(contract => ({
-                              id: contract.id,
-                              name: contract.name,
-                              email: contract.clients?.name || 'No client',
-                              phone: contract.type,
-                              company: contract.status,
-                              address: contract.description || '',
-                              notes: `Value: $${contract.monthly_value || contract.value || 0}`,
-                              createdAt: contract.start_date,
-                              updatedAt: contract.end_date || contract.updated_at
-                            }))
-                            exportToExcel(contractData, 'contracts_report')
-                          }}
+                          onClick={() =>
+                            exportTableToExcel(
+                              reportData?.contracts || [],
+                              contractReportColumns,
+                              'contracts_report',
+                              'Contracts'
+                            )
+                          }
                           className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
                         >
                           <FileSpreadsheet className="w-4 h-4 mr-2" />
                           Export Excel
                         </button>
                         <button
-                          onClick={() => {
-                            const contractData = (reportData?.contracts || []).map(contract => ({
-                              id: contract.id,
-                              name: contract.name,
-                              email: contract.clients?.name || 'No client',
-                              phone: contract.type,
-                              company: contract.status,
-                              address: contract.description || '',
-                              notes: `Value: $${contract.monthly_value || contract.value || 0}`,
-                              createdAt: contract.start_date,
-                              updatedAt: contract.end_date || contract.updated_at
-                            }))
-                            exportToPDF(contractData, 'contracts_report')
-                          }}
+                          onClick={() =>
+                            exportTableToPDF(
+                              reportData?.contracts || [],
+                              contractReportColumns,
+                              'contracts_report',
+                              'Contract Report'
+                            )
+                          }
                           className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                         >
                           <FileText className="w-4 h-4 mr-2" />
@@ -779,40 +763,28 @@ return (
                       </h3>
                       <div className="flex gap-3">
                         <button
-                          onClick={() => {
-                            const taskData = (reportData?.tasks || []).map(task => ({
-                              id: task.id,
-                              name: task.title,
-                              email: task.client_name || 'No client',
-                              phone: task.task_type,
-                              company: task.priority,
-                              address: task.description || '',
-                              notes: `Status: ${task.status}`,
-                              createdAt: task.created_at,
-                              updatedAt: task.due_date || task.updated_at
-                            }))
-                            exportToExcel(taskData, 'tasks_report')
-                          }}
+                          onClick={() =>
+                            exportTableToExcel(
+                              reportData?.tasks || [],
+                              taskReportColumns,
+                              'tasks_report',
+                              'Tasks'
+                            )
+                          }
                           className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
                         >
                           <FileSpreadsheet className="w-4 h-4 mr-2" />
                           Export Excel
                         </button>
                         <button
-                          onClick={() => {
-                            const taskData = (reportData?.tasks || []).map(task => ({
-                              id: task.id,
-                              name: task.title,
-                              email: task.client_name || 'No client',
-                              phone: task.task_type,
-                              company: task.priority,
-                              address: task.description || '',
-                              notes: `Status: ${task.status}`,
-                              createdAt: task.created_at,
-                              updatedAt: task.due_date || task.updated_at
-                            }))
-                            exportToPDF(taskData, 'tasks_report')
-                          }}
+                          onClick={() =>
+                            exportTableToPDF(
+                              reportData?.tasks || [],
+                              taskReportColumns,
+                              'tasks_report',
+                              'Task Report'
+                            )
+                          }
                           className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                         >
                           <FileText className="w-4 h-4 mr-2" />
@@ -933,19 +905,6 @@ return (
                           </select>
                         </div>
                       )}
-                    </div>
-
-                    {/* Debug Information */}
-                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                      <h4 className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-2">Debug Information</h4>
-                      <div className="text-xs text-yellow-700 dark:text-yellow-300 space-y-1">
-                        <p>Contracts loaded: {reportData?.contracts?.length || 0}</p>
-                        <p>Active contracts: {reportData?.contracts?.filter(c => c.status === 'active').length || 0}</p>
-                        <p>Contracts with monthly_value: {reportData?.contracts?.filter(c => c.monthly_value).length || 0}</p>
-                        <p>Selected month: {selectedMonth}, year: {selectedYear}</p>
-                        <p>Date range: {dateRange.start} to {dateRange.end}</p>
-                        <p>Revenue period: {revenuePeriod}</p>
-                      </div>
                     </div>
 
                     {/* Revenue Metrics */}

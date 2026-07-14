@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
   // In a production app, you'd want to verify JWT tokens here
   
   // Protected routes that require authentication
-  const protectedRoutes = ['/crm', '/time-tracking', '/projects', '/settings']
+  const protectedRoutes = ['/crm', '/time-tracking', '/projects', '/billing', '/team', '/settings']
   const isProtectedRoute = protectedRoutes.some(route => 
     req.nextUrl.pathname.startsWith(route)
   )

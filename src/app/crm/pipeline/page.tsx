@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
 import { Plus, Search, Edit, Trash2, DollarSign, Calendar, User, Building, Filter, Loader2, TrendingUp, Target, Clock, MoreVertical, Archive, Ban } from 'lucide-react'
@@ -8,7 +8,7 @@ import RoleGuard from '../../components/RoleGuard'
 import DealModal from '../../components/DealModal'
 import TaskModal from '../../components/TaskModal'
 import ContractModal from '../../components/ContractModal'
-import { ClientService } from '../../../lib/client-service'
+import { ClientService } from '../../../lib/client-service-multi-org'
 import { PipelineService, PipelineItem } from '../../../lib/pipeline-service-multi-org'
 import { useAuth } from '../../lib/auth-context-multi-org'
 import { Database } from '../../../lib/supabase'
@@ -51,8 +51,17 @@ export default function CRMPipelinePage() {
   const [isContractModalOpen, setIsContractModalOpen] = useState(false)
   const [contractModalClient, setContractModalClient] = useState<Client | null>(null)
   const [contractModalPipelineItem, setContractModalPipelineItem] = useState<PipelineItem | null>(null)
+  const [isMobileView, setIsMobileView] = useState(false)
+  const [movingItemId, setMovingItemId] = useState<string | null>(null)
+  const stageColumnRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
-  // Handle URL parameters
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 1023px)')
+    const update = () => setIsMobileView(media.matches)
+    update()
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
   useEffect(() => {
     const clientParam = searchParams.get('client')
     const actionParam = searchParams.get('action')
@@ -70,7 +79,9 @@ export default function CRMPipelinePage() {
   useEffect(() => {
     const fetchData = async () => {
       if (!currentOrganization?.id) {
-        console.log('Pipeline: No organization selected, skipping data fetch')
+        setPipelineItems([])
+        setClients([])
+        setLoading(false)
         return
       }
 
@@ -78,18 +89,16 @@ export default function CRMPipelinePage() {
         setLoading(true)
         setError(null)
         
-        // Add timeout to prevent hanging
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Data fetch timeout')), 10000)
-        )
-        
-        // Fetch both pipeline items and clients in parallel
+        const fetchPromise = Promise.all([
+          PipelineService.getPipelineItems(currentOrganization.id),
+          ClientService.getClients(currentOrganization.id),
+        ])
+
         const [pipelineItemsData, clientsData] = await Promise.race([
-          Promise.all([
-            PipelineService.getPipelineItems(currentOrganization.id),
-            ClientService.getClients(currentOrganization.id)
-          ]),
-          timeoutPromise
+          fetchPromise,
+          new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('Data fetch timeout')), 10000)
+          ),
         ])
         
         setPipelineItems(pipelineItemsData)
@@ -151,15 +160,108 @@ export default function CRMPipelinePage() {
   const wonItems = activePipelineItems.filter(item => item.stage === 'closed-won')
   const wonValue = wonItems.reduce((sum, item) => sum + item.value, 0)
 
-  const handleStageChange = (itemId: string, newStage: string) => {
-    setPipelineItems(prev => prev.map(item => 
-      item.id === itemId ? { ...item, stage: newStage as PipelineItem['stage'], updatedAt: new Date().toISOString() } : item
-    ))
+  const openContractModalForItem = (item: PipelineItem) => {
+    let client: Client | undefined
+
+    if (item.type === 'deal' && item.clientId) {
+      client = clients.find((c) => c.id === item.clientId)
+    } else {
+      client = clients.find(
+        (c) =>
+          c.name === item.clientName ||
+          c.email === item.clientEmail ||
+          c.company === item.clientCompany
+      )
+    }
+
+    if (client) {
+      setContractModalClient(client)
+      setContractModalPipelineItem(item)
+      setIsContractModalOpen(true)
+    } else {
+      alert(
+        `Client not found for contract creation. Pipeline item type: ${item.type}, Client ID: ${item.clientId}, Client Name: ${item.clientName}. Please ensure the client exists in the CRM.`
+      )
+    }
+  }
+
+  const moveItemToStage = async (itemId: string, targetStage: string) => {
+    const item = pipelineItems.find((pipelineItem) => pipelineItem.id === itemId)
+    if (!item || !currentOrganization?.id || item.stage === targetStage) return
+
+    const previousItems = pipelineItems
+    const optimisticItem: PipelineItem = {
+      ...item,
+      stage: targetStage as PipelineItem['stage'],
+      probability: targetStage === 'closed-won' ? 100 : targetStage === 'closed-lost' ? 0 : item.probability,
+      isBlocked: targetStage === 'closed-lost' ? true : item.isBlocked,
+      blockReason:
+        targetStage === 'closed-lost'
+          ? 'Automatically blocked when moved to closed-lost'
+          : item.blockReason,
+      updatedAt: new Date().toISOString(),
+    }
+
+    setPipelineItems((prev) =>
+      prev.map((pipelineItem) => (pipelineItem.id === itemId ? optimisticItem : pipelineItem))
+    )
+    setMovingItemId(itemId)
+    setError(null)
+
+    try {
+      const updateData: {
+        stage: PipelineItem['stage']
+        isBlocked?: boolean
+        blockReason?: string
+        probability?: number
+      } = {
+        stage: targetStage as PipelineItem['stage'],
+      }
+
+      if (targetStage === 'closed-lost') {
+        updateData.isBlocked = true
+        updateData.blockReason = 'Automatically blocked when moved to closed-lost'
+        updateData.probability = 0
+      } else if (targetStage === 'closed-won') {
+        updateData.probability = 100
+      }
+
+      const updatedItem = await PipelineService.updatePipelineItem(
+        item.id,
+        updateData,
+        currentOrganization.id
+      )
+
+      setPipelineItems((prev) =>
+        prev.map((pipelineItem) => (pipelineItem.id === item.id ? updatedItem : pipelineItem))
+      )
+
+      if (isMobileView) {
+        requestAnimationFrame(() => {
+          stageColumnRefs.current[targetStage]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        })
+      }
+
+      if (targetStage === 'closed-won') {
+        openContractModalForItem(updatedItem)
+      }
+    } catch (error) {
+      console.error('Error updating pipeline item stage:', error)
+      setPipelineItems(previousItems)
+      setError('Failed to update pipeline item. Please try again.')
+    } finally {
+      setMovingItemId(null)
+    }
+  }
+
+  const handleMobileStageChange = (itemId: string, targetStage: string) => {
+    void moveItemToStage(itemId, targetStage)
   }
 
   const handleArchiveItem = async (itemId: string) => {
+    if (!currentOrganization?.id) return
     try {
-      await PipelineService.archivePipelineItem(itemId)
+      await PipelineService.archivePipelineItem(itemId, currentOrganization.id)
       
       // Update local state
       setPipelineItems(prev => prev.map(item => 
@@ -179,8 +281,9 @@ export default function CRMPipelinePage() {
   }
 
   const handleUnarchiveItem = async (itemId: string) => {
+    if (!currentOrganization?.id) return
     try {
-      await PipelineService.unarchivePipelineItem(itemId)
+      await PipelineService.unarchivePipelineItem(itemId, currentOrganization.id)
       
       // Update local state
       setPipelineItems(prev => prev.map(item => 
@@ -236,69 +339,11 @@ export default function CRMPipelinePage() {
 
   const handleDrop = async (e: React.DragEvent, targetStage: string) => {
     e.preventDefault()
-    
+
     if (draggedItem && draggedItem.stage !== targetStage) {
-      try {
-        // Prepare update data
-        const updateData: any = {
-          stage: targetStage as PipelineItem['stage']
-        }
-        
-        // Auto-block if moved to closed-lost
-        if (targetStage === 'closed-lost') {
-          updateData.isBlocked = true
-          updateData.blockReason = 'Automatically blocked when moved to closed-lost'
-          updateData.probability = 0
-        }
-        
-        // Update the item in the database
-        const updatedItem = await PipelineService.updatePipelineItem(draggedItem.id, updateData, currentOrganization.id)
-        
-        // Update local state
-        setPipelineItems(prev => prev.map(item => 
-          item.id === draggedItem.id ? updatedItem : item
-        ))
-        
-        // Show contract creation modal if moved to closed-won
-        if (targetStage === 'closed-won') {
-          // Find the client for this pipeline item
-          let client: Client | undefined
-          
-          if (draggedItem.type === 'deal' && draggedItem.clientId) {
-            // For deals, use the clientId to find the client
-            client = clients.find(c => c.id === draggedItem.clientId)
-          } else {
-            // For leads, try to match by name/email/company
-            client = clients.find(c => 
-              c.name === draggedItem.clientName || 
-              c.email === draggedItem.clientEmail ||
-              c.company === draggedItem.clientCompany
-            )
-          }
-          
-          if (client) {
-            setContractModalClient(client)
-            setContractModalPipelineItem(updatedItem)
-            setIsContractModalOpen(true)
-          } else {
-            // If client doesn't exist, show alert with more details
-            console.log('Pipeline item for contract:', draggedItem)
-            console.log('Available clients:', clients)
-            alert(`Client not found for contract creation. Pipeline item type: ${draggedItem.type}, Client ID: ${draggedItem.clientId}, Client Name: ${draggedItem.clientName}. Please ensure the client exists in the CRM.`)
-          }
-        }
-        
-        // Show success feedback
-        console.log(`Moved ${draggedItem.title} to ${targetStage}`)
-        if (targetStage === 'closed-lost') {
-          console.log(`${draggedItem.title} has been automatically blocked`)
-        }
-      } catch (error) {
-        console.error('Error updating pipeline item stage:', error)
-        setError('Failed to update pipeline item. Please try again.')
-      }
+      await moveItemToStage(draggedItem.id, targetStage)
     }
-    
+
     setDraggedItem(null)
   }
 
@@ -355,6 +400,11 @@ export default function CRMPipelinePage() {
   }
 
   const handleSaveDeal = async (dealData: any) => {
+    if (!currentOrganization?.id) {
+      setError('No organization selected')
+      return
+    }
+
     try {
       if (editingItem) {
         // Update existing item
@@ -369,33 +419,32 @@ export default function CRMPipelinePage() {
         // If this is a lead (new client), create the client in the CRM first
         if (dealData.type === 'lead') {
           try {
-            const clientData = {
+            const newClient = await ClientService.createClient({
               name: dealData.clientName,
               email: dealData.clientEmail,
               phone: dealData.clientPhone || '',
               company: dealData.clientCompany,
               address: '',
-              notes: `Created from pipeline lead: ${dealData.title}`
-            }
-            
-            const newClient = await ClientService.createClient(clientData, 'lead')
-            
-            // Update the deal data with the client ID
+              notes: `Created from pipeline lead: ${dealData.title}`,
+              status: 'lead',
+              organization_id: currentOrganization.id,
+            })
+
             dealData.clientId = newClient.id
-            
-            // Refresh the clients list
-            const updatedClients = await ClientService.getClients()
+
+            const updatedClients = await ClientService.getClients(currentOrganization.id)
             setClients(updatedClients)
-            
-            console.log('Client created from pipeline lead:', newClient)
           } catch (error) {
             console.error('Error creating client from pipeline lead:', error)
-            // Still create the pipeline item even if client creation fails
           }
         }
         
         // Create the pipeline item in the database
-        newItem = await PipelineService.createPipelineItem({ ...dealData, organization_id: currentOrganization.id })
+        newItem = await PipelineService.createPipelineItem({
+          ...dealData,
+          clientId: dealData.clientId || undefined,
+          organization_id: currentOrganization.id,
+        })
         setPipelineItems(prev => [newItem, ...prev])
       }
       
@@ -447,64 +496,44 @@ export default function CRMPipelinePage() {
   }
 
   const handleContractSaved = async (contract: any) => {
-    // Contract was saved successfully
-    console.log('Contract saved:', contract)
-    
-    // Close the contract modal
+    const pipelineItemToArchive = contractModalPipelineItem
+    const orgId = currentOrganization?.id
+
     setIsContractModalOpen(false)
     setContractModalClient(null)
     setContractModalPipelineItem(null)
-    
-    // Update client status to 'active' if they have contracts
-    if (contract.client_id) {
+
+    if (contract.client_id && orgId && contract.status === 'active') {
       try {
-        // Get the client's current contracts to check if they should be active
-        const { ContractsService } = await import('../../../lib/contracts-service')
-        const allContracts = await ContractsService.getContracts()
-        const clientContracts = allContracts.filter(c => c.client_id === contract.client_id)
-        
-        // If client has active contracts, update their status to 'active'
-        const hasActiveContracts = clientContracts.some(c => c.status === 'active')
-        if (hasActiveContracts) {
-          const client = clients.find(c => c.id === contract.client_id)
-          if (client && client.status !== 'active') {
-            // Update client status directly using the client service method
-            const { ClientService } = await import('../../../lib/client-service')
-            await ClientService.updateClientStatusBasedOnContracts(contract.client_id)
-            
-            // Refresh clients list
-            const updatedClients = await ClientService.getClients()
-            setClients(updatedClients)
-            
-            console.log(`Client ${client.name} status updated to 'active' due to contract`)
-          }
+        const client = clients.find((c) => c.id === contract.client_id)
+        if (client && client.status !== 'active') {
+          await ClientService.updateClient(contract.client_id, { status: 'active' }, orgId)
+          const updatedClients = await ClientService.getClients(orgId)
+          setClients(updatedClients)
         }
       } catch (error) {
-        console.error('Error updating client status:', error)
+        console.warn('Could not update client status after contract creation:', error)
       }
     }
-    
-    // Archive the pipeline item after contract is created
-    if (contractModalPipelineItem) {
+
+    if (pipelineItemToArchive && orgId) {
       try {
-        const { PipelineService } = await import('../../../lib/pipeline-service-multi-org')
-        await PipelineService.updatePipelineItem(contractModalPipelineItem.id, {
-          ...contractModalPipelineItem,
-          isArchived: true,
-          archivedAt: new Date().toISOString()
-        }, currentOrganization.id)
-        
-        // Refresh pipeline items
-        const updatedItems = await PipelineService.getPipelineItems(currentOrganization.id)
+        await PipelineService.updatePipelineItem(
+          pipelineItemToArchive.id,
+          {
+            ...pipelineItemToArchive,
+            isArchived: true,
+            archivedAt: new Date().toISOString(),
+          },
+          orgId
+        )
+
+        const updatedItems = await PipelineService.getPipelineItems(orgId)
         setPipelineItems(updatedItems)
-        
-        console.log(`Pipeline item "${contractModalPipelineItem.title}" archived after contract creation`)
       } catch (error) {
         console.error('Error archiving pipeline item:', error)
       }
     }
-    
-    // You could add a toast notification here
   }
 
   const formatCurrency = (amount: number) => {
@@ -673,6 +702,9 @@ export default function CRMPipelinePage() {
             {stages.map((stage, stageIndex) => (
               <motion.div
                 key={stage.key}
+                ref={(element) => {
+                  stageColumnRefs.current[stage.key] = element
+                }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: stageIndex * 0.1 }}
@@ -720,10 +752,12 @@ export default function CRMPipelinePage() {
                       transition={{ delay: itemIndex * 0.05 }}
                     >
                       <div
-                        draggable
+                        draggable={!isMobileView}
                         onDragStart={(e: React.DragEvent) => handleDragStart(e, item)}
                         onDragEnd={handleDragEnd}
-                        className={`p-3 rounded-lg border hover:shadow-md transition-all cursor-move ${
+                        className={`p-3 rounded-lg border hover:shadow-md transition-all ${
+                          isMobileView ? 'cursor-pointer' : 'cursor-move'
+                        } ${
                           draggedItem?.id === item.id 
                             ? 'opacity-50 scale-95' 
                             : item.isBlocked 
@@ -734,13 +768,23 @@ export default function CRMPipelinePage() {
                                   ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 hover:border-green-300' 
                                   : 'bg-gray-50 dark:bg-slate-700 border-gray-200 dark:border-slate-600 hover:border-gray-300'
                         }`}
-                        onClick={() => handleEditItem(item)}
+                        onClick={isMobileView ? undefined : () => handleEditItem(item)}
                       >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-medium text-gray-900 dark:text-slate-100 text-sm">
-                            {item.title}
-                          </h4>
+                          {isMobileView ? (
+                            <button
+                              type="button"
+                              onClick={() => handleEditItem(item)}
+                              className="text-left font-medium text-gray-900 dark:text-slate-100 text-sm hover:text-cyan-600 dark:hover:text-cyan-400"
+                            >
+                              {item.title}
+                            </button>
+                          ) : (
+                            <h4 className="font-medium text-gray-900 dark:text-slate-100 text-sm">
+                              {item.title}
+                            </h4>
+                          )}
                           <div className="flex items-center gap-1">
                             {item.isBlocked && (
                               <span className="text-xs px-2 py-1 rounded-full bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-300">
@@ -793,9 +837,56 @@ export default function CRMPipelinePage() {
                             style={{ width: `${item.probability}%` }}
                           />
                         </div>
+
+                        {/* Mobile stage mover */}
+                        <div
+                          className="lg:hidden pt-2 border-t border-gray-200 dark:border-gray-600"
+                          onClick={(e) => e.stopPropagation()}
+                          onPointerDown={(e) => e.stopPropagation()}
+                          onTouchStart={(e) => e.stopPropagation()}
+                        >
+                          <label
+                            htmlFor={`pipeline-stage-${item.id}`}
+                            className="mb-1 block text-xs font-medium text-gray-500 dark:text-gray-400"
+                          >
+                            {t('crm.pipelinePage.moveToStage')}
+                          </label>
+                          <select
+                            id={`pipeline-stage-${item.id}`}
+                            value={item.stage}
+                            disabled={movingItemId === item.id}
+                            onClick={(e) => e.stopPropagation()}
+                            onPointerDown={(e) => e.stopPropagation()}
+                            onChange={(e) => {
+                              e.stopPropagation()
+                              handleMobileStageChange(item.id, e.target.value)
+                            }}
+                            className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                          >
+                            {stages.map((stage) => (
+                              <option key={stage.key} value={stage.key}>
+                                {t(stage.labelKey)}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
                         
                         {/* Action buttons */}
-                        <div className="flex gap-2 pt-2 border-t border-gray-200 dark:border-gray-600">
+                        <div
+                          className="flex flex-wrap gap-2 pt-2 border-t border-gray-200 dark:border-gray-600"
+                          onClick={(e) => e.stopPropagation()}
+                          onPointerDown={(e) => e.stopPropagation()}
+                        >
+                          {isMobileView && (
+                            <button
+                              type="button"
+                              onClick={() => handleEditItem(item)}
+                              className="text-xs px-2 py-1 bg-cyan-100 dark:bg-cyan-800 text-cyan-700 dark:text-cyan-300 rounded hover:bg-cyan-200 dark:hover:bg-cyan-700 transition-colors flex items-center gap-1"
+                            >
+                              <Edit className="w-3 h-3" />
+                              {t('common.edit')}
+                            </button>
+                          )}
                           {!item.isArchived && !item.isBlocked && (
                             <button
                               onClick={(e) => {

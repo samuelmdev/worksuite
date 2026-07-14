@@ -40,16 +40,16 @@ export default function UserMenu() {
 
   if (!user) {
     return (
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-2">
         <a
           href="/auth/login"
-          className="text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-slate-100 transition-colors"
+          className="px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-colors"
         >
-          {t('auth.signIn')}
+          {t('auth.login')}
         </a>
         <a
           href="/auth/signup"
-          className="px-3 py-1 bg-cyan-600 hover:bg-cyan-700 text-white text-sm rounded-lg transition-colors"
+          className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors"
         >
           {t('auth.signUp')}
         </a>

@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Settings, User, Bell, Shield, Database, X, Save, AlertCircle, CheckCircle, Trash2, Edit, Plus, Mail, Phone, Calendar, Lock, Download, Upload, Eye, EyeOff, ChevronDown, Activity, Clock } from 'lucide-react'
+import { Settings, User, Bell, Shield, Database, X, Save, AlertCircle, CheckCircle, Trash2, Mail, Phone, Calendar, Lock, Download, Upload, Eye, EyeOff, ChevronDown, Activity, Clock, UserPlus } from 'lucide-react'
 import RoleGuard from '../../components/RoleGuard'
 import { useAuth } from '../../lib/auth-context-multi-org'
-import { supabase } from '../../../lib/supabase'
 import { activityService } from '../../../lib/activity-service'
+import { ClientService } from '../../../lib/client-service-multi-org'
 import { useLocale } from '../../lib/locale'
 import type { TranslationKey } from '../../lib/translations'
 
@@ -45,7 +45,7 @@ interface SecuritySettings {
 }
 
 export default function CRMSettingsPage() {
-  const { user } = useAuth()
+  const { user: currentUser, currentOrganization } = useAuth()
   const { t } = useLocale()
   const searchParams = useSearchParams()
   const [activeSection, setActiveSection] = useState<string | null>(null)
@@ -56,6 +56,9 @@ export default function CRMSettingsPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [userActivities, setUserActivities] = useState<any[]>([])
   const [loadingActivities, setLoadingActivities] = useState(false)
+  const [showGrantModal, setShowGrantModal] = useState(false)
+  const [grantUserId, setGrantUserId] = useState('')
+  const [grantingAccess, setGrantingAccess] = useState(false)
 
   // Notification settings state
   const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({
@@ -122,11 +125,11 @@ export default function CRMSettingsPage() {
 
   // Fetch users and activities
   useEffect(() => {
-    if (activeSection === 'users') {
+    if (activeSection === 'users' && currentOrganization?.id) {
       fetchUsers()
       loadUserActivities()
     }
-  }, [activeSection])
+  }, [activeSection, currentOrganization?.id])
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -146,15 +149,26 @@ export default function CRMSettingsPage() {
   }, [isDropdownOpen])
 
   const fetchUsers = async () => {
+    if (!currentOrganization?.id) {
+      setUsers([])
+      return
+    }
+
     try {
       setLoading(true)
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (error) throw error
-      setUsers(data || [])
+      const data = await ClientService.getUsers(currentOrganization.id)
+      setUsers(
+        data.map((member) => ({
+          id: member.id,
+          email: member.email || '',
+          first_name: member.first_name || '',
+          last_name: member.last_name || '',
+          role: member.role,
+          crm_access: member.role === 'admin' || member.role === 'manager',
+          created_at: member.created_at,
+          last_login: member.last_login_at,
+        }))
+      )
     } catch (err) {
       setError('Failed to fetch users')
       console.error('Error fetching users:', err)
@@ -163,37 +177,34 @@ export default function CRMSettingsPage() {
     }
   }
 
-  const updateUserRole = async (userId: string, role: 'admin' | 'manager' | 'employee') => {
-    try {
-      const { error } = await supabase
-        .from('users')
-        .update({ role })
-        .eq('id', userId)
+  const handleGrantAccess = async () => {
+    if (!currentOrganization?.id || !grantUserId) return
 
-      if (error) throw error
-      
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, role } : u))
-      setSuccess('User role updated successfully')
+    try {
+      setGrantingAccess(true)
+      await ClientService.grantCrmAccess(grantUserId, currentOrganization.id)
+      setShowGrantModal(false)
+      setGrantUserId('')
+      setSuccess(t('crm.settingsPage.grantAccessSuccess'))
+      await fetchUsers()
     } catch (err) {
-      setError('Failed to update user role')
-      console.error('Error updating user role:', err)
+      setError('Failed to grant CRM access')
+      console.error('Error granting CRM access:', err)
+    } finally {
+      setGrantingAccess(false)
     }
   }
 
-  const toggleCRMAccess = async (userId: string, crmAccess: boolean) => {
-    try {
-      const { error } = await supabase
-        .from('users')
-        .update({ crm_access: crmAccess })
-        .eq('id', userId)
+  const handleRevokeAccess = async (userId: string) => {
+    if (!currentOrganization?.id) return
 
-      if (error) throw error
-      
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, crm_access: crmAccess } : u))
-      setSuccess('CRM access updated successfully')
+    try {
+      await ClientService.revokeCrmAccess(userId, currentOrganization.id)
+      setSuccess(t('crm.settingsPage.revokeAccessSuccess'))
+      await fetchUsers()
     } catch (err) {
-      setError('Failed to update CRM access')
-      console.error('Error updating CRM access:', err)
+      setError('Failed to revoke CRM access')
+      console.error('Error revoking CRM access:', err)
     }
   }
 
@@ -246,14 +257,43 @@ export default function CRMSettingsPage() {
     }
   }
 
-  const renderUserManagement = () => (
+  const renderUserManagement = () => {
+    const isOrgAdmin = currentOrganization?.role === 'admin'
+    const employeesWithoutCrm = users.filter((member) => member.role === 'employee')
+
+    const getRoleBadgeClass = (role: User['role']) => {
+      switch (role) {
+        case 'admin':
+          return 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400'
+        case 'manager':
+          return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400'
+        default:
+          return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+      }
+    }
+
+    return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">{t('crm.settingsPage.section.users')}</h2>
-        <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors">
-          <Plus className="w-4 h-4 mr-2 inline" />
-          Invite User
-        </button>
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">{t('crm.settingsPage.section.users')}</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            {t('crm.settingsPage.grantAccessDesc')}
+          </p>
+        </div>
+        {isOrgAdmin && (
+          <button
+            onClick={() => {
+              setGrantUserId('')
+              setShowGrantModal(true)
+            }}
+            disabled={employeesWithoutCrm.length === 0}
+            className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+          >
+            <UserPlus className="w-4 h-4 mr-2" />
+            {t('crm.settingsPage.grantAccess')}
+          </button>
+        )}
       </div>
 
       {loading ? (
@@ -279,71 +319,68 @@ export default function CRMSettingsPage() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Last Login
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
-                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
-                {users.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-slate-700">
+                {users.map((member) => (
+                  <tr key={member.id} className="hover:bg-gray-50 dark:hover:bg-slate-700">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10">
                           <div className="h-10 w-10 rounded-full bg-cyan-100 dark:bg-cyan-900 flex items-center justify-center">
                             <span className="text-sm font-medium text-cyan-600 dark:text-cyan-400">
-                              {user.first_name?.[0]}{user.last_name?.[0]}
+                              {member.first_name?.[0]}{member.last_name?.[0]}
                             </span>
                           </div>
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900 dark:text-slate-100">
-                            {user.first_name} {user.last_name}
+                            {member.first_name} {member.last_name}
                           </div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                            {user.email}
-                          </div>
+                          {member.email && (
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              {member.email}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <select
-                        value={user.role}
-                        onChange={(e) => updateUserRole(user.id, e.target.value as any)}
-                        disabled={user.role === 'admin' && user.id === user?.id}
-                        className="text-sm border border-gray-300 dark:border-slate-600 rounded px-2 py-1 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
-                      >
-                        <option value="admin">Admin</option>
-                        <option value="manager">Manager</option>
-                        <option value="employee">Employee</option>
-                      </select>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getRoleBadgeClass(member.role)}`}>
+                        {member.role}
+                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={user.crm_access}
-                          onChange={(e) => toggleCRMAccess(user.id, e.target.checked)}
-                          disabled={user.role === 'employee' || (user.role === 'manager' && user.id !== user?.id)}
-                          className="h-4 w-4 text-cyan-600 focus:ring-cyan-500 border-gray-300 rounded"
-                        />
-                        <span className="ml-2 text-sm text-gray-900 dark:text-slate-100">
-                          {user.crm_access ? 'Enabled' : 'Disabled'}
-                        </span>
-                      </label>
+                      <div className="flex items-center gap-3">
+                        {member.role === 'admin' && (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400">
+                            {t('crm.settingsPage.crmAccess.default')}
+                          </span>
+                        )}
+                        {member.role === 'manager' && (
+                          <>
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-100 text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400">
+                              {t('crm.settingsPage.crmAccess.granted')}
+                            </span>
+                            {isOrgAdmin && member.id !== currentUser?.id && (
+                              <button
+                                onClick={() => handleRevokeAccess(member.id)}
+                                className="text-sm text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                              >
+                                {t('crm.settingsPage.revokeAccess')}
+                              </button>
+                            )}
+                          </>
+                        )}
+                        {member.role === 'employee' && (
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                            {t('crm.settingsPage.crmAccess.none')}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {user.last_login ? new Date(user.last_login).toLocaleDateString() : 'Never'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-cyan-600 hover:text-cyan-900 dark:text-cyan-400 dark:hover:text-cyan-300 mr-3">
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      {user.id !== user?.id && (
-                        <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
+                      {member.last_login ? new Date(member.last_login).toLocaleDateString() : 'Never'}
                     </td>
                   </tr>
                 ))}
@@ -439,8 +476,70 @@ export default function CRMSettingsPage() {
           </div>
         )}
       </div>
+
+      {showGrantModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-gray-200 dark:border-slate-700 w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
+                {t('crm.settingsPage.grantAccessTitle')}
+              </h3>
+              <button
+                onClick={() => setShowGrantModal(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {t('crm.settingsPage.grantAccessDesc')}
+              </p>
+              {employeesWithoutCrm.length === 0 ? (
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {t('crm.settingsPage.grantAccessEmpty')}
+                </p>
+              ) : (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                    {t('crm.settingsPage.grantAccessSelect')}
+                  </label>
+                  <select
+                    value={grantUserId}
+                    onChange={(e) => setGrantUserId(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                  >
+                    <option value="">{t('crm.settingsPage.grantAccessSelect')}</option>
+                    {employeesWithoutCrm.map((member) => (
+                      <option key={member.id} value={member.id}>
+                        {member.first_name} {member.last_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-slate-700">
+              <button
+                onClick={() => setShowGrantModal(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600"
+              >
+                {t('common.cancel')}
+              </button>
+              <button
+                onClick={handleGrantAccess}
+                disabled={!grantUserId || grantingAccess}
+                className="px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 rounded-lg transition-colors"
+              >
+                {grantingAccess ? t('common.loading') : t('crm.settingsPage.grantAccess')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  )
+    )
+  }
 
   const renderNotifications = () => (
     <div className="space-y-6">

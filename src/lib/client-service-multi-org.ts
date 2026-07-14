@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import { calculatePercentChange, countExistedByEndOfLastMonth, getCalendarMonthBounds } from './stats-utils'
 import { Database } from './supabase'
 
 type Client = Database['public']['Tables']['clients']['Row']
@@ -11,6 +12,7 @@ export interface ClientFormData {
   address?: string
   website?: string
   notes?: string
+  status?: string
   organization_id: string // Required - must always be set
 }
 
@@ -129,11 +131,12 @@ export class ClientService {
     total_clients: number
     active_clients: number
     recent_clients: number
+    change_from_last_month: number
   }> {
     const { data, error } = await supabase
       .from('clients')
-      .select('id, created_at')
-      .eq('organization_id', organizationId) // Always filter by organization
+      .select('id, created_at, status')
+      .eq('organization_id', organizationId)
 
     if (error) {
       console.error('Error fetching client stats:', error)
@@ -143,71 +146,103 @@ export class ClientService {
     const clients = data || []
     const now = new Date()
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+    const { endOfLastMonth } = getCalendarMonthBounds(now)
+    const lastMonthTotal = countExistedByEndOfLastMonth(clients)
 
     return {
       total_clients: clients.length,
-      active_clients: clients.length, // All clients are considered active since there's no is_active column
-      recent_clients: clients.filter(client => 
-        new Date(client.created_at) > thirtyDaysAgo
-      ).length
+      active_clients: clients.filter((client) => client.status === 'active').length,
+      recent_clients: clients.filter((client) => new Date(client.created_at) > thirtyDaysAgo).length,
+      change_from_last_month: calculatePercentChange(clients.length, lastMonthTotal),
     }
   }
 
   // Get users for the organization (admin/manager only)
   static async getUsers(organizationId: string): Promise<any[]> {
     try {
-      console.log('Fetching users for organization:', organizationId)
-      
-      // Try to get users from user_organizations table without foreign key relationship
       const { data: userOrgData, error: userOrgError } = await supabase
         .from('user_organizations')
         .select('user_id, role, joined_at')
         .eq('organization_id', organizationId)
         .eq('is_active', true)
 
-      if (!userOrgError && userOrgData && userOrgData.length > 0) {
-        console.log('Fetched user_organizations:', userOrgData.length)
-        
-        // Get user details for each user_id
-        const userIds = userOrgData.map(item => item.user_id)
-        const { data: usersData, error: usersError } = await supabase
-          .from('users')
-          .select('id, first_name, last_name, created_at')
-          .in('id', userIds)
-          .order('first_name', { ascending: true })
-
-        if (!usersError && usersData) {
-          // Combine user_organizations data with users data
-          return usersData.map(user => {
-            const userOrg = userOrgData.find(uo => uo.user_id === user.id)
-            return {
-              id: user.id,
-              first_name: user.first_name,
-              last_name: user.last_name,
-              role: userOrg?.role || 'employee',
-              created_at: user.created_at
-            }
-          })
-        }
+      if (userOrgError) {
+        console.error('Error fetching user_organizations:', userOrgError)
+        throw userOrgError
       }
 
-      // Fallback: fetch all users (no organization filtering available)
-      console.log('No user_organizations found, fetching all users...')
-      const { data: allUsers, error: allUsersError } = await supabase
+      if (!userOrgData?.length) {
+        return []
+      }
+
+      const userIds = userOrgData.map(item => item.user_id)
+      const { data: usersData, error: usersError } = await supabase
         .from('users')
-        .select('id, first_name, last_name, created_at')
+        .select('id, first_name, last_name, created_at, last_login_at, is_active')
+        .in('id', userIds)
+        .eq('is_active', true)
         .order('first_name', { ascending: true })
 
-      if (allUsersError) {
-        console.error('Error fetching all users:', allUsersError)
-        throw allUsersError
+      if (usersError) {
+        console.error('Error fetching users:', usersError)
+        throw usersError
       }
-      
-      console.log('Fetched all users:', allUsers?.length || 0)
-      return allUsers || []
+
+      return (usersData || []).map(user => {
+        const userOrg = userOrgData.find(uo => uo.user_id === user.id)
+        return {
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          role: userOrg?.role || 'employee',
+          created_at: user.created_at,
+          last_login_at: user.last_login_at,
+          joined_at: userOrg?.joined_at,
+        }
+      })
     } catch (error) {
       console.error('Error fetching users:', error)
       throw new Error('Failed to fetch users')
     }
+  }
+
+  static async grantCrmAccess(userId: string, organizationId: string): Promise<void> {
+    const { error } = await supabase
+      .from('user_organizations')
+      .update({ role: 'manager' })
+      .eq('user_id', userId)
+      .eq('organization_id', organizationId)
+      .eq('role', 'employee')
+
+    if (error) {
+      console.error('Error granting CRM access:', error)
+      throw new Error('Failed to grant CRM access')
+    }
+
+    await supabase
+      .from('organization_members')
+      .update({ role: 'manager' })
+      .eq('user_id', userId)
+      .eq('organization_id', organizationId)
+  }
+
+  static async revokeCrmAccess(userId: string, organizationId: string): Promise<void> {
+    const { error } = await supabase
+      .from('user_organizations')
+      .update({ role: 'employee' })
+      .eq('user_id', userId)
+      .eq('organization_id', organizationId)
+      .eq('role', 'manager')
+
+    if (error) {
+      console.error('Error revoking CRM access:', error)
+      throw new Error('Failed to revoke CRM access')
+    }
+
+    await supabase
+      .from('organization_members')
+      .update({ role: 'employee' })
+      .eq('user_id', userId)
+      .eq('organization_id', organizationId)
   }
 }

@@ -29,13 +29,13 @@ BEGIN
             activity_title := 'Client updated';
             activity_description := 'Client "' || NEW.name || '" information was updated';
             INSERT INTO activity_logs (user_id, module, entity_type, entity_id, action, title, description, old_values, new_values, organization_id)
-            VALUES (NEW.updated_by, 'crm', 'client', NEW.id, 'updated', activity_title, activity_description, row_to_json(OLD), row_to_json(NEW), NEW.organization_id);
+            VALUES (COALESCE(NEW.created_by, auth.uid()), 'crm', 'client', NEW.id, 'updated', activity_title, activity_description, row_to_json(OLD), row_to_json(NEW), NEW.organization_id);
             RETURN NEW;
           ELSIF TG_OP = 'DELETE' THEN
             activity_title := 'Client deleted';
             activity_description := 'Client "' || OLD.name || '" was removed';
             INSERT INTO activity_logs (user_id, module, entity_type, entity_id, action, title, description, old_values, organization_id)
-            VALUES (OLD.updated_by, 'crm', 'client', OLD.id, 'deleted', activity_title, activity_description, row_to_json(OLD), OLD.organization_id);
+            VALUES (COALESCE(OLD.created_by, auth.uid()), 'crm', 'client', OLD.id, 'deleted', activity_title, activity_description, row_to_json(OLD), OLD.organization_id);
             RETURN OLD;
           END IF;
           RETURN NULL;

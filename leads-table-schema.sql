@@ -40,36 +40,36 @@ ALTER TABLE pipeline_items ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies
 CREATE POLICY "Users can view pipeline items in their organization" ON pipeline_items
-  FOR SELECT USING (
-    organization_id = (
-      SELECT organization_id FROM users 
-      WHERE id = auth.uid()
-    )
-  );
+  FOR SELECT USING (organization_id IN (
+    SELECT organization_id
+    FROM user_organizations
+    WHERE user_id = auth.uid()
+      AND is_active = true
+  ));
 
 CREATE POLICY "Users can insert pipeline items in their organization" ON pipeline_items
-  FOR INSERT WITH CHECK (
-    organization_id = (
-      SELECT organization_id FROM users 
-      WHERE id = auth.uid()
-    )
-  );
+  FOR INSERT WITH CHECK (organization_id IN (
+    SELECT organization_id
+    FROM user_organizations
+    WHERE user_id = auth.uid()
+      AND is_active = true
+  ));
 
 CREATE POLICY "Users can update pipeline items in their organization" ON pipeline_items
-  FOR UPDATE USING (
-    organization_id = (
-      SELECT organization_id FROM users 
-      WHERE id = auth.uid()
-    )
-  );
+  FOR UPDATE USING (organization_id IN (
+    SELECT organization_id
+    FROM user_organizations
+    WHERE user_id = auth.uid()
+      AND is_active = true
+  ));
 
 CREATE POLICY "Users can delete pipeline items in their organization" ON pipeline_items
-  FOR DELETE USING (
-    organization_id = (
-      SELECT organization_id FROM users 
-      WHERE id = auth.uid()
-    )
-  );
+  FOR DELETE USING (organization_id IN (
+    SELECT organization_id
+    FROM user_organizations
+    WHERE user_id = auth.uid()
+      AND is_active = true
+  ));
 
 -- Create function to automatically update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_pipeline_items_updated_at()

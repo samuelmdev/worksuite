@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { Database } from './supabase'
+import { calculatePercentChange, getCalendarMonthBounds } from './stats-utils'
 
 export type Contract = Database['public']['Tables']['contracts']['Row'] & {
   clients?: {
@@ -37,28 +38,19 @@ export interface ContractStats {
   monthly_recurring_revenue: number
   contracts_ending_soon: number
   average_contract_value: number
+  active_contracts_change_from_last_month: number
+  revenue_change_from_last_month: number
 }
 
 export class ContractsService {
   // Get all contracts for the organization
   static async getContracts(organizationId: string): Promise<Contract[]> {
     try {
-      console.log('ContractsService: Fetching contracts for organization:', organizationId)
-      
-      // First, let's check if there are any contracts at all
-      const { data: allContracts, error: allError } = await supabase
-        .from('contracts')
-        .select('*')
-        .limit(10)
-      
-      console.log('ContractsService: All contracts in database (first 10):', allContracts)
-      
-      // Now get contracts for this organization
       const { data, error } = await supabase
         .from('contracts')
         .select(`
           *,
-          clients!inner(name, company)
+          clients(name, company)
         `)
         .eq('organization_id', organizationId)
         .order('created_at', { ascending: false })
@@ -67,8 +59,7 @@ export class ContractsService {
         console.error('ContractsService: Error fetching contracts:', error)
         throw error
       }
-      
-      console.log('ContractsService: Contracts for organization:', data)
+
       return data || []
     } catch (error) {
       console.error('Error fetching contracts:', error)
@@ -83,7 +74,7 @@ export class ContractsService {
       
       const { data, error } = await supabase
         .from('contracts')
-        .select('*')
+        .select('status, type, value, monthly_value, end_date, created_at')
         .eq('organization_id', organizationId)
 
       if (error) {
@@ -95,6 +86,28 @@ export class ContractsService {
 
       const contracts = data || []
       const activeContracts = contracts.filter(c => c.status === 'active')
+      const { endOfLastMonth } = getCalendarMonthBounds()
+
+      const sumActiveMonthlyRevenue = (asOf?: Date) =>
+        activeContracts
+          .filter((contract) => {
+            const createdAt = new Date(contract.created_at)
+            if (asOf && createdAt > asOf) return false
+            if (contract.end_date && asOf && new Date(contract.end_date) < asOf) return false
+            return true
+          })
+          .reduce((sum, contract) => {
+            const value = contract.monthly_value || contract.value || 0
+            return sum + (typeof value === 'number' ? value : 0)
+          }, 0)
+
+      const currentMonthlyRevenue = sumActiveMonthlyRevenue()
+      const lastMonthMonthlyRevenue = sumActiveMonthlyRevenue(endOfLastMonth)
+
+      const currentActiveCount = activeContracts.length
+      const lastMonthActiveCount = activeContracts.filter(
+        (contract) => new Date(contract.created_at) <= endOfLastMonth
+      ).length
       
       // Handle different possible field names for value
       const totalValue = contracts.reduce((sum, contract) => {
@@ -102,12 +115,7 @@ export class ContractsService {
         return sum + (typeof value === 'number' ? value : 0)
       }, 0)
       
-      const monthlyRecurring = contracts
-        .filter(c => c.status === 'active' && ['monthly', 'yearly', 'quarterly'].includes(c.type || ''))
-        .reduce((sum, contract) => {
-          const value = contract.monthly_value || contract.value || 0
-          return sum + (typeof value === 'number' ? value : 0)
-        }, 0)
+      const monthlyRecurring = currentMonthlyRevenue
 
       const now = new Date()
       const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
@@ -119,11 +127,19 @@ export class ContractsService {
 
       const stats = {
         total_contracts: contracts.length,
-        active_contracts: activeContracts.length,
+        active_contracts: currentActiveCount,
         total_value: totalValue,
         monthly_recurring_revenue: monthlyRecurring,
         contracts_ending_soon: contractsEndingSoon,
-        average_contract_value: contracts.length > 0 ? totalValue / contracts.length : 0
+        average_contract_value: contracts.length > 0 ? totalValue / contracts.length : 0,
+        active_contracts_change_from_last_month: calculatePercentChange(
+          currentActiveCount,
+          lastMonthActiveCount
+        ),
+        revenue_change_from_last_month: calculatePercentChange(
+          currentMonthlyRevenue,
+          lastMonthMonthlyRevenue
+        ),
       }
 
       console.log('ContractsService: Final contract stats:', stats)
@@ -166,6 +182,11 @@ export class ContractsService {
         throw new Error('Organization ID is required for contracts')
       }
 
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      if (userError || !user) {
+        throw new Error('User not authenticated')
+      }
+
       const insertData: ContractInsert = {
         organization_id: contractData.organization_id,
         client_id: contractData.client_id,
@@ -182,6 +203,7 @@ export class ContractsService {
         billing_frequency: contractData.billing_frequency,
         next_billing_date: contractData.next_billing_date,
         assigned_to: contractData.assigned_to,
+        created_by: user.id,
         notes: contractData.notes,
         terms: contractData.terms
       }

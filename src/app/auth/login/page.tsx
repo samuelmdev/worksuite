@@ -69,11 +69,14 @@ export default function LoginPage() {
             {t('auth.brandName')}
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            {t('auth.signInTitle')}
+            {t('auth.signInTitleEmployee')}
           </p>
         </div>
 
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 p-8">
+          <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg">
+            <p className="text-sm text-slate-700 dark:text-slate-300">{t('auth.employeeLoginNote')}</p>
+          </div>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -155,15 +158,15 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mt-6">
-          <p className="text-slate-600 dark:text-slate-400">
-            {t('auth.noAccount')}{' '}
-            <Link
-              href="/auth/signup"
-              className="text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 font-medium"
-            >
-              {t('auth.signUpLink')}
-            </Link>
+          <p className="text-sm text-slate-600 dark:text-slate-400">
+            {t('auth.employeeNeedAccess')}
           </p>
+          <Link
+            href="/"
+            className="inline-block mt-3 text-sm text-cyan-600 dark:text-cyan-400 hover:underline"
+          >
+            {t('landing.switchToBusiness')}
+          </Link>
         </div>
       </motion.div>
     </div>

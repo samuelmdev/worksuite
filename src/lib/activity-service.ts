@@ -219,7 +219,95 @@ export class ActivityService {
     return data || []
   }
 
-  async getAllClientActivities(limit: number = 1000): Promise<ClientActivity[]> {
+  async getAllClientActivities(clientId: string, limit: number = 50): Promise<ClientActivityTimeline[]> {
+    return this.getClientUnifiedTimeline(clientId, limit)
+  }
+
+  async getClientUnifiedTimeline(clientId: string, limit: number = 100): Promise<ClientActivityTimeline[]> {
+    const items: ClientActivityTimeline[] = []
+
+    const activities = await this.getClientActivities(clientId, limit)
+    for (const activity of activities) {
+      items.push({
+        id: `ca-${activity.id}`,
+        user_id: activity.user_id,
+        module: 'crm',
+        entity_type: 'client_activity',
+        action: activity.type,
+        title: activity.subject,
+        description: activity.description,
+        created_at: activity.created_at,
+        user_name: activity.user
+          ? `${activity.user.first_name} ${activity.user.last_name}`.trim()
+          : 'Unknown User',
+        metadata: {
+          status: activity.status,
+          scheduled_at: activity.scheduled_at,
+          completed_at: activity.completed_at,
+        },
+      })
+    }
+
+    const { data: contracts } = await this.supabase
+      .from('contracts')
+      .select('id')
+      .eq('client_id', clientId)
+
+    const { data: tasks } = await this.supabase
+      .from('tasks')
+      .select('id')
+      .eq('client_id', clientId)
+
+    const relatedEntityIds = [
+      clientId,
+      ...(contracts?.map(c => c.id) || []),
+      ...(tasks?.map(t => t.id) || []),
+    ]
+
+    const { data: activityLogs, error: logsError } = await this.supabase
+      .from('activity_logs')
+      .select(`
+        *,
+        user:users(first_name, last_name)
+      `)
+      .eq('module', 'crm')
+      .in('entity_id', relatedEntityIds)
+      .order('created_at', { ascending: false })
+      .limit(limit)
+
+    if (logsError) {
+      console.error('Error fetching client activity logs:', logsError)
+    } else {
+      for (const log of activityLogs || []) {
+        items.push({
+          id: `al-${log.id}`,
+          user_id: log.user_id,
+          module: log.module,
+          entity_type: log.entity_type,
+          action: log.action,
+          title: log.title,
+          description: log.description,
+          created_at: log.created_at,
+          user_name: log.user
+            ? `${log.user.first_name} ${log.user.last_name}`.trim()
+            : 'Unknown User',
+          metadata: log.new_values,
+        })
+      }
+    }
+
+    const seen = new Set<string>()
+    return items
+      .filter(item => {
+        if (seen.has(item.id)) return false
+        seen.add(item.id)
+        return true
+      })
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .slice(0, limit)
+  }
+
+  async getAllClientActivitiesOrg(limit: number = 1000): Promise<ClientActivity[]> {
     const { data, error } = await this.supabase
       .from('client_activities')
       .select(`
@@ -367,31 +455,38 @@ export class ActivityService {
 
   getInteractionColor(action: string): string {
     switch (action) {
+      case 'call':
       case 'call_made':
       case 'call_received':
-        return 'text-green-600 bg-green-50'
+        return 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/30'
+      case 'email':
       case 'email_sent':
       case 'email_received':
-        return 'text-blue-600 bg-blue-50'
+        return 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30'
+      case 'meeting':
       case 'meeting_scheduled':
       case 'meeting_completed':
-        return 'text-purple-600 bg-purple-50'
+        return 'text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-900/30'
       case 'meeting_cancelled':
-        return 'text-red-600 bg-red-50'
+        return 'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-900/30'
+      case 'note':
+        return 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'
+      case 'task':
       case 'proposal_sent':
-        return 'text-orange-600 bg-orange-50'
+        return 'text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-900/30'
       case 'contract_signed':
-        return 'text-emerald-600 bg-emerald-50'
+        return 'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-900/30'
+      case 'follow_up':
       case 'follow_up_scheduled':
-        return 'text-yellow-600 bg-yellow-50'
+        return 'text-yellow-600 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-900/30'
       case 'created':
-        return 'text-green-600 bg-green-50'
+        return 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/30'
       case 'updated':
-        return 'text-blue-600 bg-blue-50'
+        return 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30'
       case 'deleted':
-        return 'text-red-600 bg-red-50'
+        return 'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-900/30'
       default:
-        return 'text-gray-600 bg-gray-50'
+        return 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'
     }
   }
 }

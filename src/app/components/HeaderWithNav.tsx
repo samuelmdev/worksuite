@@ -10,21 +10,23 @@ import LocaleSwitcher from './LocaleSwitcherClient'
 import UserMenu from './UserMenu'
 import { useAuth } from '../lib/auth-context-multi-org'
 import { useLocale } from '../lib/locale'
+import { useAccessibleNavItems } from '../lib/use-module-access'
 import type { TranslationKey } from '../lib/translations'
+
+const ALL_NAV_ITEMS: { nameKey: TranslationKey; href: string; color: string }[] = [
+  { nameKey: 'nav.crm', href: '/crm', color: 'cyan' },
+  { nameKey: 'nav.timeTracking', href: '/time-tracking', color: 'emerald' },
+  { nameKey: 'nav.projects', href: '/projects', color: 'violet' },
+  { nameKey: 'nav.billing', href: '/billing', color: 'blue' },
+  { nameKey: 'nav.team', href: '/team', color: 'red' },
+  { nameKey: 'nav.settings', href: '/settings', color: 'slate' },
+]
 
 export default function HeaderWithNav() {
   const pathname = usePathname()
   const { user } = useAuth()
   const { t } = useLocale()
-
-  const allNavItems: { nameKey: TranslationKey; href: string; color: string }[] = [
-    { nameKey: 'nav.crm', href: '/crm', color: 'cyan' },
-    { nameKey: 'nav.timeTracking', href: '/time-tracking', color: 'emerald' },
-    { nameKey: 'nav.projects', href: '/projects', color: 'violet' },
-    { nameKey: 'nav.settings', href: '/settings', color: 'slate' },
-  ]
-
-  const navItems = user ? allNavItems : []
+  const navItems = useAccessibleNavItems(ALL_NAV_ITEMS)
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
@@ -62,6 +64,22 @@ export default function HeaderWithNav() {
       textDark: 'dark:text-violet-300',
       shadow: 'shadow-violet-300/50',
       shadowDark: 'dark:shadow-violet-800/50',
+    },
+    blue: {
+      bg: 'bg-blue-200',
+      bgDark: 'dark:bg-blue-700',
+      text: 'text-blue-700',
+      textDark: 'dark:text-blue-300',
+      shadow: 'shadow-blue-300/50',
+      shadowDark: 'dark:shadow-blue-800/50',
+    },
+    red: {
+      bg: 'bg-red-200',
+      bgDark: 'dark:bg-red-700',
+      text: 'text-red-700',
+      textDark: 'dark:text-red-300',
+      shadow: 'shadow-red-300/50',
+      shadowDark: 'dark:shadow-red-800/50',
     },
     slate: {
       bg: 'bg-slate-200',
@@ -125,12 +143,12 @@ export default function HeaderWithNav() {
                       href={item.href}
                       className={`relative px-4 py-2 text-md transition-all duration-400 w-40 ${
                         active
-                          ? `${colors.bg} ${colors.bgDark} ${colors.text} ${colors.textDark} shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] rounded-t-lg font-medium text-center`
+                          ? `${colors.bg} ${colors.bgDark} ${colors.text} ${colors.textDark} rounded-t-lg rounded-b-none font-medium text-center shadow-none`
                           : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] dark:hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-md shadow-slate-500/30 dark:shadow-black/40 rounded-lg hover:cursor-pointer font-medium text-center'
                       }`}
                       style={{
                         transform: active ? 'translateY(4px)' : 'translateY(1px)',
-                        transition: 'transform 0.4s ease'
+                        transition: 'transform 0.4s ease',
                       }}
                       onMouseEnter={(e) => {
                         if (!active) {
@@ -145,9 +163,6 @@ export default function HeaderWithNav() {
                     >
                       {t(item.nameKey)}
                     </Link>
-                    {active && (
-                      <div className={`absolute -bottom-2 left-0 right-0 h-1 ${colors.bg} ${colors.bgDark} transition-all duration-300`} />
-                    )}
                   </motion.div>
                 )
               })}
@@ -163,7 +178,9 @@ export default function HeaderWithNav() {
           </div>
         </div>
       </div>
-      <div className={`w-full h-1 transition-colors duration-600 ${
+      <div className={`w-full h-1 transition-colors duration-300 ${
+        hasActiveNav ? '-mt-px' : ''
+      } ${
         hasActiveNav
           ? `${activeClasses.bg} ${activeClasses.bgDark}`
           : 'bg-slate-200 dark:bg-slate-700'

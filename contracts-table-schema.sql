@@ -93,41 +93,57 @@ RETURNS TRIGGER AS $$
 DECLARE
   activity_title VARCHAR(255);
   activity_description TEXT;
+  actor_id UUID;
+  client_name TEXT;
 BEGIN
+  actor_id := COALESCE(
+    CASE WHEN TG_OP = 'DELETE' THEN OLD.created_by ELSE NEW.created_by END,
+    auth.uid()
+  );
+
   IF TG_OP = 'INSERT' THEN
+    SELECT c.name INTO client_name FROM clients c WHERE c.id = NEW.client_id;
+
     activity_title := 'Contract created';
-    activity_description := 'New contract "' || NEW.name || '" was created for client';
-    
+    activity_description := 'New contract "' || NEW.name || '" was created' ||
+      CASE WHEN client_name IS NOT NULL THEN ' for ' || client_name ELSE '' END;
+
     BEGIN
-      INSERT INTO activity_logs (user_id, module, entity_type, entity_id, action, title, description, new_values)
-      VALUES (NEW.created_by, 'crm', 'contract', NEW.id, 'created', activity_title, activity_description, row_to_json(NEW));
+      INSERT INTO activity_logs (user_id, module, entity_type, entity_id, action, title, description, new_values, organization_id)
+      VALUES (actor_id, 'crm', 'contract', NEW.id, 'created', activity_title, activity_description, row_to_json(NEW), NEW.organization_id);
     EXCEPTION WHEN OTHERS THEN
       RAISE WARNING 'Failed to log activity: %', SQLERRM;
     END;
-    
+
   ELSIF TG_OP = 'UPDATE' THEN
+    SELECT c.name INTO client_name FROM clients c WHERE c.id = NEW.client_id;
+
     activity_title := 'Contract updated';
-    activity_description := 'Contract "' || NEW.name || '" was updated';
-    
+    activity_description := 'Contract "' || NEW.name || '" was updated' ||
+      CASE WHEN client_name IS NOT NULL THEN ' for ' || client_name ELSE '' END;
+
     BEGIN
-      INSERT INTO activity_logs (user_id, module, entity_type, entity_id, action, title, description, old_values, new_values)
-      VALUES (NEW.updated_by, 'crm', 'contract', NEW.id, 'updated', activity_title, activity_description, row_to_json(OLD), row_to_json(NEW));
+      INSERT INTO activity_logs (user_id, module, entity_type, entity_id, action, title, description, old_values, new_values, organization_id)
+      VALUES (actor_id, 'crm', 'contract', NEW.id, 'updated', activity_title, activity_description, row_to_json(OLD), row_to_json(NEW), NEW.organization_id);
     EXCEPTION WHEN OTHERS THEN
       RAISE WARNING 'Failed to log activity: %', SQLERRM;
     END;
-    
+
   ELSIF TG_OP = 'DELETE' THEN
+    SELECT c.name INTO client_name FROM clients c WHERE c.id = OLD.client_id;
+
     activity_title := 'Contract deleted';
-    activity_description := 'Contract "' || OLD.name || '" was deleted';
-    
+    activity_description := 'Contract "' || OLD.name || '" was deleted' ||
+      CASE WHEN client_name IS NOT NULL THEN ' for ' || client_name ELSE '' END;
+
     BEGIN
-      INSERT INTO activity_logs (user_id, module, entity_type, entity_id, action, title, description, old_values)
-      VALUES (OLD.updated_by, 'crm', 'contract', OLD.id, 'deleted', activity_title, activity_description, row_to_json(OLD));
+      INSERT INTO activity_logs (user_id, module, entity_type, entity_id, action, title, description, old_values, organization_id)
+      VALUES (actor_id, 'crm', 'contract', OLD.id, 'deleted', activity_title, activity_description, row_to_json(OLD), OLD.organization_id);
     EXCEPTION WHEN OTHERS THEN
       RAISE WARNING 'Failed to log activity: %', SQLERRM;
     END;
   END IF;
-  
+
   RETURN COALESCE(NEW, OLD);
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

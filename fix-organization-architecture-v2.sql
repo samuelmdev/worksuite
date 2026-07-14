@@ -324,6 +324,47 @@ CREATE POLICY "Users can delete projects in their organizations" ON projects
         )
     );
 
+-- Policy: Users can manage pipeline items in their organizations
+CREATE POLICY "Users can view pipeline items in their organization" ON pipeline_items
+    FOR SELECT USING (
+        organization_id IN (
+            SELECT organization_id
+            FROM user_organizations
+            WHERE user_id = auth.uid()
+            AND is_active = true
+        )
+    );
+
+CREATE POLICY "Users can insert pipeline items in their organization" ON pipeline_items
+    FOR INSERT WITH CHECK (
+        organization_id IN (
+            SELECT organization_id
+            FROM user_organizations
+            WHERE user_id = auth.uid()
+            AND is_active = true
+        )
+    );
+
+CREATE POLICY "Users can update pipeline items in their organization" ON pipeline_items
+    FOR UPDATE USING (
+        organization_id IN (
+            SELECT organization_id
+            FROM user_organizations
+            WHERE user_id = auth.uid()
+            AND is_active = true
+        )
+    );
+
+CREATE POLICY "Users can delete pipeline items in their organization" ON pipeline_items
+    FOR DELETE USING (
+        organization_id IN (
+            SELECT organization_id
+            FROM user_organizations
+            WHERE user_id = auth.uid()
+            AND is_active = true
+        )
+    );
+
 -- =============================================
 -- STEP 10: Add functions for common queries
 -- =============================================

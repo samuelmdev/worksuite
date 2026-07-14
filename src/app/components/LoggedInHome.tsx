@@ -11,9 +11,12 @@ import {
   ArrowRight,
   Building2,
   User,
+  CreditCard,
+  UserCog,
 } from 'lucide-react'
 import { useAuth } from '../lib/auth-context-multi-org'
 import { useLocale } from '../lib/locale'
+import { filterNavByRole } from '../../lib/module-access'
 import type { TranslationKey } from '../lib/translations'
 
 const staggerContainer = {
@@ -38,7 +41,7 @@ const modules: {
   descKey: TranslationKey
   ctaKey: TranslationKey
   href: string
-  color: 'cyan' | 'emerald' | 'violet'
+  color: 'cyan' | 'emerald' | 'violet' | 'blue' | 'red'
   icon: typeof Users
 }[] = [
   {
@@ -65,6 +68,22 @@ const modules: {
     color: 'violet',
     icon: FolderOpen,
   },
+  {
+    nameKey: 'nav.billing',
+    descKey: 'home.billingDesc',
+    ctaKey: 'home.accessBilling',
+    href: '/billing',
+    color: 'blue',
+    icon: CreditCard,
+  },
+  {
+    nameKey: 'nav.team',
+    descKey: 'home.teamDesc',
+    ctaKey: 'home.manageTeam',
+    href: '/team',
+    color: 'red',
+    icon: UserCog,
+  },
 ]
 
 const colorStyles = {
@@ -85,6 +104,18 @@ const colorStyles = {
     icon: 'bg-violet-100 dark:bg-violet-900/60 text-violet-600 dark:text-violet-400',
     cta: 'bg-violet-600 hover:bg-violet-700 text-white',
     glow: 'group-hover:shadow-violet-500/10',
+  },
+  blue: {
+    card: 'border-blue-200/80 dark:border-blue-800/60 bg-gradient-to-br from-blue-50/80 to-white dark:from-blue-950/40 dark:to-slate-900 hover:border-blue-300 dark:hover:border-blue-700',
+    icon: 'bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400',
+    cta: 'bg-blue-600 hover:bg-blue-700 text-white',
+    glow: 'group-hover:shadow-blue-500/10',
+  },
+  red: {
+    card: 'border-red-200/80 dark:border-red-800/60 bg-gradient-to-br from-red-50/80 to-white dark:from-red-950/40 dark:to-slate-900 hover:border-red-300 dark:hover:border-red-700',
+    icon: 'bg-red-100 dark:bg-red-900/60 text-red-600 dark:text-red-400',
+    cta: 'bg-red-600 hover:bg-red-700 text-white',
+    glow: 'group-hover:shadow-red-500/10',
   },
 }
 
@@ -114,6 +145,7 @@ export default function LoggedInHome() {
 
   if (!user) return null
 
+  const accessibleModules = filterNavByRole(modules, currentOrganization?.role)
   const firstName = user.name.split(' ')[0]
 
   return (
@@ -170,12 +202,12 @@ export default function LoggedInHome() {
         </motion.h2>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-5"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
         >
-          {modules.map((mod) => {
+          {accessibleModules.map((mod) => {
             const Icon = mod.icon
             const styles = colorStyles[mod.color]
             return (

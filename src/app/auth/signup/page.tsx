@@ -112,11 +112,14 @@ export default function SignupPage() {
             {t('auth.brandName')}
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            {t('auth.signUpTitle')}
+            {t('auth.signUpTitleBusiness')}
           </p>
         </div>
 
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 p-8">
+          <div className="mb-6 p-4 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg">
+            <p className="text-sm text-cyan-900 dark:text-cyan-100">{t('auth.signup.businessOnly')}</p>
+          </div>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -252,7 +255,7 @@ export default function SignupPage() {
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  {t('auth.createAccount')}
+                  {t('landing.subscribeCta')}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </>
               )}

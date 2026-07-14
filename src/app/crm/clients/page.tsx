@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Plus, Search, Edit, Trash2, Mail, Phone, Building, MapPin, Download, FileText, FileSpreadsheet, Filter, Loader2, ChevronDown, ChevronRight, Calendar, FileText as ContractIcon, CheckSquare, Clock, DollarSign, ExternalLink, MoreVertical, Ban, Shield } from 'lucide-react'
+import { Plus, Search, Edit, Trash2, Mail, Phone, Building, MapPin, Download, FileText, FileSpreadsheet, Filter, ChevronRight, ChevronDown, Calendar, FileText as ContractIcon, CheckSquare, Clock, ExternalLink, MoreVertical, Ban, Shield, Loader2 } from 'lucide-react'
 import RoleGuard from '../../components/RoleGuard'
 import ClientModal, { Client } from '../../components/ClientModal'
 import ContractModal from '../../components/ContractModal'
@@ -15,10 +15,11 @@ import { exportToExcel, exportToPDF, getExportFilename, ExportableClient } from 
 import { useCRM } from '../../lib/crm-context'
 import { useLocale } from '../../lib/locale'
 import type { TranslationKey } from '../../lib/translations'
-import { ContractsService } from '../../../lib/contracts-service'
+import { ContractsService } from '../../../lib/contracts-service-multi-org'
 import { TasksService } from '../../../lib/tasks-service'
 import { ClientService } from '../../../lib/client-service'
 import { activityService } from '../../../lib/activity-service'
+import { useAuth } from '../../lib/auth-context-multi-org'
 
 const filterOptions: { value: string; labelKey: TranslationKey }[] = [
   { value: 'all', labelKey: 'crm.clients.filter.all' },
@@ -34,6 +35,7 @@ export default function CRMClientsPage() {
   const searchParams = useSearchParams()
   const { t } = useLocale()
   const { clients, loading, errors, addClient, updateClient, deleteClient } = useCRM()
+  const { currentOrganization } = useAuth()
   const [filteredClients, setFilteredClients] = useState<Client[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [filterType, setFilterType] = useState<string>('all')
@@ -219,76 +221,72 @@ export default function CRMClientsPage() {
     setShowExportMenu(false)
   }
 
-  const handleViewClientTasks = (client: Client) => {
-    // Navigate to tasks page with client name as filter
-    const encodedClientName = encodeURIComponent(client.name)
-    router.push(`/crm/tasks?client=${encodedClientName}`)
+  const handleViewClient = (client: Client) => {
+    router.push(`/crm/clients/${client.id}`)
   }
 
   const handleViewClientContracts = (client: Client) => {
-    // Navigate to contracts page with client name as filter
-    const encodedClientName = encodeURIComponent(client.name)
-    router.push(`/crm/contracts?client=${encodedClientName}`)
+    router.push(`/crm/contracts?client=${encodeURIComponent(client.name)}`)
+  }
+
+  const handleViewClientTasks = (client: Client) => {
+    router.push(`/crm/tasks?client=${encodeURIComponent(client.name)}`)
   }
 
   const handleViewClientLogs = (client: Client) => {
-    // Navigate to logs page with client ID as filter
     router.push(`/crm/logs?client=${client.id}`)
   }
 
   const toggleClientExpansion = async (clientId: string) => {
     const isExpanded = expandedClients.has(clientId)
-    
+
     if (isExpanded) {
-      // Collapse
       setExpandedClients(prev => {
-        const newSet = new Set(prev)
-        newSet.delete(clientId)
-        return newSet
+        const next = new Set(prev)
+        next.delete(clientId)
+        return next
       })
-    } else {
-      // Expand and fetch data
-      setExpandedClients(prev => new Set(prev).add(clientId))
-      
-      // Only fetch if we don't have the data yet
-      if (!clientContracts[clientId] && !clientTasks[clientId]) {
-        setLoadingDetails(prev => ({ ...prev, [clientId]: true }))
-        
+      return
+    }
+
+    setExpandedClients(prev => new Set(prev).add(clientId))
+
+    if (!clientContracts[clientId] && !clientTasks[clientId]) {
+      if (!currentOrganization?.id) return
+
+      setLoadingDetails(prev => ({ ...prev, [clientId]: true }))
+
+      try {
+        const [allContracts, tasks] = await Promise.all([
+          ContractsService.getContracts(currentOrganization.id),
+          TasksService.getTasks({ client_id: clientId }),
+        ])
+
+        setClientContracts(prev => ({
+          ...prev,
+          [clientId]: allContracts.filter(c => c.client_id === clientId),
+        }))
+        setClientTasks(prev => ({ ...prev, [clientId]: tasks }))
+
         try {
-          const [allContracts, tasks] = await Promise.all([
-            ContractsService.getContracts(),
-            TasksService.getTasks({ client_id: clientId })
-          ])
-          
-          // Filter contracts for this specific client
-          const contracts = allContracts.filter(contract => contract.client_id === clientId)
-          
-          setClientContracts(prev => ({ ...prev, [clientId]: contracts }))
-          setClientTasks(prev => ({ ...prev, [clientId]: tasks }))
-          
-          // Load logs count
-          try {
-            const logsStats = await activityService.getClientInteractionStats(clientId)
-            setClientLogsCount(prev => ({ ...prev, [clientId]: logsStats.total_interactions || 0 }))
-          } catch (err) {
-            console.error('Error loading client logs count:', err)
-            setClientLogsCount(prev => ({ ...prev, [clientId]: 0 }))
-          }
-        } catch (err) {
-          console.error('Error fetching client details:', err)
-        } finally {
-          setLoadingDetails(prev => ({ ...prev, [clientId]: false }))
+          const logsStats = await activityService.getClientInteractionStats(clientId)
+          setClientLogsCount(prev => ({ ...prev, [clientId]: logsStats.total_interactions || 0 }))
+        } catch {
+          setClientLogsCount(prev => ({ ...prev, [clientId]: 0 }))
         }
+      } catch (err) {
+        console.error('Error fetching client details:', err)
+      } finally {
+        setLoadingDetails(prev => ({ ...prev, [clientId]: false }))
       }
     }
   }
 
   const handleBlockClient = async (client: Client) => {
+    if (!currentOrganization?.id) return
+
     try {
-      // Check for active contracts
-      const [allContracts] = await Promise.all([
-        ContractsService.getContracts()
-      ])
+      const allContracts = await ContractsService.getContracts(currentOrganization.id)
       
       const activeContracts = allContracts.filter(contract => 
         contract.client_id === client.id && contract.status === 'active'
@@ -326,12 +324,12 @@ export default function CRMClientsPage() {
   }
 
   const handleTerminateContractsAndBlock = async () => {
-    if (clientToBlock && blockReason.trim()) {
+    if (clientToBlock && blockReason.trim() && currentOrganization?.id) {
       try {
         setError(null)
         
         // First terminate all active contracts
-        const allContracts = await ContractsService.getContracts()
+        const allContracts = await ContractsService.getContracts(currentOrganization.id)
         const activeContracts = allContracts.filter(contract => 
           contract.client_id === clientToBlock.id && contract.status === 'active'
         )
@@ -339,10 +337,9 @@ export default function CRMClientsPage() {
         // Terminate each contract
         for (const contract of activeContracts) {
           await ContractsService.updateContract(contract.id, {
-            ...contract,
-            status: 'terminated',
+            status: 'cancelled',
             end_date: new Date().toISOString()
-          })
+          }, currentOrganization.id)
         }
         
         // Then block the client
@@ -545,97 +542,72 @@ export default function CRMClientsPage() {
                 const contracts = clientContracts[client.id] || []
                 const tasks = clientTasks[client.id] || []
                 const isLoadingDetails = loadingDetails[client.id]
-                
+
                 return (
                   <motion.div
                     key={client.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ delay: index * 0.05 }}
                     className="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
                   >
-                    {/* Main Client Row */}
                     <div className="p-6">
                       <div className="flex items-start justify-between">
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-3 mb-2">
-                            <div className="flex items-center space-x-2">
-                              <button
-                                onClick={() => toggleClientExpansion(client.id)}
-                                className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
-                              >
-                                {isExpanded ? (
-                                  <ChevronDown className="w-4 h-4" />
-                                ) : (
-                                  <ChevronRight className="w-4 h-4" />
-                                )}
-                              </button>
-                              <button
-                                onClick={() => router.push(`/crm/clients/${client.id}`)}
-                                className="text-lg font-semibold text-gray-900 dark:text-slate-100 hover:text-blue-600 transition-colors"
-                              >
-                                {client.name}
-                              </button>
-                            </div>
-                            <span className="px-2 py-1 text-xs font-medium bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 rounded-full">
-                              {client.company}
-                            </span>
+                            <button
+                              type="button"
+                              onClick={() => toggleClientExpansion(client.id)}
+                              className="p-0.5 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors flex-shrink-0"
+                              aria-label={isExpanded ? 'Collapse' : 'Expand'}
+                            >
+                              {isExpanded ? (
+                                <ChevronDown className="w-4 h-4" />
+                              ) : (
+                                <ChevronRight className="w-4 h-4" />
+                              )}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleViewClient(client)}
+                              className="text-lg font-semibold text-gray-900 dark:text-slate-100 hover:text-cyan-600 dark:hover:text-cyan-400 truncate text-left min-w-0"
+                            >
+                              {client.name}
+                            </button>
+                            {client.company && (
+                              <span className="px-2 py-1 text-xs font-medium bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 rounded-full flex-shrink-0">
+                                {client.company}
+                              </span>
+                            )}
                             {client.isBlocked && (
-                              <span className="px-2 py-1 text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full flex items-center">
+                              <span className="px-2 py-1 text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full flex items-center flex-shrink-0">
                                 <Ban className="w-3 h-3 mr-1" />
                                 {t('crm.clients.restricted')}
                               </span>
                             )}
                           </div>
-                          
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400">
-                        <div className="flex items-center space-x-2">
-                          <Mail className="w-4 h-4" />
-                          <a 
-                            href={`mailto:${client.email}`}
-                            className="text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 hover:underline transition-colors"
-                            title={t('crm.clients.sendEmail')}
-                          >
-                            {client.email}
-                          </a>
-                        </div>
-                        {client.phone && (
-                          <div className="flex items-center space-x-2">
-                            <Phone className="w-4 h-4" />
-                            <a 
-                              href={`tel:${client.phone}`}
-                              className="text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 hover:underline transition-colors"
-                              title={t('crm.clients.callClient')}
-                            >
-                              {client.phone}
-                            </a>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400 ml-7">
+                            <div className="flex items-center space-x-2">
+                              <Mail className="w-4 h-4 flex-shrink-0" />
+                              <span className="truncate">{client.email}</span>
+                            </div>
+                            {client.phone && (
+                              <div className="flex items-center space-x-2">
+                                <Phone className="w-4 h-4 flex-shrink-0" />
+                                <span>{client.phone}</span>
+                              </div>
+                            )}
                           </div>
-                        )}
-                        {client.address && (
-                          <div className="flex items-center space-x-2 md:col-span-2">
-                            <MapPin className="w-4 h-4" />
-                            <a 
-                              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(client.address)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 hover:underline transition-colors"
-                              title={t('crm.clients.openMaps')}
-                            >
-                              {client.address}
-                            </a>
-                          </div>
-                        )}
-                      </div>
-                          
+
                           {client.notes && (
-                            <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-slate-700 p-3 rounded-lg">
+                            <p className="mt-2 ml-7 text-sm text-gray-500 dark:text-slate-500 truncate">
                               {client.notes}
                             </p>
                           )}
                         </div>
-                        
+
                         <div className="flex items-center space-x-2 ml-4">
-                          {/* Actions dropdown menu */}
                           <div className="relative block-menu">
                             <button
                               onClick={() => setShowBlockMenu(showBlockMenu === client.id ? null : client.id)}
@@ -644,10 +616,17 @@ export default function CRMClientsPage() {
                             >
                               <MoreVertical className="w-4 h-4" />
                             </button>
-                            
+
                             {showBlockMenu === client.id && (
                               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 z-10">
                                 <div className="py-1">
+                                  <button
+                                    onClick={() => { handleViewClient(client); setShowBlockMenu(null) }}
+                                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+                                  >
+                                    <ExternalLink className="w-4 h-4 mr-3" />
+                                    {t('crm.clientDetail.details')}
+                                  </button>
                                   <button
                                     onClick={() => handleEditClient(client)}
                                     className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700"
@@ -731,7 +710,6 @@ export default function CRMClientsPage() {
                       </div>
                     </div>
 
-                    {/* Expanded Details */}
                     <AnimatePresence>
                       {isExpanded && (
                         <motion.div
@@ -749,7 +727,6 @@ export default function CRMClientsPage() {
                               </div>
                             ) : (
                               <div className="space-y-6">
-                                {/* Client Info */}
                                 <div>
                                   <h4 className="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-3">
                                     {t('crm.clients.additionalInfo')}
@@ -770,9 +747,9 @@ export default function CRMClientsPage() {
                                   </div>
                                 </div>
 
-                                {/* Contracts, Tasks, and Logs */}
-                                <div className="flex items-center space-x-6">
+                                <div className="flex flex-wrap items-center gap-4">
                                   <button
+                                    type="button"
                                     onClick={() => handleViewClientContracts(client)}
                                     className="text-sm font-semibold text-gray-900 dark:text-slate-100 flex items-center hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors underline"
                                   >
@@ -780,6 +757,7 @@ export default function CRMClientsPage() {
                                     {t('crm.clients.contracts', { count: contracts.length })}
                                   </button>
                                   <button
+                                    type="button"
                                     onClick={() => handleViewClientTasks(client)}
                                     className="text-sm font-semibold text-gray-900 dark:text-slate-100 flex items-center hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors underline"
                                   >
@@ -787,11 +765,20 @@ export default function CRMClientsPage() {
                                     {t('crm.clients.tasks', { count: tasks.length })}
                                   </button>
                                   <button
+                                    type="button"
                                     onClick={() => handleViewClientLogs(client)}
                                     className="text-sm font-semibold text-gray-900 dark:text-slate-100 flex items-center hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors underline"
                                   >
                                     <Clock className="w-4 h-4 mr-2" />
                                     {t('crm.clients.logs', { count: clientLogsCount[client.id] || 0 })}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleViewClient(client)}
+                                    className="text-sm font-semibold text-cyan-600 dark:text-cyan-400 flex items-center hover:underline"
+                                  >
+                                    <ExternalLink className="w-4 h-4 mr-2" />
+                                    {t('crm.clientDetail.details')}
                                   </button>
                                 </div>
                               </div>

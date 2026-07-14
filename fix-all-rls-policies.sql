@@ -180,6 +180,7 @@ CREATE POLICY "Users can view pipeline items in their organization" ON pipeline_
         SELECT organization_id 
         FROM user_organizations 
         WHERE user_id = auth.uid()
+          AND is_active = true
     ));
 
 CREATE POLICY "Users can insert pipeline items in their organization" ON pipeline_items
@@ -187,6 +188,7 @@ CREATE POLICY "Users can insert pipeline items in their organization" ON pipelin
         SELECT organization_id 
         FROM user_organizations 
         WHERE user_id = auth.uid()
+          AND is_active = true
     ));
 
 CREATE POLICY "Users can update pipeline items in their organization" ON pipeline_items
@@ -194,6 +196,7 @@ CREATE POLICY "Users can update pipeline items in their organization" ON pipelin
         SELECT organization_id 
         FROM user_organizations 
         WHERE user_id = auth.uid()
+          AND is_active = true
     ));
 
 CREATE POLICY "Users can delete pipeline items in their organization" ON pipeline_items
@@ -201,6 +204,7 @@ CREATE POLICY "Users can delete pipeline items in their organization" ON pipelin
         SELECT organization_id 
         FROM user_organizations 
         WHERE user_id = auth.uid()
+          AND is_active = true
     ));
 
 -- =====================================================

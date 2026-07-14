@@ -11,6 +11,7 @@ import { useSubscription } from '../../lib/subscription-utils'
 import { useAuth } from '../lib/auth-context-multi-org'
 import { useLocale } from '../lib/locale'
 import type { TranslationKey } from '../lib/translations'
+import ModuleAccessShell from '../components/ModuleAccessShell'
 
 type NavItem = { nameKey: TranslationKey; href: string; icon: typeof Home; requires?: string }
 
@@ -50,6 +51,9 @@ export default function TimeLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <TimeProvider>
+      <ModuleAccessShell
+        children={children}
+        withSidebar={
       <div className="flex h-screen bg-gray-50 dark:bg-slate-900">
       {/* Desktop Sidebar */}
       <motion.div
@@ -192,6 +196,8 @@ export default function TimeLayout({ children }: { children: React.ReactNode }) 
         </main>
       </div>
     </div>
+        }
+      />
     </TimeProvider>
   )
 }
