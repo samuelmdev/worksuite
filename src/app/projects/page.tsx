@@ -287,7 +287,7 @@ export default function ProjectsIndex() {
   }
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <div className="space-y-6">
         {/* Header */}
         <div>

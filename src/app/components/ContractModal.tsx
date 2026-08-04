@@ -4,11 +4,10 @@ import React, { useState, useEffect } from 'react'
 import { X, Calendar, User, AlertCircle, DollarSign, FileText, Building, Edit } from 'lucide-react'
 import { ContractsService, ContractFormData } from '../../lib/contracts-service-multi-org'
 import { useAuth } from '../lib/auth-context-multi-org'
-import { Database } from '../../lib/supabase'
+import type { ClientOption as Client } from '../../lib/client-types'
 import { useLocale } from '../lib/locale'
 import type { TranslationKey } from '../lib/translations'
 
-type Client = Database['public']['Tables']['clients']['Row']
 type ContractFormState = Omit<ContractFormData, 'organization_id'>
 
 const contractTypeKeys: Record<string, TranslationKey> = {

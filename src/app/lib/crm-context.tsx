@@ -106,6 +106,10 @@ export function CRMProvider({ children }: CRMProviderProps) {
     company: dbClient.company || '',
     address: dbClient.address || '',
     notes: dbClient.notes || '',
+    status: dbClient.status || undefined,
+    isBlocked: dbClient.is_blocked ?? false,
+    blockReason: dbClient.block_reason || undefined,
+    blockedAt: dbClient.blocked_at || undefined,
     createdAt: dbClient.created_at,
     updatedAt: dbClient.updated_at
   })

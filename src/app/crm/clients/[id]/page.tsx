@@ -162,7 +162,7 @@ export default function ClientDetailPage() {
 
   if (loading) {
     return (
-      <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+      <RoleGuard>
         <div className="flex flex-col items-center justify-center min-h-[60vh]">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600" />
           <p className="text-gray-600 dark:text-slate-400 mt-4">{t('crm.clientDetail.loading')}</p>
@@ -173,7 +173,7 @@ export default function ClientDetailPage() {
 
   if (error || !client) {
     return (
-      <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+      <RoleGuard>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-16">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-4">
@@ -193,7 +193,7 @@ export default function ClientDetailPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <div className="max-w-7xl mx-auto w-full flex flex-col h-[calc(100dvh-9rem)] md:h-[calc(100dvh-6rem)] min-h-0">
         {/* Fixed header: back, title, stats, tabs */}
         <div className="flex-shrink-0 space-y-4 pb-4">

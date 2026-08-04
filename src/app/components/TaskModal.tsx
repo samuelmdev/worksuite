@@ -3,12 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import { X, Calendar, User, AlertCircle, Clock, CheckSquare } from 'lucide-react'
 import { TasksService, TaskFormData } from '../../lib/tasks-service'
-import { ClientService } from '../../lib/client-service'
-import { Database } from '../../lib/supabase'
+import type { ClientOption as Client } from '../../lib/client-types'
 import { useLocale } from '../lib/locale'
 import type { TranslationKey } from '../lib/translations'
 
-type Client = Database['public']['Tables']['clients']['Row']
 
 const taskTypeKeys: Record<string, TranslationKey> = {
   call: 'enum.taskType.call',

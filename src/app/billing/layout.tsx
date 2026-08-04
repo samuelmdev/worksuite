@@ -68,7 +68,7 @@ export default function BillingLayout({ children }: { children: React.ReactNode 
 
   return (
     <ModuleAccessShell
-      children={children}
+      withoutSidebar={children}
       withSidebar={
     <div className="flex h-screen bg-gray-50 dark:bg-slate-900">
       <motion.div

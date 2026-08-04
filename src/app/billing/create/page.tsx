@@ -97,7 +97,7 @@ export default function CreateInvoicePage() {
   }
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager']}>
+    <RoleGuard>
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{t('billing.create.title')}</h1>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Home, Users, Settings } from 'lucide-react'
+import { Menu, X, Home, Users, Settings, Wallet } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useLocale } from '../lib/locale'
@@ -12,6 +12,7 @@ import ModuleAccessShell from '../components/ModuleAccessShell'
 const navigation: { nameKey: TranslationKey; href: string; icon: typeof Home }[] = [
   { nameKey: 'common.overview', href: '/team', icon: Home },
   { nameKey: 'team.nav.members', href: '/team/members', icon: Users },
+  { nameKey: 'team.nav.compensation', href: '/team/compensation', icon: Wallet },
   { nameKey: 'common.settings', href: '/team/settings', icon: Settings },
 ]
 
@@ -64,7 +65,7 @@ export default function TeamLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <ModuleAccessShell
-      children={children}
+      withoutSidebar={children}
       withSidebar={
     <div className="flex h-screen bg-gray-50 dark:bg-slate-900">
       <motion.div

@@ -13,6 +13,7 @@ export interface Client {
   company: string
   address: string
   notes: string
+  status?: string
   isBlocked?: boolean
   blockReason?: string
   blockedAt?: string

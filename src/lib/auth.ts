@@ -2,7 +2,7 @@ import { supabase } from './supabase'
 import { User } from '@supabase/supabase-js'
 
 export interface AuthUser extends User {
-  user_metadata?: {
+  user_metadata: User['user_metadata'] & {
     first_name?: string
     last_name?: string
     avatar_url?: string

@@ -1,35 +1,58 @@
+/** Every role the application understands, in descending order of privilege. */
+export const ROLES = ['admin', 'manager', 'sales_rep', 'employee'] as const
+
+export type Role = (typeof ROLES)[number]
+
+/** Roles allowed to read and write CRM records (clients, pipeline, contracts). */
+export const SELLING_ROLES: Role[] = ['admin', 'manager', 'sales_rep']
+
+/** Roles allowed to manage delivery: projects, approvals, team. */
+export const MANAGING_ROLES: Role[] = ['admin', 'manager']
+
+const ALL_ROLES: Role[] = [...ROLES]
+
 /** Allowed roles per module route — keep in sync with page-level RoleGuard rules. */
 export function getAllowedRolesForPath(pathname: string): string[] {
   if (pathname.startsWith('/crm')) {
+    // CRM configuration stays with the people who administer the workspace.
+    if (pathname.startsWith('/crm/settings')) {
+      return MANAGING_ROLES
+    }
     if (pathname.startsWith('/crm/logs')) {
-      return ['admin', 'manager', 'employee']
+      return ALL_ROLES
     }
     if (/^\/crm\/clients\/[^/]+$/.test(pathname)) {
-      return ['admin', 'manager', 'employee']
+      return ALL_ROLES
     }
-    return ['admin', 'manager']
+    // Clients, pipeline, contracts, tasks and reports are a sales rep's daily work.
+    return SELLING_ROLES
   }
 
   if (pathname.startsWith('/time-tracking')) {
-    return ['admin', 'manager', 'employee']
+    return ALL_ROLES
   }
 
   if (pathname.startsWith('/projects')) {
-    return ['admin', 'manager', 'employee']
+    return ALL_ROLES
+  }
+
+  if (pathname.startsWith('/finance')) {
+    return MANAGING_ROLES
   }
 
   if (pathname.startsWith('/billing')) {
-    return ['admin', 'manager']
+    return MANAGING_ROLES
   }
 
   if (pathname.startsWith('/team')) {
-    if (pathname.startsWith('/team/settings')) {
+    // Compensation is admin-only; the roster is visible to managers too.
+    if (pathname.startsWith('/team/settings') || pathname.startsWith('/team/compensation')) {
       return ['admin']
     }
-    return ['admin', 'manager']
+    return MANAGING_ROLES
   }
 
-  return ['admin', 'manager', 'employee']
+  return ALL_ROLES
 }
 
 export function hasRoleAccess(role: string | undefined, allowedRoles: string[]): boolean {
@@ -44,4 +67,14 @@ export function canAccessPath(role: string | undefined, pathname: string): boole
 
 export function filterNavByRole<T extends { href: string }>(items: T[], role: string | undefined): T[] {
   return items.filter((item) => canAccessPath(role, item.href))
+}
+
+/** Sales reps and above can work deals; used to gate pipeline write actions. */
+export function canSell(role: string | undefined): boolean {
+  return hasRoleAccess(role, SELLING_ROLES)
+}
+
+/** Managers and above; used to gate approvals, project and team administration. */
+export function canManage(role: string | undefined): boolean {
+  return hasRoleAccess(role, MANAGING_ROLES)
 }

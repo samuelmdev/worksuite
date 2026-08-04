@@ -16,7 +16,7 @@ interface User {
   email: string
   first_name: string
   last_name: string
-  role: 'admin' | 'manager' | 'employee'
+  role: 'admin' | 'manager' | 'sales_rep' | 'employee'
   crm_access: boolean
   created_at: string
   last_login?: string
@@ -867,7 +867,7 @@ export default function CRMSettingsPage() {
   )
 
   return (
-    <RoleGuard allowedRoles={["admin", "manager"]}>
+    <RoleGuard>
       <div className="space-y-6">
         {/* Header */}
         <div>

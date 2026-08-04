@@ -18,6 +18,7 @@ const ALL_NAV_ITEMS: { nameKey: TranslationKey; href: string; color: string }[] 
   { nameKey: 'nav.timeTracking', href: '/time-tracking', color: 'emerald' },
   { nameKey: 'nav.projects', href: '/projects', color: 'violet' },
   { nameKey: 'nav.billing', href: '/billing', color: 'blue' },
+  { nameKey: 'nav.finance', href: '/finance', color: 'amber' },
   { nameKey: 'nav.team', href: '/team', color: 'red' },
   { nameKey: 'nav.settings', href: '/settings', color: 'slate' },
 ]
@@ -73,6 +74,14 @@ export default function HeaderWithNav() {
       shadow: 'shadow-blue-300/50',
       shadowDark: 'dark:shadow-blue-800/50',
     },
+    amber: {
+      bg: 'bg-amber-200',
+      bgDark: 'dark:bg-amber-700',
+      text: 'text-amber-800',
+      textDark: 'dark:text-amber-200',
+      shadow: 'shadow-amber-300/50',
+      shadowDark: 'dark:shadow-amber-800/50',
+    },
     red: {
       bg: 'bg-red-200',
       bgDark: 'dark:bg-red-700',
@@ -103,9 +112,11 @@ export default function HeaderWithNav() {
   const isHomePage = pathname === '/'
   const hasActiveNav = navItems.some(item => isActive(item.href))
 
-  const headerClasses = `sticky top-0 z-50 ${
+  // On the landing page the header floats translucently over the hero, but
+  // goes fully opaque on hover so the nav is legible while you are using it.
+  const headerClasses = `sticky top-0 z-50 transition-colors duration-300 ${
     isHomePage
-      ? 'bg-white/70 dark:bg-slate-800/70 backdrop-blur-md shadow-md shadow-slate-300/50 dark:shadow-gray-950/50'
+      ? 'bg-white/70 dark:bg-slate-800/70 hover:bg-white dark:hover:bg-slate-800 backdrop-blur-md shadow-md shadow-slate-300/50 dark:shadow-gray-950/50'
       : `bg-white dark:bg-slate-800 shadow-md ${
           hasActiveNav
             ? `${activeClasses.shadow} ${activeClasses.shadowDark}`

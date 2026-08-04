@@ -3,7 +3,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Clock, ChevronLeft, ChevronRight, Plus, User, Building } from 'lucide-react'
-import { TimeService, TimeEntry } from '@/lib/time-service'
+import { TimeService, TimeEntry } from '@/lib/time-service-multi-org'
 import { useLocale } from '../lib/locale'
 import type { TranslationKey } from '../lib/translations'
 
@@ -20,7 +20,7 @@ interface WeeklyCalendarViewProps {
   onAddTimeEntry?: (date: string) => void
   onEditTimeEntry?: (timeEntry: TimeEntry) => void
   getUserName: (userId: string) => string
-  getClientName: (clientId: string) => string
+  getClientName: (clientId: string | null) => string
   getStatusColor: (status: string) => string
   getStatusBorderColor: (status: string) => string
   userRole?: string

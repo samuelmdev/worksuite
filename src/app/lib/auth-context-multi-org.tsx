@@ -8,7 +8,7 @@ export interface Organization {
   id: string
   name: string
   slug: string
-  role: 'admin' | 'manager' | 'employee'
+  role: 'admin' | 'manager' | 'sales_rep' | 'employee'
   joined_at: string
 }
 
@@ -20,6 +20,18 @@ export interface User {
   last_name?: string
   organizations: Organization[]
   currentOrganizationId: string | null
+}
+
+/**
+ * Shape of an organization_members row with its organization embedded.
+ * supabase-js cannot infer to-one relations without generated types, so the
+ * embedded object is declared explicitly here.
+ */
+type MembershipRow = {
+  organization_id: string
+  role: Organization['role']
+  joined_at: string
+  organizations: { id: string; name: string; slug: string }
 }
 
 interface AuthContextType {
@@ -56,9 +68,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return
       }
 
-      // Get user's organizations
+      // Get user's organizations. organization_members is the single source of
+      // truth for membership and roles across the app.
       const { data: orgData, error: orgError } = await supabase
-        .from('user_organizations')
+        .from('organization_members')
         .select(`
           organization_id,
           role,
@@ -73,12 +86,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return
       }
 
-      const organizations: Organization[] = orgData.map(org => ({
-        id: org.organization_id,
-        name: org.organizations.name,
-        slug: org.organizations.slug,
-        role: org.role,
-        joined_at: org.joined_at
+      const organizations: Organization[] = (orgData as unknown as MembershipRow[]).map(row => ({
+        id: row.organization_id,
+        name: row.organizations.name,
+        slug: row.organizations.slug,
+        role: row.role,
+        joined_at: row.joined_at
       }))
 
       const userProfile: User = {
@@ -249,9 +262,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return false
       }
 
-      // Add user to organization as admin
+      // Add user to organization as admin — the subscriber owns the workspace
       const { error: userOrgError } = await supabase
-        .from('user_organizations')
+        .from('organization_members')
         .insert([{
           user_id: authData.user.id,
           organization_id: orgData.id,

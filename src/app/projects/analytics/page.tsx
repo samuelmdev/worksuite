@@ -8,11 +8,36 @@ import { useAuth } from '../../lib/auth-context-multi-org'
 import { ProjectsService } from '../../../lib/projects-service-multi-org'
 import { useLocale } from '../../lib/locale'
 
+interface ProjectTimelineEntry {
+  name: string
+  progress: number
+  status: 'planning' | 'active' | 'on-hold' | 'completed' | 'cancelled'
+}
+
+interface MonthlyTrend {
+  month: string
+  projects: number
+  completed: number
+}
+
+interface AnalyticsData {
+  totalProjects: number
+  completedProjects: number
+  activeProjects: number
+  onHoldProjects: number
+  totalBudget: number
+  spentBudget: number
+  teamProductivity: number
+  averageProgress: number
+  projectTimeline: ProjectTimelineEntry[]
+  monthlyTrends: MonthlyTrend[]
+}
+
 export default function ProjectsAnalyticsPage() {
   const { t } = useLocale()
   const { user, currentOrganization } = useAuth()
   const [selectedPeriod, setSelectedPeriod] = useState('month')
-  const [analyticsData, setAnalyticsData] = useState({
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
     totalProjects: 0,
     completedProjects: 0,
     activeProjects: 0,
@@ -20,7 +45,7 @@ export default function ProjectsAnalyticsPage() {
     totalBudget: 0,
     spentBudget: 0,
     teamProductivity: 0,
-    clientSatisfaction: 0,
+    averageProgress: 0,
     projectTimeline: [],
     monthlyTrends: []
   })
@@ -44,26 +69,52 @@ export default function ProjectsAnalyticsPage() {
         const activeProjects = statsData.active_projects
         const onHoldProjects = projectsData.filter(p => p.status === 'on-hold').length
         const totalBudget = statsData.total_budget
-        const spentBudget = Math.round(totalBudget * 0.6) // Estimate 60% spent
-        
-        // Calculate team productivity (mock calculation for now)
+
+        // Budget consumed so far, derived from each project's reported progress
+        // against its own budget rather than a flat organisation-wide estimate.
+        const spentBudget = Math.round(
+          projectsData.reduce(
+            (sum, p) => sum + ((p.budget || 0) * (p.progress || 0)) / 100,
+            0
+          )
+        )
+
         const teamProductivity = Math.round((completedProjects / Math.max(totalProjects, 1)) * 100)
-        
+
+        const averageProgress = projectsData.length
+          ? Math.round(
+              projectsData.reduce((sum, p) => sum + (p.progress || 0), 0) / projectsData.length
+            )
+          : 0
+
         // Project timeline from real projects
-        const projectTimeline = projectsData.slice(0, 5).map(project => ({
+        const projectTimeline: ProjectTimelineEntry[] = projectsData.slice(0, 5).map(project => ({
           name: project.name,
           progress: project.progress || 0,
           status: project.status
         }))
-        
-        // Mock monthly trends (could be enhanced with real time-based data)
-        const monthlyTrends = [
-          { month: 'Jan', projects: Math.max(1, Math.floor(totalProjects * 0.7)), completed: Math.max(0, Math.floor(completedProjects * 0.3)) },
-          { month: 'Feb', projects: Math.max(1, Math.floor(totalProjects * 0.8)), completed: Math.max(0, Math.floor(completedProjects * 0.6)) },
-          { month: 'Mar', projects: totalProjects, completed: completedProjects },
-          { month: 'Apr', projects: totalProjects, completed: completedProjects }
-        ]
-        
+
+        // Trailing six months, bucketed from real project timestamps. A project
+        // counts as "completed" in the month it last moved to the completed state.
+        const now = new Date()
+        const monthlyTrends: MonthlyTrend[] = Array.from({ length: 6 }, (_, i) => {
+          const bucket = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1)
+          const nextBucket = new Date(bucket.getFullYear(), bucket.getMonth() + 1, 1)
+          const inBucket = (value?: string) => {
+            if (!value) return false
+            const d = new Date(value)
+            return d >= bucket && d < nextBucket
+          }
+
+          return {
+            month: bucket.toLocaleDateString(undefined, { month: 'short' }),
+            projects: projectsData.filter(p => inBucket(p.created_at)).length,
+            completed: projectsData.filter(
+              p => p.status === 'completed' && inBucket(p.updated_at)
+            ).length
+          }
+        })
+
         setAnalyticsData({
           totalProjects,
           completedProjects,
@@ -72,7 +123,7 @@ export default function ProjectsAnalyticsPage() {
           totalBudget,
           spentBudget,
           teamProductivity,
-          clientSatisfaction: 4.5, // Mock value
+          averageProgress,
           projectTimeline,
           monthlyTrends
         })
@@ -89,7 +140,7 @@ export default function ProjectsAnalyticsPage() {
   const currentData = analyticsData
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -302,7 +353,9 @@ export default function ProjectsAnalyticsPage() {
             <div className="text-center">
               <div className="w-16 h-16 bg-violet-200 dark:bg-violet-900 rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-2xl font-bold text-violet-600 dark:text-violet-400">
-                  {Math.round((currentData.completedProjects / currentData.totalProjects) * 100)}%
+                  {currentData.totalProjects > 0
+                    ? Math.round((currentData.completedProjects / currentData.totalProjects) * 100)
+                    : 0}%
                 </span>
               </div>
               <h4 className="font-medium text-gray-900 dark:text-slate-100">Completion Rate</h4>
@@ -311,7 +364,9 @@ export default function ProjectsAnalyticsPage() {
             <div className="text-center">
               <div className="w-16 h-16 bg-emerald-200 dark:bg-emerald-900 rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                  {Math.round((currentData.spentBudget / currentData.totalBudget) * 100)}%
+                  {currentData.totalBudget > 0
+                    ? Math.round((currentData.spentBudget / currentData.totalBudget) * 100)
+                    : 0}%
                 </span>
               </div>
               <h4 className="font-medium text-gray-900 dark:text-slate-100">Budget Utilization</h4>
@@ -320,11 +375,11 @@ export default function ProjectsAnalyticsPage() {
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-200 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  {currentData.clientSatisfaction}
+                  {currentData.averageProgress}%
                 </span>
               </div>
-              <h4 className="font-medium text-gray-900 dark:text-slate-100">Client Satisfaction</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400">out of 5.0</p>
+              <h4 className="font-medium text-gray-900 dark:text-slate-100">Average Progress</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400">across all projects</p>
             </div>
           </div>
         </motion.div>

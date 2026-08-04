@@ -100,7 +100,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={["admin", "manager", "employee"]}>
+    <RoleGuard>
       <div className="min-h-screen bg-gray-100 dark:bg-slate-900">
         <div className="border-l border-r border-slate-500/50 min-h-screen">
           <div className="p-4 sm:p-6 space-y-6">

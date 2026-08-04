@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { X, Building, Mail, Phone, User, AlertCircle, CheckCircle, ChevronDown, ChevronRight, Info } from 'lucide-react'
-import { ClientService } from '@/lib/client-service'
+import { ClientService } from '@/lib/client-service-multi-org'
+import { useAuth } from '../lib/auth-context-multi-org'
 import { useLocale } from '../lib/locale'
 
 interface BasicClientModalProps {
@@ -28,6 +29,7 @@ export default function BasicClientModal({
   onClientSaved
 }: BasicClientModalProps) {
   const { t } = useLocale()
+  const { currentOrganization } = useAuth()
   const [formData, setFormData] = useState<BasicClientFormData>({
     name: '',
     email: '',
@@ -79,6 +81,12 @@ export default function BasicClientModal({
     setIsSubmitting(true)
     setError(null)
 
+    if (!currentOrganization?.id) {
+      setError(t('modal.basicClient.error.noOrg'))
+      setIsSubmitting(false)
+      return
+    }
+
     try {
       if (mode === 'edit' && client) {
         await ClientService.updateClient(client.id, {
@@ -87,8 +95,9 @@ export default function BasicClientModal({
           phone: formData.phone.trim() || '',
           company: formData.company.trim() || '',
           address: client.address || '', // Keep existing address
-          notes: client.notes || '' // Keep existing notes
-        })
+          notes: client.notes || '', // Keep existing notes
+          organization_id: currentOrganization.id
+        }, currentOrganization.id)
       } else {
         await ClientService.createClient({
           name: formData.name.trim(),
@@ -96,8 +105,10 @@ export default function BasicClientModal({
           phone: formData.phone.trim() || '',
           company: formData.company.trim() || '',
           address: '',
-          notes: ''
-        }, 'active')
+          notes: '',
+          status: 'active',
+          organization_id: currentOrganization.id
+        })
       }
 
       onClientSaved?.()

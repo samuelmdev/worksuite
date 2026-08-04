@@ -3,11 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, DollarSign, Calendar, User, Building, FileText, Target, Clock } from 'lucide-react'
-import { Database } from '../../lib/supabase'
+import type { ClientOption as Client } from '../../lib/client-types'
 import { useLocale } from '../lib/locale'
 import type { TranslationKey } from '../lib/translations'
 
-type Client = Database['public']['Tables']['clients']['Row']
 
 const pipelineStageKeys: Record<string, TranslationKey> = {
   lead: 'enum.pipelineStage.lead',

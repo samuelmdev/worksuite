@@ -16,7 +16,7 @@ export default function NotificationsSettingsPage() {
   const [marketing, setMarketing] = useState(false)
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <SettingsSubpage titleKey="settings.section.notifications" descKey="settings.section.notificationsDesc">
         <SettingsCard
           title={t('settings.notifications.emailTitle')}

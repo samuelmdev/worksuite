@@ -1,12 +1,13 @@
 import React from 'react'
 
-export default function ProjectTeamPage({ params }: { params: { id: string } }) {
+export default async function ProjectTeamPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return (
     <div className="space-y-6">
       <div className="p-6 bg-white rounded shadow">
         <h3 className="text-lg font-semibold mb-4">Project Team Management</h3>
         <p className="text-gray-600">
-          This page will manage team assignments and roles for project ID: {params.id}
+          This page will manage team assignments and roles for project ID: {id}
         </p>
         <ul className="mt-4 space-y-2 text-sm text-gray-600">
           <li>• Add/remove team members from the project</li>

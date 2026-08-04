@@ -12,6 +12,14 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
+    rules: {
+      // The shared supabase client is untyped, so `any` is pervasive in the
+      // service layer. Surfacing these as warnings keeps the signal without
+      // blocking builds; tightening them is a separate refactor.
+      "@typescript-eslint/no-explicit-any": "warn",
+    },
+  },
+  {
     ignores: [
       "node_modules/**",
       ".next/**",

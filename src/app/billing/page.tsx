@@ -30,11 +30,18 @@ export default function BillingOverviewPage() {
         return
       }
       const orgId = currentOrganization.id
-      const baseStats = BillingService.getStats(orgId)
-      const unbilled = await BillingService.getUnbilledHours(orgId)
-      setStats({ ...baseStats, unbilled_hours: unbilled })
-      setRecentInvoices(BillingService.getInvoices(orgId).slice(0, 5))
-      setLoading(false)
+      try {
+        const [baseStats, invoices] = await Promise.all([
+          BillingService.getStats(orgId),
+          BillingService.getInvoices(orgId),
+        ])
+        setStats(baseStats)
+        setRecentInvoices(invoices.slice(0, 5))
+      } catch (error) {
+        console.error('Error loading billing overview:', error)
+      } finally {
+        setLoading(false)
+      }
     }
     load()
   }, [currentOrganization?.id])
@@ -56,7 +63,7 @@ export default function BillingOverviewPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager']}>
+    <RoleGuard>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>

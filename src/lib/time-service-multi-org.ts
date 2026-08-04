@@ -27,6 +27,9 @@ export type TimeEntryFormData = {
   user_id: string
   organization_id: string // Required - must always be set
   client_id: string | null
+  project_id: string | null
+  // Retained as a denormalised label so historical entries keep their project
+  // name if the project is later renamed or deleted.
   project_name: string
   description: string
   start_time: string
@@ -415,7 +418,7 @@ export class TimeService {
     avg_hourly_rate: number
     entries_count: number
   }>> {
-    let query = supabase
+    const query = supabase
       .from('time_entries')
       .select(`
         user_id,
@@ -491,7 +494,7 @@ export class TimeService {
     entries_count: number
     billing_status: 'fully_billed' | 'partially_billed' | 'not_billed'
   }>> {
-    let query = supabase
+    const query = supabase
       .from('time_entries')
       .select(`
         client_id,
@@ -578,7 +581,7 @@ export class TimeService {
     billable_hours: number
     entries_count: number
   }>> {
-    let query = supabase
+    const query = supabase
       .from('time_entries')
       .select(`
         start_time,
@@ -648,7 +651,7 @@ export class TimeService {
     least_productive_day: string
     top_performing_employee: string
   }> {
-    let query = supabase
+    const query = supabase
       .from('time_entries')
       .select(`
         start_time,
