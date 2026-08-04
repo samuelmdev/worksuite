@@ -3,11 +3,10 @@
 import { useState, useEffect, useMemo } from 'react'
 import { X, Phone, Mail, Calendar, FileText, CheckCircle, Clock, AlertCircle } from 'lucide-react'
 import { activityService, ManualInteractionData } from '@/lib/activity-service'
-import { Database } from '@/lib/supabase'
+import type { ClientOption as Client } from '@/lib/client-types'
 import { useLocale } from '../lib/locale'
 import type { TranslationKey } from '../lib/translations'
 
-type Client = Database['public']['Tables']['clients']['Row']
 
 interface ActivityLogModalProps {
   isOpen: boolean

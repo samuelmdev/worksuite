@@ -42,6 +42,80 @@ body {
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Hero backdrop — slow, offset drifts so the mesh never visibly loops.
+   Deliberately long durations: this should read as light shifting in a room,
+   not as an animation playing. */
+@keyframes hero-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(4%, -3%, 0) scale(1.08); }
+}
+
+@keyframes hero-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50%      { transform: translate3d(-5%, 4%, 0) scale(1); }
+}
+
+@keyframes hero-drift-c {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(3%, 5%, 0) scale(1.1); }
+}
+
+.hero-blob-a { animation: hero-drift-a 26s ease-in-out infinite; }
+.hero-blob-b { animation: hero-drift-b 34s ease-in-out infinite; }
+.hero-blob-c { animation: hero-drift-c 30s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-blob-a,
+  .hero-blob-b,
+  .hero-blob-c {
+    animation: none;
+  }
+}
+
+/* Colour fields for the hero mesh.
+   Written as plain CSS rather than Tailwind arbitrary values because v4 does
+   not resolve theme() inside them — the rule silently computes to `none`. */
+.hero-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(64px);
+}
+
+.hero-blob--crm     { background: radial-gradient(closest-side, rgb(34 211 238 / 0.34), transparent); }
+.hero-blob--project { background: radial-gradient(closest-side, rgb(167 139 250 / 0.30), transparent); }
+.hero-blob--finance { background: radial-gradient(closest-side, rgb(251 191 36 / 0.28), transparent); }
+.hero-blob--time    { background: radial-gradient(closest-side, rgb(52 211 153 / 0.24), transparent); }
+
+.dark .hero-blob--crm     { background: radial-gradient(closest-side, rgb(34 211 238 / 0.20), transparent); }
+.dark .hero-blob--project { background: radial-gradient(closest-side, rgb(167 139 250 / 0.18), transparent); }
+.dark .hero-blob--finance { background: radial-gradient(closest-side, rgb(251 191 36 / 0.14), transparent); }
+.dark .hero-blob--time    { background: radial-gradient(closest-side, rgb(52 211 153 / 0.14), transparent); }
+
+/* Fine grid behind the colour, so the mesh reads as structured. */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(15 23 42 / 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(15 23 42 / 0.055) 1px, transparent 1px);
+  background-size: 3.5rem 3.5rem;
+}
+
+.dark .hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(241 245 249 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(241 245 249 / 0.07) 1px, transparent 1px);
+}
+
+/* Both layers fade before the section ends so nothing fights the headline. */
+.hero-mesh-mask {
+  -webkit-mask-image: radial-gradient(120% 85% at 50% 0%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(120% 85% at 50% 0%, #000 40%, transparent 100%);
+}
+
+.hero-grid-mask {
+  -webkit-mask-image: radial-gradient(95% 70% at 50% 10%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(95% 70% at 50% 10%, #000 30%, transparent 100%);
+}
+
 /* Smooth transitions for theme switching - DISABLED FOR TESTING */
 /* * {
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;

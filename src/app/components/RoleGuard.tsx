@@ -1,11 +1,18 @@
 'use client'
 
 import React from 'react'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '../lib/auth-context-multi-org'
 import { useLocale } from '../lib/locale'
+import { getAllowedRolesForPath } from '../../lib/module-access'
 
 interface RoleGuardProps {
-  allowedRoles: string[]
+  /**
+   * Omit to derive the rule from the current route, which keeps the guard and
+   * the nav filtering in module-access.ts from drifting apart. Pass explicitly
+   * only when a section needs to differ from its route's default.
+   */
+  allowedRoles?: string[]
   children: React.ReactNode
   fallback?: React.ReactNode
 }
@@ -13,6 +20,8 @@ interface RoleGuardProps {
 export default function RoleGuard({ allowedRoles, children, fallback }: RoleGuardProps) {
   const { user, currentOrganization, isLoading } = useAuth()
   const { t } = useLocale()
+  const pathname = usePathname()
+  const effectiveRoles = allowedRoles ?? getAllowedRolesForPath(pathname)
 
   if (isLoading) {
     return (
@@ -43,7 +52,7 @@ export default function RoleGuard({ allowedRoles, children, fallback }: RoleGuar
     )
   }
 
-  const has = allowedRoles.includes(currentOrganization?.role || '')
+  const has = effectiveRoles.includes(currentOrganization?.role || '')
 
   if (!has) {
     return fallback || (
@@ -56,7 +65,7 @@ export default function RoleGuard({ allowedRoles, children, fallback }: RoleGuar
             {t('guard.noPermission')}
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-500">
-            {t('guard.requiredRoles', { roles: allowedRoles.join(', ') })}
+            {t('guard.requiredRoles', { roles: effectiveRoles.join(', ') })}
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-500">
             {t('guard.yourRole', { role: currentOrganization?.role || t('common.noOrganization') })}

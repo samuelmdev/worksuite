@@ -13,7 +13,7 @@ export default function AppearanceSettingsPage() {
   const { locale, setLocale, t } = useLocale()
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <SettingsSubpage titleKey="settings.section.appearance" descKey="settings.section.appearanceDesc">
         <SettingsCard title={t('settings.appearance.themeTitle')} description={t('settings.appearance.themeDesc')}>
           <div className="grid grid-cols-2 gap-4">

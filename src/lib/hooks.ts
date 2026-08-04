@@ -169,7 +169,7 @@ export function useRealtimeData<T>(
     })
 
     // Set up real-time subscription
-    let subscription = supabase
+    const subscription = supabase
       .channel(`${table}_changes`)
       .on(
         'postgres_changes',

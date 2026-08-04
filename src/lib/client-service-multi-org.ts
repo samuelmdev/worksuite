@@ -161,13 +161,13 @@ export class ClientService {
   static async getUsers(organizationId: string): Promise<any[]> {
     try {
       const { data: userOrgData, error: userOrgError } = await supabase
-        .from('user_organizations')
+        .from('organization_members')
         .select('user_id, role, joined_at')
         .eq('organization_id', organizationId)
         .eq('is_active', true)
 
       if (userOrgError) {
-        console.error('Error fetching user_organizations:', userOrgError)
+        console.error('Error fetching organization_members:', userOrgError)
         throw userOrgError
       }
 
@@ -206,9 +206,47 @@ export class ClientService {
     }
   }
 
+  // Block a client (do not contact) - ALWAYS filtered by organization
+  static async blockClient(id: string, reason: string, organizationId: string): Promise<void> {
+    const { error } = await supabase
+      .from('clients')
+      .update({
+        is_blocked: true,
+        block_reason: reason,
+        blocked_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .eq('organization_id', organizationId)
+
+    if (error) {
+      console.error('Error blocking client:', error)
+      throw new Error('Failed to block client')
+    }
+  }
+
+  // Unblock a client - ALWAYS filtered by organization
+  static async unblockClient(id: string, organizationId: string): Promise<void> {
+    const { error } = await supabase
+      .from('clients')
+      .update({
+        is_blocked: false,
+        block_reason: null,
+        blocked_at: null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .eq('organization_id', organizationId)
+
+    if (error) {
+      console.error('Error unblocking client:', error)
+      throw new Error('Failed to unblock client')
+    }
+  }
+
   static async grantCrmAccess(userId: string, organizationId: string): Promise<void> {
     const { error } = await supabase
-      .from('user_organizations')
+      .from('organization_members')
       .update({ role: 'manager' })
       .eq('user_id', userId)
       .eq('organization_id', organizationId)
@@ -218,17 +256,11 @@ export class ClientService {
       console.error('Error granting CRM access:', error)
       throw new Error('Failed to grant CRM access')
     }
-
-    await supabase
-      .from('organization_members')
-      .update({ role: 'manager' })
-      .eq('user_id', userId)
-      .eq('organization_id', organizationId)
   }
 
   static async revokeCrmAccess(userId: string, organizationId: string): Promise<void> {
     const { error } = await supabase
-      .from('user_organizations')
+      .from('organization_members')
       .update({ role: 'employee' })
       .eq('user_id', userId)
       .eq('organization_id', organizationId)
@@ -238,11 +270,5 @@ export class ClientService {
       console.error('Error revoking CRM access:', error)
       throw new Error('Failed to revoke CRM access')
     }
-
-    await supabase
-      .from('organization_members')
-      .update({ role: 'employee' })
-      .eq('user_id', userId)
-      .eq('organization_id', organizationId)
   }
 }

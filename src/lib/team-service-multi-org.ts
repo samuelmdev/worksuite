@@ -4,7 +4,7 @@ export interface TeamMember {
   id: string
   user_id: string
   organization_id: string
-  role: 'admin' | 'manager' | 'employee'
+  role: 'admin' | 'manager' | 'sales_rep' | 'employee'
   joined_at: string
   is_active: boolean
   first_name: string | null
@@ -16,6 +16,7 @@ export interface TeamStats {
   total_members: number
   admins: number
   managers: number
+  sales_reps: number
   employees: number
 }
 
@@ -89,6 +90,7 @@ export class TeamService {
       total_members: members.length,
       admins: members.filter(m => m.role === 'admin').length,
       managers: members.filter(m => m.role === 'manager').length,
+      sales_reps: members.filter(m => m.role === 'sales_rep').length,
       employees: members.filter(m => m.role === 'employee').length,
     }
   }
@@ -98,16 +100,13 @@ export class TeamService {
     organizationId: string,
     role: TeamMember['role']
   ): Promise<void> {
-    const { data: member, error: fetchError } = await supabase
-      .from('organization_members')
-      .select('user_id')
-      .eq('id', memberId)
-      .eq('organization_id', organizationId)
-      .single()
-
-    if (fetchError || !member) {
-      console.error('Error fetching member for role update:', fetchError?.message, fetchError)
-      throw new Error('Failed to update member role')
+    // Never allow the last admin to be demoted — it would lock the
+    // organization out of member management entirely.
+    if (role !== 'admin') {
+      const target = await this.getMember(memberId, organizationId)
+      if (target?.role === 'admin' && (await this.countAdmins(organizationId)) <= 1) {
+        throw new Error('LAST_ADMIN')
+      }
     }
 
     const { error } = await supabase
@@ -120,12 +119,97 @@ export class TeamService {
       console.error('Error updating member role:', error.message, error)
       throw new Error('Failed to update member role')
     }
+  }
 
-    // Keep auth membership in sync for app permissions / nav
-    await supabase
-      .from('user_organizations')
-      .update({ role })
-      .eq('user_id', member.user_id)
+  /**
+   * Invite someone into the organization by email.
+   *
+   * Creating auth users needs the service-role key, so this delegates to the
+   * server route, which re-verifies that the caller is an org admin.
+   */
+  static async inviteMember(
+    organizationId: string,
+    email: string,
+    role: TeamMember['role'],
+    names?: { firstName?: string; lastName?: string }
+  ): Promise<void> {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.access_token) {
+      throw new Error('NOT_AUTHENTICATED')
+    }
+
+    const res = await fetch('/api/team/invite', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({
+        organizationId,
+        email,
+        role,
+        firstName: names?.firstName,
+        lastName: names?.lastName,
+      }),
+    })
+
+    if (!res.ok) {
+      const payload = await res.json().catch(() => ({}))
+      throw new Error(payload.error || 'Failed to invite team member')
+    }
+  }
+
+  /** Soft-remove a member: they lose access but their history is preserved. */
+  static async deactivateMember(memberId: string, organizationId: string): Promise<void> {
+    const target = await this.getMember(memberId, organizationId)
+    if (target?.role === 'admin' && (await this.countAdmins(organizationId)) <= 1) {
+      throw new Error('LAST_ADMIN')
+    }
+
+    const { error } = await supabase
+      .from('organization_members')
+      .update({ is_active: false })
+      .eq('id', memberId)
       .eq('organization_id', organizationId)
+
+    if (error) {
+      console.error('Error deactivating member:', error.message, error)
+      throw new Error('Failed to remove team member')
+    }
+  }
+
+  private static async getMember(
+    memberId: string,
+    organizationId: string
+  ): Promise<{ user_id: string; role: TeamMember['role'] } | null> {
+    const { data, error } = await supabase
+      .from('organization_members')
+      .select('user_id, role')
+      .eq('id', memberId)
+      .eq('organization_id', organizationId)
+      .maybeSingle()
+
+    if (error) {
+      console.error('Error fetching member:', error.message, error)
+      throw new Error('Failed to load team member')
+    }
+
+    return (data as { user_id: string; role: TeamMember['role'] } | null) ?? null
+  }
+
+  private static async countAdmins(organizationId: string): Promise<number> {
+    const { count, error } = await supabase
+      .from('organization_members')
+      .select('id', { count: 'exact', head: true })
+      .eq('organization_id', organizationId)
+      .eq('role', 'admin')
+      .eq('is_active', true)
+
+    if (error) {
+      console.error('Error counting admins:', error.message, error)
+      throw new Error('Failed to verify admin count')
+    }
+
+    return count ?? 0
   }
 }

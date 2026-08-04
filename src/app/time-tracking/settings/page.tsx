@@ -42,7 +42,7 @@ export default function TimeTrackingSettingsPage() {
   ]
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{t('time.settingsPage.title')}</h1>

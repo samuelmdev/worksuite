@@ -6,7 +6,6 @@ import { BarChart3, Download, Calendar, TrendingUp, Clock, DollarSign, Users, Bu
 import RoleGuard from '../../components/RoleGuard'
 import { useAuth } from '../../lib/auth-context-multi-org'
 import { TimeService } from '../../../lib/time-service-multi-org'
-import { supabase } from '../../../lib/supabase'
 import { useLocale } from '../../lib/locale'
 
 interface EmployeeSalaryData {
@@ -69,7 +68,8 @@ export default function TimeTrackingReportsPage() {
 
   // Load reports data
   const loadReportsData = async () => {
-    if (!user?.organizationId) {
+    const organizationId = currentOrganization?.id
+    if (!organizationId) {
       setLoading(false)
       return
     }
@@ -88,28 +88,6 @@ export default function TimeTrackingReportsPage() {
       // Automatically determine view type based on period
       const viewType = selectedPeriod === 'week' ? 'daily' : 'weekly'
 
-      console.log('Loading data for:', { startDate, endDate, selectedPeriod, viewType })
-
-      // First, let's test a simple query to see what's in the database
-      const { data: testData, error: testError } = await supabase
-        .from('time_entries')
-        .select('id, start_time, status, organization_id, billable_hours, user_id, client_id')
-        .limit(10)
-      
-      console.log('Test query - all time entries (first 10):', { testData, testError })
-      console.log('Sample time entry data:', testData?.[0])
-
-      // Check if there are time entries with null organization_id and fix them
-      const nullOrgEntries = testData?.filter(entry => entry.organization_id === null)
-      if (nullOrgEntries && nullOrgEntries.length > 0) {
-        console.log('Found time entries with null organization_id, updating them...')
-        try {
-          await TimeService.updateNullOrganizationIds(user.organizationId)
-        } catch (error) {
-          console.error('Failed to update organization_ids:', error)
-        }
-      }
-
       // Load all data in parallel
       const [
         employeeSalaryData,
@@ -117,19 +95,11 @@ export default function TimeTrackingReportsPage() {
         hoursChartData,
         productivityInsights
       ] = await Promise.all([
-        TimeService.getEmployeeSalaryData(startDate, endDate, user.organizationId),
-        TimeService.getClientBillingData(startDate, endDate, user.organizationId),
-        TimeService.getHoursChartData(startDate, endDate, viewType, user.organizationId),
-        TimeService.getProductivityInsights(startDate, endDate, user.organizationId)
+        TimeService.getEmployeeSalaryData(startDate, endDate, organizationId),
+        TimeService.getClientBillingData(startDate, endDate, organizationId),
+        TimeService.getHoursChartData(startDate, endDate, viewType, organizationId),
+        TimeService.getProductivityInsights(startDate, endDate, organizationId)
       ])
-
-
-      console.log('Reports data loaded:', {
-        employeeCount: employeeSalaryData.length,
-        clientCount: clientBillingData.length,
-        hoursCount: hoursChartData.length,
-        hasInsights: !!productivityInsights
-      })
 
       setEmployeeData(employeeSalaryData)
       setClientData(clientBillingData)
@@ -168,12 +138,12 @@ export default function TimeTrackingReportsPage() {
   }
 
   useEffect(() => {
-    if (user) {
+    if (user && currentOrganization?.id) {
       loadReportsData()
     } else {
       setLoading(false)
     }
-  }, [selectedPeriod, currentDate, user?.organizationId, user])
+  }, [selectedPeriod, currentDate, currentOrganization?.id, user])
 
   // Navigation functions
   const goToPreviousPeriod = () => {
@@ -248,7 +218,7 @@ export default function TimeTrackingReportsPage() {
 
   if (loading) {
     return (
-      <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+      <RoleGuard>
         <div className="flex items-center justify-center min-h-96">
           <div className="w-8 h-8 border-2 border-cyan-600 border-t-transparent rounded-full animate-spin" />
         </div>
@@ -257,7 +227,7 @@ export default function TimeTrackingReportsPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

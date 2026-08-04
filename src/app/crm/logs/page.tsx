@@ -22,7 +22,8 @@ import {
 import RoleGuard from '../../components/RoleGuard'
 import ActivityLogModal from '../../components/ActivityLogModal'
 import { activityService, ClientActivity } from '../../../lib/activity-service'
-import { ClientService } from '../../../lib/client-service'
+import { ClientService } from '../../../lib/client-service-multi-org'
+import { useAuth } from '../../lib/auth-context-multi-org'
 import { Database } from '../../../lib/supabase'
 import { useLocale } from '../../lib/locale'
 import type { TranslationKey } from '../../lib/translations'
@@ -42,6 +43,7 @@ const getActivityTypeLabelKey = (type: string): TranslationKey => {
 }
 
 export default function ClientLogsPage() {
+  const { currentOrganization } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
   const { t } = useLocale()
@@ -69,7 +71,7 @@ export default function ClientLogsPage() {
   useEffect(() => {
     loadClients()
     loadLogs()
-  }, [])
+  }, [currentOrganization?.id])
 
   // Handle URL parameters for filtering
   useEffect(() => {
@@ -95,8 +97,9 @@ export default function ClientLogsPage() {
   }, [selectedClient, selectedType, dateRange])
 
   const loadClients = async () => {
+    if (!currentOrganization?.id) return
     try {
-      const clientData = await ClientService.getClients()
+      const clientData = await ClientService.getClients(currentOrganization.id)
       setClients(clientData || [])
     } catch (err) {
       console.error('Error loading clients:', err)
@@ -227,7 +230,7 @@ export default function ClientLogsPage() {
 
   if (loading) {
     return (
-      <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+      <RoleGuard>
         <div className="flex flex-col items-center justify-center min-h-screen">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600"></div>
           <p className="text-gray-600 dark:text-gray-400 mt-4">{t('crm.logsPage.loading')}</p>
@@ -237,7 +240,7 @@ export default function ClientLogsPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}

@@ -17,7 +17,7 @@ import {
 import RoleGuard from '../../components/RoleGuard'
 import { useTime } from '../../lib/time-context'
 import { useAuth } from '../../lib/auth-context-multi-org'
-import { useSubscription } from '../../../lib/subscription-utils'
+import { useSubscription } from '../../lib/use-subscription'
 import { useRouter } from 'next/navigation'
 import BasicClientModal from '../../components/BasicClientModal'
 import { useLocale } from '../../lib/locale'
@@ -26,7 +26,7 @@ export default function TimeClientsPage() {
   const { t } = useLocale()
   const { user, currentOrganization } = useAuth()
   const { clients, loading } = useTime()
-  const { shouldShowTimeTrackingClients } = useSubscription(user?.id)
+  const { isEntitled: shouldShowTimeTrackingClients, isLoading: subscriptionLoading } = useSubscription()
   const router = useRouter()
   
   const [searchTerm, setSearchTerm] = useState('')
@@ -34,15 +34,15 @@ export default function TimeClientsPage() {
   const [editingClient, setEditingClient] = useState<any>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
 
-  // Redirect if user shouldn't have access to this page
+  // Redirect once the subscription is known and does not entitle access.
   useEffect(() => {
-    if (user && !shouldShowTimeTrackingClients) {
+    if (user && !subscriptionLoading && !shouldShowTimeTrackingClients) {
       router.push('/time-tracking')
     }
-  }, [user, shouldShowTimeTrackingClients, router])
+  }, [user, subscriptionLoading, shouldShowTimeTrackingClients, router])
 
   // Show loading while checking permissions
-  if (!user || shouldShowTimeTrackingClients === undefined) {
+  if (!user || subscriptionLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
@@ -91,7 +91,7 @@ export default function TimeClientsPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">

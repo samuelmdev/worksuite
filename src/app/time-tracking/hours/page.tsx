@@ -30,7 +30,9 @@ import type { TranslationKey } from '../../lib/translations'
 export default function TimeHoursPage() {
   const { t } = useLocale()
   const { user, currentOrganization } = useAuth()
-  const { 
+  // Roles are per-organization in the multi-org model, not per-user.
+  const role = currentOrganization?.role
+  const {
     timeEntries, 
     weeklyTimeSlots,
     loading, 
@@ -95,7 +97,7 @@ export default function TimeHoursPage() {
   }
 
   const handleApproveTimeEntry = async (id: string) => {
-    if (user?.role !== 'admin' && user?.role !== 'manager') {
+    if (role !== 'admin' && role !== 'manager') {
       alert('You do not have permission to approve time entries')
       return
     }
@@ -108,7 +110,7 @@ export default function TimeHoursPage() {
   }
 
   const handleRejectTimeEntry = async (id: string) => {
-    if (user?.role !== 'admin' && user?.role !== 'manager') {
+    if (role !== 'admin' && role !== 'manager') {
       alert('You do not have permission to reject time entries')
       return
     }
@@ -193,14 +195,14 @@ export default function TimeHoursPage() {
   })
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{t('time.hoursPage.title')}</h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
-              {user?.role === 'employee' 
+              {role === 'employee' 
                 ? t('time.hoursPage.subtitleEmployee')
                 : t('time.hoursPage.subtitleManager')
               }
@@ -283,7 +285,7 @@ export default function TimeHoursPage() {
                 className="grid grid-cols-1 md:grid-cols-3 gap-4"
               >
                 {/* User Filter - only for admin/manager */}
-                {(user?.role === 'admin' || user?.role === 'manager') && (
+                {(role === 'admin' || role === 'manager') && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
                       <User className="w-4 h-4 inline mr-1" />
@@ -482,7 +484,7 @@ export default function TimeHoursPage() {
                           <Edit className="w-4 h-4" />
                         </button>
                         
-                        {user?.role === 'admin' || user?.role === 'manager' ? (
+                        {role === 'admin' || role === 'manager' ? (
                           <>
                             {entry.status === 'submitted' && (
                               <>
@@ -534,7 +536,7 @@ export default function TimeHoursPage() {
             getClientName={getClientName}
             getStatusColor={getStatusColor}
             getStatusBorderColor={getStatusBorderColor}
-            userRole={user?.role}
+            userRole={role}
           />
         )}
 
@@ -549,7 +551,7 @@ export default function TimeHoursPage() {
           timeEntry={editingTimeEntry}
           mode={editingTimeEntry ? 'edit' : 'create'}
           clients={clients}
-          users={user?.role === 'admin' || user?.role === 'manager' ? users : undefined}
+          users={role === 'admin' || role === 'manager' ? users : undefined}
           currentUser={user || undefined}
           onTimeEntrySaved={handleTimeEntrySaved}
           preselectedDate={selectedDate}

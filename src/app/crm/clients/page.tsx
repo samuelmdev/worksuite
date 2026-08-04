@@ -17,7 +17,7 @@ import { useLocale } from '../../lib/locale'
 import type { TranslationKey } from '../../lib/translations'
 import { ContractsService } from '../../../lib/contracts-service-multi-org'
 import { TasksService } from '../../../lib/tasks-service'
-import { ClientService } from '../../../lib/client-service'
+import { ClientService } from '../../../lib/client-service-multi-org'
 import { activityService } from '../../../lib/activity-service'
 import { useAuth } from '../../lib/auth-context-multi-org'
 
@@ -312,9 +312,10 @@ export default function CRMClientsPage() {
   }
 
   const handleUnblockClient = async (client: Client) => {
+    if (!currentOrganization?.id) return
     try {
       setError(null)
-      await ClientService.unblockClient(client.id)
+      await ClientService.unblockClient(client.id, currentOrganization.id)
       // Refresh the client data
       window.location.reload() // Simple refresh for now
     } catch (err) {
@@ -343,7 +344,7 @@ export default function CRMClientsPage() {
         }
         
         // Then block the client
-        await ClientService.blockClient(clientToBlock.id, blockReason.trim())
+        await ClientService.blockClient(clientToBlock.id, blockReason.trim(), currentOrganization.id)
         
         setIsContractTerminationDialogOpen(false)
         setClientToBlock(null)
@@ -359,10 +360,10 @@ export default function CRMClientsPage() {
   }
 
   const handleConfirmBlock = async () => {
-    if (clientToBlock && blockReason.trim()) {
+    if (clientToBlock && blockReason.trim() && currentOrganization?.id) {
       try {
         setError(null)
-        await ClientService.blockClient(clientToBlock.id, blockReason.trim())
+        await ClientService.blockClient(clientToBlock.id, blockReason.trim(), currentOrganization.id)
         setIsBlockDialogOpen(false)
         setClientToBlock(null)
         setBlockReason('')
@@ -383,7 +384,7 @@ export default function CRMClientsPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={["admin", "manager"]}>
+    <RoleGuard>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

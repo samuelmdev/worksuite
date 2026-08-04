@@ -1,17 +1,22 @@
+import { supabase } from './supabase'
 import { TimeService } from './time-service-multi-org'
 import { ProjectsService } from './projects-service-multi-org'
 import { ClientService } from './client-service-multi-org'
+import { FinanceService } from './finance-service'
 
 export interface InvoiceLineItem {
   id: string
+  invoice_id?: string
   description: string
   quantity: number
   unit: 'hours' | 'fixed'
   rate: number
   amount: number
-  source_type: 'time_entry' | 'project'
-  source_id?: string
+  source_type: 'time_entry' | 'project' | 'manual'
+  source_id?: string | null
 }
+
+export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
 
 export interface Invoice {
   id: string
@@ -21,13 +26,15 @@ export interface Invoice {
   invoice_number: string
   issue_date: string
   due_date: string
-  status: 'draft' | 'sent' | 'paid' | 'overdue'
+  status: InvoiceStatus
   line_items: InvoiceLineItem[]
   subtotal: number
   tax_rate: number
   tax_amount: number
   total: number
-  notes?: string
+  currency: string
+  notes?: string | null
+  paid_at?: string | null
   created_at: string
 }
 
@@ -52,47 +59,61 @@ export interface BillingStats {
   unbilled_hours: number
 }
 
-const STORAGE_KEY = 'worksuite_invoices'
+type InvoiceRow = Omit<Invoice, 'line_items' | 'client_name'> & {
+  clients?: { name: string } | null
+  invoice_line_items?: InvoiceLineItem[] | null
+}
 
-function loadInvoices(): Invoice[] {
-  if (typeof window === 'undefined') return []
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : []
-  } catch {
-    return []
+function mapInvoice(row: InvoiceRow): Invoice {
+  return {
+    ...row,
+    client_name: row.clients?.name ?? 'Unknown client',
+    line_items: row.invoice_line_items ?? [],
   }
 }
 
-function saveInvoices(invoices: Invoice[]) {
-  if (typeof window === 'undefined') return
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(invoices))
-}
-
-function generateId(): string {
-  return `inv_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`
-}
-
-function generateInvoiceNumber(orgId: string): string {
-  const existing = loadInvoices().filter(i => i.organization_id === orgId)
-  const num = existing.length + 1
-  const year = new Date().getFullYear()
-  return `INV-${year}-${String(num).padStart(4, '0')}`
-}
+const INVOICE_SELECT = `
+  *,
+  clients:client_id(name),
+  invoice_line_items(*)
+`
 
 export class BillingService {
-  static getInvoices(organizationId: string): Invoice[] {
-    return loadInvoices()
-      .filter(i => i.organization_id === organizationId)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+  static async getInvoices(organizationId: string): Promise<Invoice[]> {
+    const { data, error } = await supabase
+      .from('invoices')
+      .select(INVOICE_SELECT)
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('Error fetching invoices:', error)
+      throw new Error('Failed to fetch invoices')
+    }
+    return ((data as unknown as InvoiceRow[]) || []).map(mapInvoice)
   }
 
-  static getInvoice(id: string, organizationId: string): Invoice | null {
-    return loadInvoices().find(i => i.id === id && i.organization_id === organizationId) ?? null
+  static async getInvoice(id: string, organizationId: string): Promise<Invoice | null> {
+    const { data, error } = await supabase
+      .from('invoices')
+      .select(INVOICE_SELECT)
+      .eq('id', id)
+      .eq('organization_id', organizationId)
+      .maybeSingle()
+
+    if (error) {
+      console.error('Error fetching invoice:', error)
+      throw new Error('Failed to fetch invoice')
+    }
+    return data ? mapInvoice(data as unknown as InvoiceRow) : null
   }
 
-  static getStats(organizationId: string): BillingStats {
-    const invoices = this.getInvoices(organizationId)
+  static async getStats(organizationId: string): Promise<BillingStats> {
+    const [invoices, unbilledHours] = await Promise.all([
+      this.getInvoices(organizationId),
+      this.getUnbilledHours(organizationId),
+    ])
+
     const paid = invoices.filter(i => i.status === 'paid')
     const outstanding = invoices.filter(i => i.status === 'sent' || i.status === 'overdue')
 
@@ -102,25 +123,45 @@ export class BillingService {
       paid_invoices: paid.length,
       total_revenue: paid.reduce((sum, i) => sum + i.total, 0),
       outstanding_amount: outstanding.reduce((sum, i) => sum + i.total, 0),
-      unbilled_hours: 0,
+      unbilled_hours: unbilledHours,
     }
   }
 
-  static async getUnbilledHours(organizationId: string): Promise<number> {
-    const entries = await TimeService.getTimeEntries(
-      { status: 'approved', billable: true },
-      organizationId
-    )
-    const invoicedEntryIds = new Set<string>()
-    for (const invoice of this.getInvoices(organizationId)) {
-      for (const item of invoice.line_items) {
-        if (item.source_type === 'time_entry' && item.source_id) {
-          invoicedEntryIds.add(item.source_id)
-        }
-      }
+  /** Ids already billed, so the same work is never invoiced twice. */
+  private static async getInvoicedSourceIds(
+    organizationId: string
+  ): Promise<{ timeEntries: Set<string>; projects: Set<string> }> {
+    const { data, error } = await supabase
+      .from('invoice_line_items')
+      .select('source_type, source_id, invoices!inner(organization_id, status)')
+      .eq('invoices.organization_id', organizationId)
+      .neq('invoices.status', 'cancelled')
+
+    if (error) {
+      console.error('Error fetching invoiced sources:', error)
+      throw new Error('Failed to check invoiced work')
     }
+
+    const timeEntries = new Set<string>()
+    const projects = new Set<string>()
+
+    for (const row of ((data as any[]) || [])) {
+      if (!row.source_id) continue
+      if (row.source_type === 'time_entry') timeEntries.add(row.source_id)
+      if (row.source_type === 'project') projects.add(row.source_id)
+    }
+
+    return { timeEntries, projects }
+  }
+
+  static async getUnbilledHours(organizationId: string): Promise<number> {
+    const [entries, invoiced] = await Promise.all([
+      TimeService.getTimeEntries({ status: 'approved', billable: true }, organizationId),
+      this.getInvoicedSourceIds(organizationId),
+    ])
+
     return entries
-      .filter(e => !invoicedEntryIds.has(e.id))
+      .filter(e => !invoiced.timeEntries.has(e.id))
       .reduce((sum, e) => sum + (e.billable_hours ?? 0), 0)
   }
 
@@ -129,15 +170,7 @@ export class BillingService {
     formData: InvoiceFormData
   ): Promise<InvoiceLineItem[]> {
     const items: InvoiceLineItem[] = []
-    const invoicedEntryIds = new Set<string>()
-    const invoicedProjectIds = new Set<string>()
-
-    for (const invoice of this.getInvoices(organizationId)) {
-      for (const item of invoice.line_items) {
-        if (item.source_type === 'time_entry' && item.source_id) invoicedEntryIds.add(item.source_id)
-        if (item.source_type === 'project' && item.source_id) invoicedProjectIds.add(item.source_id)
-      }
-    }
+    const invoiced = await this.getInvoicedSourceIds(organizationId)
 
     if (formData.include_time_entries) {
       const entries = await TimeService.getTimeEntries(
@@ -152,17 +185,17 @@ export class BillingService {
       )
 
       for (const entry of entries) {
-        if (invoicedEntryIds.has(entry.id)) continue
+        if (invoiced.timeEntries.has(entry.id)) continue
         const hours = entry.billable_hours ?? 0
         if (hours <= 0) continue
         const rate = entry.hourly_rate ?? 0
         items.push({
-          id: generateId(),
+          id: crypto.randomUUID(),
           description: entry.description || entry.project_name || 'Time entry',
           quantity: hours,
           unit: 'hours',
           rate,
-          amount: hours * rate,
+          amount: Math.round(hours * rate * 100) / 100,
           source_type: 'time_entry',
           source_id: entry.id,
         })
@@ -171,19 +204,18 @@ export class BillingService {
 
     if (formData.include_projects) {
       const projects = await ProjectsService.getProjects(organizationId)
-      const clientProjects = projects.filter(p => {
-        if (invoicedProjectIds.has(p.id)) return false
-        return p.status === 'active' || p.status === 'completed'
-      })
 
-      for (const project of clientProjects) {
+      for (const project of projects) {
+        if (invoiced.projects.has(project.id)) continue
+        if (project.status !== 'active' && project.status !== 'completed') continue
+
         const budget = project.budget ?? 0
         const rate = project.hourly_rate ?? 0
         const hours = project.total_hours ?? 0
 
         if (budget > 0) {
           items.push({
-            id: generateId(),
+            id: crypto.randomUUID(),
             description: `Project: ${project.name}`,
             quantity: 1,
             unit: 'fixed',
@@ -194,12 +226,12 @@ export class BillingService {
           })
         } else if (hours > 0 && rate > 0) {
           items.push({
-            id: generateId(),
+            id: crypto.randomUUID(),
             description: `Project hours: ${project.name}`,
             quantity: hours,
             unit: 'hours',
             rate,
-            amount: hours * rate,
+            amount: Math.round(hours * rate * 100) / 100,
             source_type: 'project',
             source_id: project.id,
           })
@@ -210,6 +242,22 @@ export class BillingService {
     return items
   }
 
+  /**
+   * Invoice numbers are allocated by a database function holding an advisory
+   * lock, so two people creating invoices at once cannot collide.
+   */
+  private static async nextInvoiceNumber(organizationId: string): Promise<string> {
+    const { data, error } = await supabase.rpc('next_invoice_number', {
+      p_organization_id: organizationId,
+    })
+
+    if (error) {
+      console.error('Error allocating invoice number:', error)
+      throw new Error('Failed to allocate invoice number')
+    }
+    return data as string
+  }
+
   static async createInvoice(
     organizationId: string,
     formData: InvoiceFormData
@@ -218,60 +266,147 @@ export class BillingService {
     if (!client) throw new Error('Client not found')
 
     const lineItems = await this.buildLineItems(organizationId, formData)
-    const subtotal = lineItems.reduce((sum, item) => sum + item.amount, 0)
-    const taxAmount = subtotal * (formData.tax_rate / 100)
-    const total = subtotal + taxAmount
-
-    const invoice: Invoice = {
-      id: generateId(),
-      organization_id: organizationId,
-      client_id: formData.client_id,
-      client_name: client.name,
-      invoice_number: generateInvoiceNumber(organizationId),
-      issue_date: formData.issue_date,
-      due_date: formData.due_date,
-      status: 'draft',
-      line_items: lineItems,
-      subtotal,
-      tax_rate: formData.tax_rate,
-      tax_amount: taxAmount,
-      total,
-      notes: formData.notes,
-      created_at: new Date().toISOString(),
+    if (lineItems.length === 0) {
+      throw new Error('NO_BILLABLE_WORK')
     }
 
-    const invoices = loadInvoices()
-    invoices.push(invoice)
-    saveInvoices(invoices)
+    const subtotal = lineItems.reduce((sum, item) => sum + item.amount, 0)
+    const taxAmount = Math.round(subtotal * (formData.tax_rate / 100) * 100) / 100
+    const total = Math.round((subtotal + taxAmount) * 100) / 100
+    const invoiceNumber = await this.nextInvoiceNumber(organizationId)
+
+    const { data: invoiceRow, error: invoiceError } = await supabase
+      .from('invoices')
+      .insert([{
+        organization_id: organizationId,
+        client_id: formData.client_id,
+        invoice_number: invoiceNumber,
+        issue_date: formData.issue_date,
+        due_date: formData.due_date,
+        status: 'draft',
+        subtotal,
+        tax_rate: formData.tax_rate,
+        tax_amount: taxAmount,
+        total,
+        currency: 'EUR',
+        notes: formData.notes ?? null,
+      }])
+      .select()
+      .single()
+
+    if (invoiceError || !invoiceRow) {
+      console.error('Error creating invoice:', invoiceError)
+      throw new Error('Failed to create invoice')
+    }
+
+    const { error: itemsError } = await supabase
+      .from('invoice_line_items')
+      .insert(
+        lineItems.map(item => ({
+          invoice_id: (invoiceRow as { id: string }).id,
+          description: item.description,
+          quantity: item.quantity,
+          unit: item.unit,
+          rate: item.rate,
+          amount: item.amount,
+          source_type: item.source_type,
+          source_id: item.source_id ?? null,
+        }))
+      )
+
+    if (itemsError) {
+      // Without line items the invoice is meaningless — remove the header so a
+      // half-written invoice cannot block the work from being billed later.
+      await supabase.from('invoices').delete().eq('id', (invoiceRow as { id: string }).id)
+      console.error('Error creating invoice line items:', itemsError)
+      throw new Error('Failed to create invoice')
+    }
+
+    const created = await this.getInvoice((invoiceRow as { id: string }).id, organizationId)
+    if (!created) throw new Error('Failed to load created invoice')
+    return created
+  }
+
+  static async updateInvoiceStatus(
+    id: string,
+    organizationId: string,
+    status: InvoiceStatus
+  ): Promise<Invoice | null> {
+    const updates: Record<string, unknown> = { status }
+    if (status === 'paid') updates.paid_at = new Date().toISOString()
+
+    const { error } = await supabase
+      .from('invoices')
+      .update(updates)
+      .eq('id', id)
+      .eq('organization_id', organizationId)
+
+    if (error) {
+      console.error('Error updating invoice status:', error)
+      throw new Error('Failed to update invoice')
+    }
+
+    const invoice = await this.getInvoice(id, organizationId)
+
+    // A paid invoice is real revenue — mirror it into the finance ledger.
+    if (invoice && status === 'paid') {
+      await FinanceService.recordFromSource({
+        organizationId,
+        direction: 'in',
+        amount: invoice.total,
+        currency: invoice.currency,
+        occurredOn: new Date().toISOString().split('T')[0],
+        description: `Invoice ${invoice.invoice_number} — ${invoice.client_name}`,
+        sourceType: 'invoice',
+        sourceId: invoice.id,
+        categorySlug: 'client_revenue',
+      })
+    }
+
     return invoice
   }
 
-  static updateInvoiceStatus(
-    id: string,
-    organizationId: string,
-    status: Invoice['status']
-  ): Invoice | null {
-    const invoices = loadInvoices()
-    const index = invoices.findIndex(i => i.id === id && i.organization_id === organizationId)
-    if (index === -1) return null
-    invoices[index] = { ...invoices[index], status }
-    saveInvoices(invoices)
-    return invoices[index]
-  }
-
-  static deleteInvoice(id: string, organizationId: string): boolean {
-    const invoices = loadInvoices()
-    const filtered = invoices.filter(i => !(i.id === id && i.organization_id === organizationId))
-    if (filtered.length === invoices.length) return false
-    saveInvoices(filtered)
-    return true
-  }
-
+  /** CSV export of a single invoice, one row per line item plus totals. */
   static exportInvoiceCsv(invoice: Invoice): string {
-    const header = 'Description,Quantity,Unit,Rate,Amount'
-    const rows = invoice.line_items.map(
-      item => `"${item.description}",${item.quantity},${item.unit},${item.rate},${item.amount}`
-    )
-    return [header, ...rows, '', `Subtotal,,,${invoice.subtotal}`, `Tax (${invoice.tax_rate}%),,,${invoice.tax_amount}`, `Total,,,${invoice.total}`].join('\n')
+    const escape = (value: string | number) => {
+      const text = String(value ?? '')
+      return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+    }
+
+    const rows: string[][] = [
+      ['Invoice', invoice.invoice_number],
+      ['Client', invoice.client_name],
+      ['Issue date', invoice.issue_date],
+      ['Due date', invoice.due_date],
+      ['Status', invoice.status],
+      [],
+      ['Description', 'Quantity', 'Unit', 'Rate', 'Amount'],
+      ...invoice.line_items.map(item => [
+        item.description,
+        String(item.quantity),
+        item.unit,
+        item.rate.toFixed(2),
+        item.amount.toFixed(2),
+      ]),
+      [],
+      ['Subtotal', '', '', '', invoice.subtotal.toFixed(2)],
+      [`Tax (${invoice.tax_rate}%)`, '', '', '', invoice.tax_amount.toFixed(2)],
+      ['Total', '', '', '', invoice.total.toFixed(2)],
+    ]
+
+    return rows.map(row => row.map(escape).join(',')).join('\n')
+  }
+
+  static async deleteInvoice(id: string, organizationId: string): Promise<void> {
+    const { error } = await supabase
+      .from('invoices')
+      .delete()
+      .eq('id', id)
+      .eq('organization_id', organizationId)
+
+    if (error) {
+      console.error('Error deleting invoice:', error)
+      throw new Error('Failed to delete invoice')
+    }
   }
 }

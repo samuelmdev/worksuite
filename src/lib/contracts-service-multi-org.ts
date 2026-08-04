@@ -109,9 +109,8 @@ export class ContractsService {
         (contract) => new Date(contract.created_at) <= endOfLastMonth
       ).length
       
-      // Handle different possible field names for value
       const totalValue = contracts.reduce((sum, contract) => {
-        const value = contract.value || contract.monthly_value || contract.total_value || 0
+        const value = contract.value || contract.monthly_value || 0
         return sum + (typeof value === 'number' ? value : 0)
       }, 0)
       

@@ -13,7 +13,7 @@ export default function SecuritySettingsPage() {
   const [loginAlerts, setLoginAlerts] = useState(true)
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <SettingsSubpage titleKey="settings.section.security" descKey="settings.section.securityDesc">
         <SettingsCard title={t('settings.security.passwordTitle')}>
           <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>

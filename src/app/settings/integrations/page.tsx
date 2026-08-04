@@ -33,7 +33,7 @@ export default function IntegrationsSettingsPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <SettingsSubpage titleKey="settings.section.integrations" descKey="settings.section.integrationsDesc" maxWidth="3xl">
         <SettingsCard title={t('settings.integrations.available')} description={t('settings.integrations.availableDesc')}>
           <div className="space-y-3">

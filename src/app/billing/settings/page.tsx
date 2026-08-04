@@ -8,7 +8,7 @@ export default function BillingSettingsPage() {
   const { t } = useLocale()
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager']}>
+    <RoleGuard>
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{t('billing.settings.title')}</h1>

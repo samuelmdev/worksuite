@@ -3,17 +3,18 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Users, Crown, Shield, User, ArrowRight } from 'lucide-react'
+import { Users, Crown, Shield, TrendingUp, User, ArrowRight } from 'lucide-react'
 import RoleGuard from '../components/RoleGuard'
 import { useAuth } from '../lib/auth-context-multi-org'
 import { useLocale } from '../lib/locale'
 import { TeamService, TeamMember, TeamStats } from '../../lib/team-service-multi-org'
+import { roleIcon, roleBadgeClass, roleLabelKey } from '../lib/role-display'
 
 export default function TeamOverviewPage() {
   const { currentOrganization } = useAuth()
   const { t } = useLocale()
   const [members, setMembers] = useState<TeamMember[]>([])
-  const [stats, setStats] = useState<TeamStats>({ total_members: 0, admins: 0, managers: 0, employees: 0 })
+  const [stats, setStats] = useState<TeamStats>({ total_members: 0, admins: 0, managers: 0, sales_reps: 0, employees: 0 })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -39,27 +40,12 @@ export default function TeamOverviewPage() {
     { labelKey: 'team.stats.totalMembers' as const, value: stats.total_members, icon: Users },
     { labelKey: 'team.stats.admins' as const, value: stats.admins, icon: Crown },
     { labelKey: 'team.stats.managers' as const, value: stats.managers, icon: Shield },
+    { labelKey: 'team.stats.salesReps' as const, value: stats.sales_reps, icon: TrendingUp },
     { labelKey: 'team.stats.employees' as const, value: stats.employees, icon: User },
   ]
 
-  const roleIcon = (role: TeamMember['role']) => {
-    switch (role) {
-      case 'admin': return Crown
-      case 'manager': return Shield
-      default: return User
-    }
-  }
-
-  const roleColor = (role: TeamMember['role']) => {
-    switch (role) {
-      case 'admin': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
-      case 'manager': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-      default: return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300'
-    }
-  }
-
   return (
-    <RoleGuard allowedRoles={['admin', 'manager']}>
+    <RoleGuard>
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{t('team.overview.title')}</h1>
@@ -73,7 +59,7 @@ export default function TeamOverviewPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {statCards.map((card, index) => {
             const Icon = card.icon
             return (
@@ -129,8 +115,8 @@ export default function TeamOverviewPage() {
                         </p>
                       </div>
                     </div>
-                    <span className={`px-2 py-0.5 text-xs rounded-full capitalize ${roleColor(member.role)}`}>
-                      {t(`settings.role.${member.role === 'employee' ? 'member' : member.role}`)}
+                    <span className={`px-2 py-0.5 text-xs rounded-full ${roleBadgeClass(member.role)}`}>
+                      {t(roleLabelKey(member.role))}
                     </span>
                   </div>
                 )

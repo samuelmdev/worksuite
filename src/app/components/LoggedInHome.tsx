@@ -13,6 +13,7 @@ import {
   User,
   CreditCard,
   UserCog,
+  Wallet,
 } from 'lucide-react'
 import { useAuth } from '../lib/auth-context-multi-org'
 import { useLocale } from '../lib/locale'
@@ -41,7 +42,7 @@ const modules: {
   descKey: TranslationKey
   ctaKey: TranslationKey
   href: string
-  color: 'cyan' | 'emerald' | 'violet' | 'blue' | 'red'
+  color: 'cyan' | 'emerald' | 'violet' | 'blue' | 'amber' | 'red'
   icon: typeof Users
 }[] = [
   {
@@ -77,6 +78,14 @@ const modules: {
     icon: CreditCard,
   },
   {
+    nameKey: 'nav.finance',
+    descKey: 'home.financeDesc',
+    ctaKey: 'home.accessFinance',
+    href: '/finance',
+    color: 'amber',
+    icon: Wallet,
+  },
+  {
     nameKey: 'nav.team',
     descKey: 'home.teamDesc',
     ctaKey: 'home.manageTeam',
@@ -110,6 +119,12 @@ const colorStyles = {
     icon: 'bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400',
     cta: 'bg-blue-600 hover:bg-blue-700 text-white',
     glow: 'group-hover:shadow-blue-500/10',
+  },
+  amber: {
+    card: 'border-amber-200/80 dark:border-amber-800/60 bg-gradient-to-br from-amber-50/80 to-white dark:from-amber-950/40 dark:to-slate-900 hover:border-amber-300 dark:hover:border-amber-700',
+    icon: 'bg-amber-100 dark:bg-amber-900/60 text-amber-600 dark:text-amber-400',
+    cta: 'bg-amber-600 hover:bg-amber-700 text-white',
+    glow: 'group-hover:shadow-amber-500/10',
   },
   red: {
     card: 'border-red-200/80 dark:border-red-800/60 bg-gradient-to-br from-red-50/80 to-white dark:from-red-950/40 dark:to-slate-900 hover:border-red-300 dark:hover:border-red-700',

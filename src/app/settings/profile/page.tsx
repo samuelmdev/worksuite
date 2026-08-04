@@ -26,7 +26,7 @@ export default function ProfileSettingsPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager', 'employee']}>
+    <RoleGuard>
       <SettingsSubpage titleKey="settings.section.profile" descKey="settings.section.profileDesc">
         <SettingsCard>
           <div className="flex items-center space-x-4 pb-4 border-b border-gray-200 dark:border-slate-700">

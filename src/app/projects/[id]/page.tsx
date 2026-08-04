@@ -1,12 +1,13 @@
 import React from 'react'
 
-export default function ProjectDetailPage({ params }: { params: { id: string } }) {
+export default async function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return (
     <div className="space-y-6">
       <div className="p-6 bg-white rounded shadow">
         <h3 className="text-lg font-semibold mb-4">Project Details</h3>
         <p className="text-gray-600">
-          This page will display comprehensive project information for project ID: {params.id}
+          This page will display comprehensive project information for project ID: {id}
         </p>
         <ul className="mt-4 space-y-2 text-sm text-gray-600">
           <li>• Project overview with description, timeline, and budget</li>

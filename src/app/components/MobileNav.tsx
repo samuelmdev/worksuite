@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, Users, Clock, FolderOpen, Settings, Home, CreditCard, UserCog } from 'lucide-react'
+import { ChevronDown, Users, Clock, FolderOpen, Settings, Home, CreditCard, UserCog, Wallet } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import LocaleSwitcher from './LocaleSwitcherClient'
 import UserMenu from './UserMenu'
@@ -20,6 +20,7 @@ const ALL_NAV_ITEMS: { nameKey: TranslationKey; href: string; icon: typeof Home;
   { nameKey: 'nav.timeTracking', href: '/time-tracking', icon: Clock, color: 'emerald' },
   { nameKey: 'nav.projects', href: '/projects', icon: FolderOpen, color: 'violet' },
   { nameKey: 'nav.billing', href: '/billing', icon: CreditCard, color: 'blue' },
+  { nameKey: 'nav.finance', href: '/finance', icon: Wallet, color: 'amber' },
   { nameKey: 'nav.team', href: '/team', icon: UserCog, color: 'red' },
   { nameKey: 'nav.settings', href: '/settings', icon: Settings, color: 'gray' },
 ]
@@ -76,6 +77,7 @@ export default function MobileNav() {
             currentModule.color === 'emerald' ? 'text-emerald-600 dark:text-emerald-400' :
             currentModule.color === 'violet' ? 'text-violet-600 dark:text-violet-400' :
             currentModule.color === 'blue' ? 'text-blue-600 dark:text-blue-400' :
+            currentModule.color === 'amber' ? 'text-amber-600 dark:text-amber-400' :
             currentModule.color === 'red' ? 'text-red-600 dark:text-red-400' :
             'text-slate-600 dark:text-slate-400'
           }`} />
@@ -138,6 +140,8 @@ export default function MobileNav() {
                                 ? 'bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300'
                                 : item.color === 'blue'
                                 ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+                                : item.color === 'amber'
+                                ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200'
                                 : item.color === 'red'
                                 ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'
                                 : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200'
@@ -150,6 +154,7 @@ export default function MobileNav() {
                               : item.color === 'emerald' ? 'text-emerald-600 dark:text-emerald-400'
                               : item.color === 'violet' ? 'text-violet-600 dark:text-violet-400'
                               : item.color === 'blue' ? 'text-blue-600 dark:text-blue-400'
+                              : item.color === 'amber' ? 'text-amber-600 dark:text-amber-400'
                               : item.color === 'red' ? 'text-red-600 dark:text-red-400'
                               : 'text-slate-700 dark:text-slate-300'
                               : 'text-slate-500 dark:text-slate-400'
@@ -161,6 +166,7 @@ export default function MobileNav() {
                               : item.color === 'emerald' ? 'bg-emerald-500'
                               :                               item.color === 'violet' ? 'bg-violet-500'
                               : item.color === 'blue' ? 'bg-blue-500'
+                              : item.color === 'amber' ? 'bg-amber-500'
                               : item.color === 'red' ? 'bg-red-500'
                               : 'bg-slate-500'
                             }`} />

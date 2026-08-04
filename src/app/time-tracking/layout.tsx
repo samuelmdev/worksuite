@@ -7,7 +7,7 @@ import { Menu, X, Clock, BarChart3, Settings, Home, Users } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { TimeProvider } from '../lib/time-context'
-import { useSubscription } from '../../lib/subscription-utils'
+import { useSubscription } from '../lib/use-subscription'
 import { useAuth } from '../lib/auth-context-multi-org'
 import { useLocale } from '../lib/locale'
 import type { TranslationKey } from '../lib/translations'
@@ -35,7 +35,7 @@ export default function TimeLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname()
   const { user } = useAuth()
   const { t } = useLocale()
-  const { shouldShowTimeTrackingClients } = useSubscription(user?.id)
+  const { isEntitled: shouldShowTimeTrackingClients } = useSubscription()
 
   // Build navigation based on subscription
   const navigation = [
@@ -52,7 +52,7 @@ export default function TimeLayout({ children }: { children: React.ReactNode }) 
   return (
     <TimeProvider>
       <ModuleAccessShell
-        children={children}
+        withoutSidebar={children}
         withSidebar={
       <div className="flex h-screen bg-gray-50 dark:bg-slate-900">
       {/* Desktop Sidebar */}

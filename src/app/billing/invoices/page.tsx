@@ -15,10 +15,19 @@ export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [loading, setLoading] = useState(true)
 
-  const loadInvoices = () => {
-    if (!currentOrganization?.id) return
-    setInvoices(BillingService.getInvoices(currentOrganization.id))
-    setLoading(false)
+  const loadInvoices = async () => {
+    if (!currentOrganization?.id) {
+      setLoading(false)
+      return
+    }
+    try {
+      setInvoices(await BillingService.getInvoices(currentOrganization.id))
+    } catch (error) {
+      console.error('Error loading invoices:', error)
+      setInvoices([])
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -36,16 +45,16 @@ export default function InvoicesPage() {
     URL.revokeObjectURL(url)
   }
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!currentOrganization?.id) return
     if (!confirm(t('billing.invoices.confirmDelete'))) return
-    BillingService.deleteInvoice(id, currentOrganization.id)
+    await BillingService.deleteInvoice(id, currentOrganization.id)
     loadInvoices()
   }
 
-  const handleStatusChange = (id: string, status: Invoice['status']) => {
+  const handleStatusChange = async (id: string, status: Invoice['status']) => {
     if (!currentOrganization?.id) return
-    BillingService.updateInvoiceStatus(id, currentOrganization.id, status)
+    await BillingService.updateInvoiceStatus(id, currentOrganization.id, status)
     loadInvoices()
   }
 
@@ -59,7 +68,7 @@ export default function InvoicesPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={['admin', 'manager']}>
+    <RoleGuard>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>

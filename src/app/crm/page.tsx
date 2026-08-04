@@ -197,7 +197,7 @@ export default function CRMIndexPage() {
   ]
 
   return (
-    <RoleGuard allowedRoles={["admin", "manager"]}>
+    <RoleGuard>
       <div className="space-y-6">
         {/* Header */}
         <div>
@@ -661,18 +661,24 @@ export default function CRMIndexPage() {
         <ContractModal
           isOpen={isContractModalOpen}
           onClose={() => setIsContractModalOpen(false)}
+          onSave={() => {
+            setIsContractModalOpen(false)
+            refreshAll()
+          }}
           clients={clients}
+          mode="create"
         />
 
         {/* Task Modal */}
         <TaskModal
           isOpen={isTaskModalOpen}
           onClose={() => setIsTaskModalOpen(false)}
-          onSave={(task) => {
-            console.log('Task saved:', task)
-            // TODO: Add task to context when we implement task management
+          onSave={() => {
+            setIsTaskModalOpen(false)
+            refreshAll()
           }}
           clients={clients}
+          mode="create"
         />
 
         {/* Activity Log Modal */}

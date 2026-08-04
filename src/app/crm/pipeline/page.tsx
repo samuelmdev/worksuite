@@ -10,6 +10,7 @@ import TaskModal from '../../components/TaskModal'
 import ContractModal from '../../components/ContractModal'
 import { ClientService } from '../../../lib/client-service-multi-org'
 import { PipelineService, PipelineItem } from '../../../lib/pipeline-service-multi-org'
+import { CompensationService } from '../../../lib/compensation-service'
 import { useAuth } from '../../lib/auth-context-multi-org'
 import { Database } from '../../../lib/supabase'
 import { useLocale } from '../../lib/locale'
@@ -29,7 +30,8 @@ const stages: { key: string; labelKey: TranslationKey; color: string; textColor:
 export default function CRMPipelinePage() {
   const searchParams = useSearchParams()
   const { t } = useLocale()
-  const { currentOrganization } = useAuth()
+  const { currentOrganization, user } = useAuth()
+  const [commissionNotice, setCommissionNotice] = useState<string | null>(null)
   const [pipelineItems, setPipelineItems] = useState<PipelineItem[]>([])
   const [clients, setClients] = useState<Client[]>([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -243,6 +245,35 @@ export default function CRMPipelinePage() {
       }
 
       if (targetStage === 'closed-won') {
+        // Record the rep's commission before opening the contract flow. This is
+        // idempotent per deal, so bouncing a deal in and out of closed-won
+        // cannot pay twice.
+        if (user?.id && currentOrganization.role) {
+          try {
+            const commission = await CompensationService.recordCommissionForWonDeal({
+              organizationId: currentOrganization.id,
+              pipelineItemId: updatedItem.id,
+              userId: user.id,
+              role: currentOrganization.role,
+              dealValue: updatedItem.value,
+              clientId: updatedItem.clientId ?? null,
+            })
+            if (commission) {
+              setCommissionNotice(
+                t('crm.pipelinePage.commissionRecorded', {
+                  amount: commission.amount.toLocaleString(undefined, {
+                    style: 'currency',
+                    currency: commission.currency,
+                  }),
+                })
+              )
+            }
+          } catch (commissionError) {
+            // A commission failure must not roll back a won deal.
+            console.error('Error recording commission:', commissionError)
+          }
+        }
+
         openContractModalForItem(updatedItem)
       }
     } catch (error) {
@@ -303,6 +334,7 @@ export default function CRMPipelinePage() {
   }
 
   const handleBlockItem = async (itemId: string, reason: string) => {
+    if (!currentOrganization?.id) return
     try {
       await PipelineService.blockPipelineItem(itemId, reason, currentOrganization.id)
       // Refresh pipeline items from database
@@ -315,6 +347,7 @@ export default function CRMPipelinePage() {
   }
 
   const handleUnblockItem = async (itemId: string) => {
+    if (!currentOrganization?.id) return
     try {
       await PipelineService.unblockPipelineItem(itemId, currentOrganization.id)
       // Refresh pipeline items from database
@@ -375,6 +408,7 @@ export default function CRMPipelinePage() {
   }
 
   const handleConfirmDelete = async () => {
+    if (!currentOrganization?.id) return
     if (itemToDelete) {
       try {
         await PipelineService.deletePipelineItem(itemToDelete.id, currentOrganization.id)
@@ -414,8 +448,6 @@ export default function CRMPipelinePage() {
         ))
       } else {
         // Create new item
-        let newItem: PipelineItem
-        
         // If this is a lead (new client), create the client in the CRM first
         if (dealData.type === 'lead') {
           try {
@@ -440,7 +472,7 @@ export default function CRMPipelinePage() {
         }
         
         // Create the pipeline item in the database
-        newItem = await PipelineService.createPipelineItem({
+        const newItem = await PipelineService.createPipelineItem({
           ...dealData,
           clientId: dealData.clientId || undefined,
           organization_id: currentOrganization.id,
@@ -554,7 +586,7 @@ export default function CRMPipelinePage() {
   }
 
   return (
-    <RoleGuard allowedRoles={["admin", "manager"]}>
+    <RoleGuard>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -566,6 +598,17 @@ export default function CRMPipelinePage() {
             {error && (
               <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
                 <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+              </div>
+            )}
+            {commissionNotice && (
+              <div className="mt-2 flex items-center justify-between gap-3 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg">
+                <p className="text-sm text-emerald-700 dark:text-emerald-400">{commissionNotice}</p>
+                <button
+                  onClick={() => setCommissionNotice(null)}
+                  className="text-emerald-600 dark:text-emerald-400 hover:opacity-70 text-sm"
+                >
+                  ×
+                </button>
               </div>
             )}
           </div>

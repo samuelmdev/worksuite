@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { X, Clock, User, Building, FileText, CheckCircle, AlertCircle } from 'lucide-react'
 import { TimeService, TimeEntryFormData } from '@/lib/time-service-multi-org'
+import { ProjectsService, type ProjectWithDetails } from '@/lib/projects-service-multi-org'
 import { Database } from '@/lib/supabase'
 import { User as AuthUser, useAuth } from '../lib/auth-context-multi-org'
 import { useLocale } from '../lib/locale'
@@ -48,6 +49,7 @@ export default function TimeEntryModal({
     user_id: currentUser?.id || '',
     organization_id: currentOrganization?.id || '',
     client_id: null,
+    project_id: null,
     project_name: '',
     description: '',
     start_time: '',
@@ -61,9 +63,30 @@ export default function TimeEntryModal({
   const [startTime, setStartTime] = useState('07:00')
   const [endDate, setEndDate] = useState('')
   const [endTime, setEndTime] = useState('07:00')
-  
+
+  const [projects, setProjects] = useState<ProjectWithDetails[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Projects are what hours roll up to, so the picker is sourced from the
+  // Projects module rather than typed in by hand.
+  useEffect(() => {
+    if (!isOpen || !currentOrganization?.id) return
+    let cancelled = false
+
+    ProjectsService.getProjects(currentOrganization.id)
+      .then((data) => {
+        if (!cancelled) setProjects(data)
+      })
+      .catch((err) => {
+        console.error('Error loading projects for time entry:', err)
+        if (!cancelled) setProjects([])
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [isOpen, currentOrganization?.id])
 
   // Update organization_id when currentOrganization changes
   useEffect(() => {
@@ -86,6 +109,7 @@ export default function TimeEntryModal({
           user_id: timeEntry.user_id || currentUser?.id || '',
           organization_id: timeEntry.organization_id || currentOrganization?.id || '',
           client_id: timeEntry.client_id,
+          project_id: timeEntry.project_id ?? null,
           project_name: timeEntry.project_name || '',
           description: timeEntry.description || '',
           start_time: timeEntry.start_time || '',
@@ -105,6 +129,7 @@ export default function TimeEntryModal({
           user_id: currentUser?.id || '',
           organization_id: currentOrganization?.id || '',
           client_id: null,
+          project_id: null,
           project_name: '',
           description: '',
           start_time: `${selectedDate}T07:00:00`,
@@ -325,20 +350,38 @@ export default function TimeEntryModal({
             </select>
           </div>
 
-          {/* Project Name */}
+          {/* Project Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
               <FileText className="w-4 h-4 inline mr-1" />
-              {t('modal.timeEntry.projectName')}
+              {t('modal.timeEntry.projectName')} *
             </label>
-            <input
-              type="text"
-              value={formData.project_name || ''}
-              onChange={(e) => handleInputChange('project_name', e.target.value)}
+            <select
+              value={formData.project_id || ''}
+              onChange={(e) => {
+                const projectId = e.target.value || null
+                const project = projects.find((p) => p.id === projectId)
+                setFormData((prev) => ({
+                  ...prev,
+                  project_id: projectId,
+                  project_name: project?.name || '',
+                }))
+              }}
               className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-              placeholder={t('modal.timeEntry.placeholder.project')}
               required
-            />
+            >
+              <option value="">{t('modal.timeEntry.selectProject')}</option>
+              {projects.map((project) => (
+                <option key={project.id} value={project.id}>
+                  {project.name}
+                </option>
+              ))}
+            </select>
+            {projects.length === 0 && (
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                {t('modal.timeEntry.noProjects')}
+              </p>
+            )}
           </div>
 
           {/* Description */}

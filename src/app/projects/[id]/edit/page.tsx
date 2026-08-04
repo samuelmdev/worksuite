@@ -1,11 +1,12 @@
 import React from 'react'
 
-export default function EditProjectPage({ params }: { params: { id: string } }) {
+export default async function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return (
     <div className="p-6 bg-white rounded shadow">
       <h3 className="text-lg font-semibold mb-4">Edit Project</h3>
       <p className="text-gray-600">
-        This page will provide a comprehensive form to edit project details for project ID: {params.id}
+        This page will provide a comprehensive form to edit project details for project ID: {id}
       </p>
       <ul className="mt-4 space-y-2 text-sm text-gray-600">
         <li>• Project name, description, and type</li>
