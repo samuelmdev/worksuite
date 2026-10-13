@@ -12,16 +12,33 @@ moving on. Every file is idempotent, so re-running one is harmless.
 
 ## Existing database
 
-Run these two, in order:
+Run these three, in order:
 
 ```
 001_consolidate_schema.sql
 003_sales_compensation_billing_finance.sql
+004_fix_rls_recursion_and_leaks.sql
 ```
 
-Both are idempotent and non-destructive — safe to re-run, and neither drops
-anything. Afterwards run the verification queries commented at the bottom of
-each file.
+All are idempotent and non-destructive to data — safe to re-run, and none of
+them drops a table. Afterwards run the verification queries commented at the
+bottom of each file.
+
+**004 is required, not optional.** It repairs two RLS defects in 001 and 003
+that only showed up against a real database:
+
+- 001 dropped pre-existing policies *by name*. A database previously set up by
+  the old `fix-*-rls-*.sql` scripts keeps its policies under other names, and
+  Postgres ORs permissive policies together — so a surviving `USING (true)`
+  silently defeated every policy added afterwards. `public.organizations` was
+  readable by anonymous callers.
+- The `organization_members` insert policy queried `organization_members`
+  inline, so evaluating it re-entered it: `42P17 infinite recursion detected
+  in policy`. That blocked every write to the table, signup included.
+
+004 drops every policy on the tables in scope by enumerating `pg_policies`,
+then recreates the intended set, and moves the recursive check into a
+`SECURITY DEFINER` function. It is the single authority on RLS.
 
 Once the app is confirmed healthy, optionally run:
 
@@ -45,6 +62,7 @@ the numbered migrations:
 | 4 | `../tasks-table-schema.sql` | tasks |
 | 5 | `001_consolidate_schema.sql` | organization_members, missing columns, triggers, all RLS |
 | 6 | `003_sales_compensation_billing_finance.sql` | sales_rep role, compensation, invoices, finance, Stripe columns |
+| 7 | `004_fix_rls_recursion_and_leaks.sql` | rebuilds all RLS policies; required |
 
 `001` creates `organization_members` itself, so
 `../organization-members-table-schema.sql` is not needed.

@@ -77,11 +77,25 @@ BEGIN
 END;
 $$;
 
-DROP TRIGGER IF EXISTS sync_user_email_on_auth_change ON auth.users;
-CREATE TRIGGER sync_user_email_on_auth_change
-    AFTER INSERT OR UPDATE OF email ON auth.users
-    FOR EACH ROW
-    EXECUTE FUNCTION public.sync_user_email();
+-- auth.users is owned by supabase_auth_admin, so creating a trigger on it can
+-- be refused depending on how the project is configured. The backfill above
+-- has already run by this point, so a refusal costs only the ongoing sync for
+-- future signups — not worth aborting the whole migration over. The notice
+-- tells you if that happened.
+DO $$
+BEGIN
+    DROP TRIGGER IF EXISTS sync_user_email_on_auth_change ON auth.users;
+    CREATE TRIGGER sync_user_email_on_auth_change
+        AFTER INSERT OR UPDATE OF email ON auth.users
+        FOR EACH ROW
+        EXECUTE FUNCTION public.sync_user_email();
+EXCEPTION
+    WHEN insufficient_privilege OR undefined_table THEN
+        RAISE NOTICE
+            'Could not attach sync_user_email to auth.users (%). Existing emails were still backfilled; new signups will need users.email set by the application.',
+            SQLERRM;
+END;
+$$;
 
 
 -- =============================================================================
@@ -137,19 +151,29 @@ BEGIN
 END;
 $$;
 
--- Every organization needs at least one admin. Promote the creator of any
--- organization that ended up without one.
-INSERT INTO public.organization_members (organization_id, user_id, role, is_active)
-SELECT DISTINCT ON (o.id) o.id, u.id, 'admin', true
-FROM public.organizations o
-JOIN public.users u ON u.organization_id = o.id
-WHERE NOT EXISTS (
-    SELECT 1 FROM public.organization_members om
-    WHERE om.organization_id = o.id AND om.role = 'admin' AND om.is_active
-)
-ORDER BY o.id, u.created_at
-ON CONFLICT (organization_id, user_id) DO UPDATE SET
-    role = 'admin', is_active = true, updated_at = NOW();
+-- Every organization needs at least one admin, or nobody can manage members.
+-- Any organization whose members are all non-admin gets its earliest joiner
+-- promoted.
+--
+-- This reads organization_members (populated just above) rather than
+-- users.organization_id: that column only exists on databases still on the
+-- original single-org schema, and is absent once the multi-org migration has
+-- been applied.
+UPDATE public.organization_members
+SET role = 'admin', updated_at = NOW()
+WHERE id IN (
+    SELECT DISTINCT ON (candidate.organization_id) candidate.id
+    FROM public.organization_members candidate
+    WHERE candidate.is_active
+      AND NOT EXISTS (
+          SELECT 1
+          FROM public.organization_members existing_admin
+          WHERE existing_admin.organization_id = candidate.organization_id
+            AND existing_admin.role = 'admin'
+            AND existing_admin.is_active
+      )
+    ORDER BY candidate.organization_id, candidate.joined_at
+);
 
 
 -- =============================================================================
@@ -426,13 +450,25 @@ CREATE POLICY "Admins can manage org members" ON public.organization_members
     WITH CHECK (organization_id IN (SELECT public.user_admin_organization_ids()));
 
 -- Lets the subscriber attach themselves to the organization they just made.
+--
+-- The emptiness test MUST go through a SECURITY DEFINER function. An inline
+-- "SELECT ... FROM organization_members" here makes the policy re-enter
+-- itself: 42P17 infinite recursion, which blocks every write to the table
+-- including signup. See 004, which supersedes this whole RLS section.
+CREATE OR REPLACE FUNCTION public.organization_has_no_members(p_organization_id UUID)
+RETURNS BOOLEAN LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public
+AS $$
+    SELECT NOT EXISTS (
+        SELECT 1 FROM public.organization_members WHERE organization_id = p_organization_id
+    );
+$$;
+
+GRANT EXECUTE ON FUNCTION public.organization_has_no_members(UUID) TO authenticated;
+
 CREATE POLICY "Users can join as first admin" ON public.organization_members
     FOR INSERT WITH CHECK (
         user_id = auth.uid()
-        AND NOT EXISTS (
-            SELECT 1 FROM public.organization_members existing
-            WHERE existing.organization_id = organization_members.organization_id
-        )
+        AND public.organization_has_no_members(organization_id)
     );
 
 -- --- users ------------------------------------------------------------------
