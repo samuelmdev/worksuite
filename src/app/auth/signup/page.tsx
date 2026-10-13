@@ -116,8 +116,8 @@ export default function SignupPage() {
           </p>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 p-8">
-          <div className="mb-6 p-4 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-lg border border-gray-200 dark:border-slate-700 p-8">
+          <div className="mb-6 p-4 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 shape-sm">
             <p className="text-sm text-cyan-900 dark:text-cyan-100">{t('auth.signup.businessOnly')}</p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -131,7 +131,7 @@ export default function SignupPage() {
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('auth.placeholder.fullName')}
                   required
                 />
@@ -148,7 +148,7 @@ export default function SignupPage() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('auth.placeholder.email')}
                   required
                 />
@@ -165,7 +165,7 @@ export default function SignupPage() {
                   type="text"
                   value={formData.organizationName}
                   onChange={(e) => handleInputChange('organizationName', e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('auth.placeholder.organizationName')}
                   required
                 />
@@ -182,7 +182,7 @@ export default function SignupPage() {
                   type="email"
                   value={formData.organizationEmail}
                   onChange={(e) => handleInputChange('organizationEmail', e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('auth.placeholder.organizationEmail')}
                 />
               </div>
@@ -198,7 +198,7 @@ export default function SignupPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className="w-full pl-10 pr-12 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full pl-10 pr-12 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('auth.placeholder.passwordCreate')}
                   required
                 />
@@ -222,7 +222,7 @@ export default function SignupPage() {
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={formData.confirmPassword}
                   onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                  className="w-full pl-10 pr-12 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full pl-10 pr-12 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('auth.placeholder.confirmPassword')}
                   required
                 />
@@ -240,7 +240,7 @@ export default function SignupPage() {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+                className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm"
               >
                 <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
               </motion.div>
@@ -249,7 +249,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-cyan-400 text-white rounded-lg transition-colors"
+              className="w-full flex items-center justify-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-cyan-400 text-white shape-sm transition-colors"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -262,7 +262,7 @@ export default function SignupPage() {
             </button>
           </form>
 
-          <div className="mt-6 p-4 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg">
+          <div className="mt-6 p-4 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 shape-sm">
             <h3 className="text-sm font-medium text-cyan-900 dark:text-cyan-100 mb-2">
               {t('auth.signup.adminTitle')}
             </h3>
@@ -272,7 +272,7 @@ export default function SignupPage() {
             </div>
           </div>
 
-          <div className="mt-4 p-4 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg">
+          <div className="mt-4 p-4 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 shape-sm">
             <h3 className="text-sm font-medium text-gray-900 dark:text-slate-100 mb-2">
               {t('auth.signup.whatsNextTitle')}
             </h3>

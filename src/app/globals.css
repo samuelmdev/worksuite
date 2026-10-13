@@ -1,16 +1,431 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================================
+   DigiShift design system, ported to WorkSuite.
+
+   Three things carry the brand:
+     1. The shape — three rounded corners, the top right cut sharp.
+     2. The type — Archivo for everything, IBM Plex Mono for labels and figures.
+     3. The restraint — a near-neutral page with colour used only where it means
+        something. Every named Tailwind ramp below is re-cut to that discipline,
+        so the ~1800 existing colour utilities across the app inherit it without
+        being touched one by one.
+   ============================================================================ */
 
 @theme inline {
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* DigiShift surface vocabulary */
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-mute: var(--mute);
+  --color-line: var(--line);
+  --color-soft: var(--soft);
+  --color-surface: var(--surface);
+
+  /* Accent spots. Deeper and calmer in the dark theme. */
+  --color-ember: var(--spot-ember);
+  --color-ultra: var(--spot-ultra);
+  --color-haze: var(--spot-haze);
+  --color-silver: var(--spot-silver);
+
+  --radius-brand: 1.25rem;
+  --ease-shift: cubic-bezier(0.7, 0, 0.2, 1);
+
   --animate-module-marquee: module-marquee 32s linear infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Re-cut colour ramps.
+
+   Same hue families as before, so class names stay honest and every module
+   keeps the identity people have already learned — but pulled to DigiShift's
+   chroma and value structure: nothing neon, neutrals with no blue cast, and
+   `blue` / `orange` landing exactly on the brand's ultra and ember.
+
+   Written in oklch, which is what Tailwind v4 uses natively, so the ramps
+   interpolate and mix predictably.
+   --------------------------------------------------------------------------- */
+@theme {
+  /* Neutrals: DigiShift is neutral, not blue-grey. slate keeps a whisper of
+     cool so large dark fills do not read as dead flat; gray is a true grey.
+     slate-900 lands on DigiShift's #161616 surface, slate-950 on its #0a0a0a ink. */
+  --color-slate-50: oklch(0.985 0.001 250);
+  --color-slate-100: oklch(0.967 0.002 250);
+  --color-slate-200: oklch(0.925 0.003 250);
+  --color-slate-300: oklch(0.868 0.004 250);
+  --color-slate-400: oklch(0.705 0.005 250);
+  --color-slate-500: oklch(0.556 0.005 250);
+  --color-slate-600: oklch(0.442 0.005 250);
+  --color-slate-700: oklch(0.365 0.005 250);
+  --color-slate-800: oklch(0.242 0.004 250);
+  --color-slate-900: oklch(0.155 0.003 250);
+  --color-slate-950: oklch(0.105 0.002 250);
+
+  --color-gray-50: oklch(0.986 0 0);
+  --color-gray-100: oklch(0.969 0 0);
+  --color-gray-200: oklch(0.928 0 0);
+  --color-gray-300: oklch(0.871 0 0);
+  --color-gray-400: oklch(0.709 0 0);
+  --color-gray-500: oklch(0.557 0 0);
+  --color-gray-600: oklch(0.445 0 0);
+  --color-gray-700: oklch(0.368 0 0);
+  --color-gray-800: oklch(0.246 0 0);
+  --color-gray-900: oklch(0.158 0 0);
+  --color-gray-950: oklch(0.108 0 0);
+
+  /* CRM — a deep, calm cyan instead of the neon default. */
+  --color-cyan-50: oklch(0.982 0.016 213);
+  --color-cyan-100: oklch(0.956 0.034 213);
+  --color-cyan-200: oklch(0.915 0.058 213);
+  --color-cyan-300: oklch(0.855 0.082 213);
+  --color-cyan-400: oklch(0.755 0.102 213);
+  --color-cyan-500: oklch(0.64 0.115 213);
+  --color-cyan-600: oklch(0.545 0.105 213);
+  --color-cyan-700: oklch(0.455 0.088 213);
+  --color-cyan-800: oklch(0.375 0.07 213);
+  --color-cyan-900: oklch(0.31 0.055 213);
+  --color-cyan-950: oklch(0.225 0.042 213);
+
+  /* Hours — teal-green, the calm end of the ramp. */
+  --color-emerald-50: oklch(0.979 0.018 165);
+  --color-emerald-100: oklch(0.95 0.038 165);
+  --color-emerald-200: oklch(0.903 0.062 165);
+  --color-emerald-300: oklch(0.835 0.082 165);
+  --color-emerald-400: oklch(0.72 0.096 165);
+  --color-emerald-500: oklch(0.6 0.105 165);
+  --color-emerald-600: oklch(0.51 0.094 165);
+  --color-emerald-700: oklch(0.425 0.078 165);
+  --color-emerald-800: oklch(0.35 0.063 165);
+  --color-emerald-900: oklch(0.292 0.05 165);
+  --color-emerald-950: oklch(0.21 0.038 165);
+
+  /* Success states ride the same green as Hours. */
+  --color-green-50: oklch(0.978 0.018 152);
+  --color-green-100: oklch(0.949 0.04 152);
+  --color-green-200: oklch(0.9 0.066 151);
+  --color-green-300: oklch(0.83 0.09 151);
+  --color-green-400: oklch(0.718 0.108 150);
+  --color-green-500: oklch(0.6 0.115 150);
+  --color-green-600: oklch(0.512 0.102 150);
+  --color-green-700: oklch(0.428 0.084 150);
+  --color-green-800: oklch(0.352 0.068 150);
+  --color-green-900: oklch(0.295 0.054 150);
+  --color-green-950: oklch(0.212 0.04 150);
+
+  /* Projects — violet with most of the glare taken out. */
+  --color-violet-50: oklch(0.978 0.015 288);
+  --color-violet-100: oklch(0.951 0.032 288);
+  --color-violet-200: oklch(0.906 0.06 288);
+  --color-violet-300: oklch(0.835 0.092 288);
+  --color-violet-400: oklch(0.7 0.125 288);
+  --color-violet-500: oklch(0.56 0.145 288);
+  --color-violet-600: oklch(0.482 0.138 288);
+  --color-violet-700: oklch(0.408 0.118 288);
+  --color-violet-800: oklch(0.342 0.096 288);
+  --color-violet-900: oklch(0.288 0.078 288);
+  --color-violet-950: oklch(0.205 0.058 288);
+
+  --color-purple-50: oklch(0.977 0.015 300);
+  --color-purple-100: oklch(0.949 0.033 300);
+  --color-purple-200: oklch(0.903 0.06 300);
+  --color-purple-300: oklch(0.83 0.09 299);
+  --color-purple-400: oklch(0.695 0.122 298);
+  --color-purple-500: oklch(0.558 0.14 297);
+  --color-purple-600: oklch(0.478 0.132 297);
+  --color-purple-700: oklch(0.405 0.112 296);
+  --color-purple-800: oklch(0.34 0.092 296);
+  --color-purple-900: oklch(0.286 0.074 296);
+  --color-purple-950: oklch(0.204 0.055 296);
+
+  --color-indigo-50: oklch(0.976 0.015 277);
+  --color-indigo-100: oklch(0.948 0.033 277);
+  --color-indigo-200: oklch(0.901 0.062 276);
+  --color-indigo-300: oklch(0.827 0.098 275);
+  --color-indigo-400: oklch(0.695 0.145 273);
+  --color-indigo-500: oklch(0.552 0.175 271);
+  --color-indigo-600: oklch(0.478 0.17 270);
+  --color-indigo-700: oklch(0.406 0.146 269);
+  --color-indigo-800: oklch(0.341 0.118 269);
+  --color-indigo-900: oklch(0.288 0.095 269);
+  --color-indigo-950: oklch(0.206 0.07 269);
+
+  /* Billing — this is the brand's ultra, #1f5bff. */
+  --color-blue-50: oklch(0.975 0.015 263);
+  --color-blue-100: oklch(0.945 0.034 263);
+  --color-blue-200: oklch(0.896 0.062 263);
+  --color-blue-300: oklch(0.82 0.1 263);
+  --color-blue-400: oklch(0.69 0.16 263);
+  --color-blue-500: oklch(0.545 0.21 263);
+  --color-blue-600: oklch(0.475 0.205 263);
+  --color-blue-700: oklch(0.405 0.175 263);
+  --color-blue-800: oklch(0.342 0.14 263);
+  --color-blue-900: oklch(0.29 0.112 263);
+  --color-blue-950: oklch(0.21 0.082 263);
+
+  /* Finance — brass gold. Lightness stays high right through 500 so it reads
+     gold rather than brown; that is why gold wants dark text on top of it. */
+  --color-yellow-50: oklch(0.988 0.021 95);
+  --color-yellow-100: oklch(0.968 0.045 95);
+  --color-yellow-200: oklch(0.938 0.078 93);
+  --color-yellow-300: oklch(0.898 0.108 91);
+  --color-yellow-400: oklch(0.852 0.13 89);
+  --color-yellow-500: oklch(0.8 0.145 88);
+  --color-yellow-600: oklch(0.705 0.132 85);
+  --color-yellow-700: oklch(0.576 0.108 83);
+  --color-yellow-800: oklch(0.47 0.088 82);
+  --color-yellow-900: oklch(0.395 0.072 82);
+  --color-yellow-950: oklch(0.275 0.052 82);
+
+  --color-amber-50: oklch(0.985 0.02 90);
+  --color-amber-100: oklch(0.962 0.046 86);
+  --color-amber-200: oklch(0.93 0.082 82);
+  --color-amber-300: oklch(0.885 0.118 79);
+  --color-amber-400: oklch(0.835 0.14 77);
+  --color-amber-500: oklch(0.78 0.15 76);
+  --color-amber-600: oklch(0.672 0.142 71);
+  --color-amber-700: oklch(0.545 0.118 68);
+  --color-amber-800: oklch(0.448 0.095 67);
+  --color-amber-900: oklch(0.378 0.078 67);
+  --color-amber-950: oklch(0.262 0.058 67);
+
+  /* This is the brand's ember, #ff5a1f. */
+  --color-orange-50: oklch(0.98 0.018 55);
+  --color-orange-100: oklch(0.955 0.042 52);
+  --color-orange-200: oklch(0.914 0.078 48);
+  --color-orange-300: oklch(0.845 0.125 44);
+  --color-orange-400: oklch(0.762 0.175 41);
+  --color-orange-500: oklch(0.684 0.212 38);
+  --color-orange-600: oklch(0.59 0.2 36);
+  --color-orange-700: oklch(0.492 0.168 34);
+  --color-orange-800: oklch(0.41 0.135 33);
+  --color-orange-900: oklch(0.345 0.11 33);
+  --color-orange-950: oklch(0.245 0.08 33);
+
+  /* Team, and every destructive action — brick, not alarm-red. */
+  --color-red-50: oklch(0.972 0.015 22);
+  --color-red-100: oklch(0.942 0.034 22);
+  --color-red-200: oklch(0.892 0.06 23);
+  --color-red-300: oklch(0.818 0.095 24);
+  --color-red-400: oklch(0.695 0.135 25);
+  --color-red-500: oklch(0.57 0.165 25);
+  --color-red-600: oklch(0.498 0.158 26);
+  --color-red-700: oklch(0.428 0.133 26);
+  --color-red-800: oklch(0.362 0.108 26);
+  --color-red-900: oklch(0.308 0.088 26);
+  --color-red-950: oklch(0.222 0.065 26);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+
+  --paper: #ffffff;
+  --ink: #0a0a0a;
+  --mute: color-mix(in oklab, var(--ink) 58%, var(--paper));
+  --line: color-mix(in oklab, var(--ink) 12%, var(--paper));
+  --soft: color-mix(in oklab, var(--ink) 4%, var(--paper));
+  /* Raised dark panels: footer, feature blocks, modals. */
+  --surface: #0a0a0a;
+
+  --spot-ember: #ff5a1f;
+  --spot-ultra: #1f5bff;
+  --spot-haze: #a8c8ff;
+  --spot-silver: #b4bbc5;
+  --spot-opacity: 0.85;
+
+  /* Metal finish: bright brushed silver. The banded version alternates light
+     and dark every sixth of the image, so shifting by one band swaps them. */
+  --metal: linear-gradient(115deg, #f5f7f9 0%, #c2c8d0 20%, #eef1f4 38%, #959ca6 60%, #dfe3e8 80%, #b3b9c2 100%);
+  --metal-band: linear-gradient(115deg, #f4f6f8 0%, #a7aeb8 16.66%, #f4f6f8 33.33%, #a7aeb8 50%, #f4f6f8 66.66%, #a7aeb8 83.33%, #f4f6f8 100%);
+
+  color-scheme: light;
+}
+
+.light {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+
+  --paper: #0a0a0a;
+  --ink: #ffffff;
+  --line: color-mix(in oklab, var(--ink) 20%, var(--paper));
+  --soft: #161616;
+  --surface: #161616;
+
+  --spot-ember: #b4380b;
+  --spot-ultra: #1840b8;
+  --spot-haze: #173a7a;
+  --spot-silver: #8e96a2;
+  --spot-opacity: 0.6;
+
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-variation-settings: "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  hanging-punctuation: first;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------------------------
+   The brand shape: three rounded corners, the top right cut sharp.
+   --------------------------------------------------------------------------- */
+@utility shape {
+  border-radius: var(--radius-brand) 0 var(--radius-brand) var(--radius-brand);
+}
+@utility shape-lg {
+  border-radius: 2.25rem 0 2.25rem 2.25rem;
+}
+@utility shape-sm {
+  border-radius: 0.75rem 0 0.75rem 0.75rem;
+}
+/* An active tab sits on the colour line below it, so its bottom corners go sharp
+   and it reads as joined to the module rather than floating above it. The top
+   stays rounded — the brand's sharp corner is wrong on something this small. */
+@utility shape-tab {
+  border-radius: 0.75rem 0.75rem 0 0;
+}
+
+/* Inside a surface, ink and paper are re-pointed so the same utilities work in
+   both themes: bg-ink is the panel, bg-paper text-ink makes a white chip. */
+@utility surface {
+  --ink: var(--surface);
+  --paper: #ffffff;
+  --mute: color-mix(in oklab, var(--ink) 58%, var(--paper));
+  --line: color-mix(in oklab, var(--ink) 12%, var(--paper));
+  background-color: var(--surface);
+  color: #ffffff;
+}
+@utility surface-scope {
+  --ink: var(--surface);
+  --paper: #ffffff;
+  --mute: color-mix(in oklab, var(--ink) 58%, var(--paper));
+  --line: color-mix(in oklab, var(--ink) 12%, var(--paper));
+  color: #ffffff;
+}
+
+/* Metallic silver: a brushed fill for small surfaces, and for text. */
+@utility metal {
+  background-image: var(--metal);
+  color: #14161a;
+}
+@utility metal-sweep {
+  background-image: var(--metal-band);
+  background-size: 300% 100%;
+  background-position: 75% 0;
+  color: #14161a;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-position: 50% 0;
+      filter: brightness(1.12);
+    }
+  }
+}
+@utility metal-text {
+  background-image: var(--metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------------------------------------------------------------------------
+   Type
+   --------------------------------------------------------------------------- */
+.display {
+  font-variation-settings: "wdth" 125;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.86;
+}
+.display-tight {
+  font-variation-settings: "wdth" 112;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+}
+/* Small mono caps, used for section labels, table headers and figures. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.figure {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* ---------------------------------------------------------------------------
+   Gradient spots: blurred, grainy, never flat.
+   --------------------------------------------------------------------------- */
+.spot {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: var(--spot-opacity);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, -6%, 0) scale(1.08);
+  }
+}
+.drift {
+  animation: drift 18s ease-in-out infinite;
+}
+.drift-slow {
+  animation: drift 26s ease-in-out infinite reverse;
 }
 
 @keyframes module-marquee {
@@ -22,29 +437,11 @@
   }
 }
 
-/* Light mode (default) */
-.light {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-/* Dark mode */
-.dark {
-  --background: #0f172a;
-  --foreground: #f1f5f9;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@custom-variant dark (&:where(.dark, .dark *));
-
-/* Hero backdrop — slow, offset drifts so the mesh never visibly loops.
+/* ---------------------------------------------------------------------------
+   Hero backdrop — slow, offset drifts so the mesh never visibly loops.
    Deliberately long durations: this should read as light shifting in a room,
-   not as an animation playing. */
+   not as an animation playing.
+   --------------------------------------------------------------------------- */
 @keyframes hero-drift-a {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
   50%      { transform: translate3d(4%, -3%, 0) scale(1.08); }
@@ -64,45 +461,41 @@ body {
 .hero-blob-b { animation: hero-drift-b 34s ease-in-out infinite; }
 .hero-blob-c { animation: hero-drift-c 30s ease-in-out infinite; }
 
-@media (prefers-reduced-motion: reduce) {
-  .hero-blob-a,
-  .hero-blob-b,
-  .hero-blob-c {
-    animation: none;
-  }
-}
-
-/* Colour fields for the hero mesh.
-   Written as plain CSS rather than Tailwind arbitrary values because v4 does
-   not resolve theme() inside them — the rule silently computes to `none`. */
+/* Colour fields for the hero mesh. Written as plain CSS rather than Tailwind
+   arbitrary values because v4 does not resolve theme() inside them — the rule
+   silently computes to `none`. Ember and ultra lead, as they do on DigiShift. */
 .hero-blob {
   position: absolute;
   border-radius: 9999px;
   filter: blur(64px);
 }
 
-.hero-blob--crm     { background: radial-gradient(closest-side, rgb(34 211 238 / 0.34), transparent); }
-.hero-blob--project { background: radial-gradient(closest-side, rgb(167 139 250 / 0.30), transparent); }
-.hero-blob--finance { background: radial-gradient(closest-side, rgb(251 191 36 / 0.28), transparent); }
-.hero-blob--time    { background: radial-gradient(closest-side, rgb(52 211 153 / 0.24), transparent); }
+.hero-blob--crm     { background: radial-gradient(closest-side, color-mix(in oklab, var(--spot-ember) 70%, transparent), transparent); }
+.hero-blob--project { background: radial-gradient(closest-side, color-mix(in oklab, var(--spot-silver) 85%, transparent), transparent); }
+.hero-blob--finance { background: radial-gradient(closest-side, color-mix(in oklab, var(--spot-ultra) 55%, transparent), transparent); }
+.hero-blob--time    { background: radial-gradient(closest-side, color-mix(in oklab, var(--spot-haze) 70%, transparent), transparent); }
 
-.dark .hero-blob--crm     { background: radial-gradient(closest-side, rgb(34 211 238 / 0.20), transparent); }
-.dark .hero-blob--project { background: radial-gradient(closest-side, rgb(167 139 250 / 0.18), transparent); }
-.dark .hero-blob--finance { background: radial-gradient(closest-side, rgb(251 191 36 / 0.14), transparent); }
-.dark .hero-blob--time    { background: radial-gradient(closest-side, rgb(52 211 153 / 0.14), transparent); }
+/* Light theme: deepen the orange and blue so the headline stays dominant. */
+:root:not(.dark) .hero-blob--crm     { background: radial-gradient(closest-side, color-mix(in oklab, #c2410c 48%, transparent), transparent); }
+:root:not(.dark) .hero-blob--finance { background: radial-gradient(closest-side, color-mix(in oklab, #5b7fd6 48%, transparent), transparent); }
+
+.dark .hero-blob--crm     { background: radial-gradient(closest-side, color-mix(in oklab, var(--spot-ember) 55%, transparent), transparent); }
+.dark .hero-blob--project { background: radial-gradient(closest-side, color-mix(in oklab, var(--spot-silver) 35%, transparent), transparent); }
+.dark .hero-blob--finance { background: radial-gradient(closest-side, color-mix(in oklab, var(--spot-ultra) 60%, transparent), transparent); }
+.dark .hero-blob--time    { background: radial-gradient(closest-side, color-mix(in oklab, var(--spot-haze) 60%, transparent), transparent); }
 
 /* Fine grid behind the colour, so the mesh reads as structured. */
 .hero-grid {
   background-image:
-    linear-gradient(to right, rgb(15 23 42 / 0.055) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(15 23 42 / 0.055) 1px, transparent 1px);
+    linear-gradient(to right, rgb(10 10 10 / 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(10 10 10 / 0.055) 1px, transparent 1px);
   background-size: 3.5rem 3.5rem;
 }
 
 .dark .hero-grid {
   background-image:
-    linear-gradient(to right, rgb(241 245 249 / 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(241 245 249 / 0.07) 1px, transparent 1px);
+    linear-gradient(to right, rgb(255 255 255 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.07) 1px, transparent 1px);
 }
 
 /* Both layers fade before the section ends so nothing fights the headline. */
@@ -116,8 +509,35 @@ body {
   mask-image: radial-gradient(95% 70% at 50% 10%, #000 30%, transparent 100%);
 }
 
-/* Smooth transitions for theme switching - DISABLED FOR TESTING */
-/* * {
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-} */
+/* ---------------------------------------------------------------------------
+   Focus and motion
+   --------------------------------------------------------------------------- */
+@layer base {
+  :focus-visible {
+    outline: 1.5px solid currentColor;
+    outline-offset: 3px;
+  }
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none;
+  }
+}
 
+.link-underline {
+  background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 0 1px;
+  transition: background-size 0.45s var(--ease-shift);
+}
+.link-underline:hover,
+.link-underline:focus-visible {
+  background-size: 100% 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -362,7 +362,7 @@ return (
             <button
               onClick={fetchReportData}
               disabled={loadingReports}
-              className="flex items-center px-4 py-2 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
+              className="flex items-center px-4 py-2 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-300 shape-sm transition-colors"
             >
               {loadingReports ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -375,7 +375,7 @@ return (
         </div>
 
         {/* Date Range Filter */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-4">
           <div className="flex items-center gap-4">
             <Calendar className="w-5 h-5 text-gray-500" />
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('crm.reportsPage.dateRange')}:</span>
@@ -383,20 +383,20 @@ return (
               type="date"
               value={dateRange.start}
               onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
-              className="px-3 py-1 border border-gray-300 dark:border-slate-600 rounded-md text-sm dark:bg-slate-700 dark:text-slate-100"
+              className="px-3 py-1 border border-gray-300 dark:border-slate-600 shape-sm text-sm dark:bg-slate-700 dark:text-slate-100"
             />
             <span className="text-gray-500">to</span>
             <input
               type="date"
               value={dateRange.end}
               onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
-              className="px-3 py-1 border border-gray-300 dark:border-slate-600 rounded-md text-sm dark:bg-slate-700 dark:text-slate-100"
+              className="px-3 py-1 border border-gray-300 dark:border-slate-600 shape-sm text-sm dark:bg-slate-700 dark:text-slate-100"
             />
           </div>
         </div>
 
         {/* Report Navigation */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
           <div className="p-4 border-b border-gray-200 dark:border-slate-700">
             <div className="flex space-x-1">
               {reportTabs.map((section) => {
@@ -405,7 +405,7 @@ return (
                   <button
                     key={section.id}
                     onClick={() => setSelectedReport(section.id)}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-2 px-4 py-2 shape-sm text-sm font-medium transition-colors ${
                       selectedReport === section.id
                         ? 'bg-cyan-100 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300'
                         : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700'
@@ -422,7 +422,7 @@ return (
           {/* Report Content */}
           <div className="p-6">
             {fetchError && (
-              <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
+              <div className="mb-4 shape-sm border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
                 {fetchError}. Showing available data.
               </div>
             )}
@@ -440,7 +440,7 @@ return (
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 p-6 rounded-lg text-white"
+                        className="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 p-6 shape-sm text-white"
                       >
                         <div className="flex items-center justify-between">
                           <div>
@@ -458,7 +458,7 @@ return (
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="bg-gradient-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 p-6 rounded-lg text-white"
+                        className="bg-gradient-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 p-6 shape-sm text-white"
                       >
                         <div className="flex items-center justify-between">
                           <div>
@@ -476,7 +476,7 @@ return (
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="bg-gradient-to-r from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700 p-6 rounded-lg text-white"
+                        className="bg-gradient-to-r from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700 p-6 shape-sm text-white"
                       >
                         <div className="flex items-center justify-between">
                           <div>
@@ -494,7 +494,7 @@ return (
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="bg-gradient-to-r from-violet-500 to-violet-600 dark:from-violet-600 dark:to-violet-700 p-6 rounded-lg text-white"
+                        className="bg-gradient-to-r from-violet-500 to-violet-600 dark:from-violet-600 dark:to-violet-700 p-6 shape-sm text-white"
                       >
                         <div className="flex items-center justify-between">
                           <div>
@@ -510,7 +510,7 @@ return (
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <div className="bg-gray-50 dark:bg-slate-700 p-6 rounded-lg">
+                      <div className="bg-gray-50 dark:bg-slate-700 p-6 shape-sm">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
                           Recent Activity Summary
                         </h3>
@@ -538,7 +538,7 @@ return (
                         </div>
                       </div>
 
-                      <div className="bg-gray-50 dark:bg-slate-700 p-6 rounded-lg">
+                      <div className="bg-gray-50 dark:bg-slate-700 p-6 shape-sm">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
                           Export Overview Report
                         </h3>
@@ -559,7 +559,7 @@ return (
                               ]
                               exportTableToExcel(overviewData, overviewExportColumns, 'overview_report', 'Overview')
                             }}
-                            className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                            className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white shape-sm transition-colors"
                           >
                             <FileSpreadsheet className="w-4 h-4 mr-2" />
                             Excel
@@ -577,7 +577,7 @@ return (
                               ]
                               exportTableToPDF(overviewData, overviewExportColumns, 'overview_report', 'CRM Overview Report')
                             }}
-                            className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                            className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white shape-sm transition-colors"
                           >
                             <FileText className="w-4 h-4 mr-2" />
                             PDF
@@ -605,7 +605,7 @@ return (
                               'Clients'
                             )
                           }
-                          className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                          className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white shape-sm transition-colors"
                         >
                           <FileSpreadsheet className="w-4 h-4 mr-2" />
                           Export Excel
@@ -619,7 +619,7 @@ return (
                               'Client Report'
                             )
                           }
-                          className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                          className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white shape-sm transition-colors"
                         >
                           <FileText className="w-4 h-4 mr-2" />
                           Export PDF
@@ -627,7 +627,7 @@ return (
                       </div>
                     </div>
 
-                    <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+                    <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
                       <div className="overflow-x-auto">
                         <table className="w-full">
                           <thead className="bg-gray-50 dark:bg-slate-700">
@@ -683,7 +683,7 @@ return (
                               'Contracts'
                             )
                           }
-                          className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                          className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white shape-sm transition-colors"
                         >
                           <FileSpreadsheet className="w-4 h-4 mr-2" />
                           Export Excel
@@ -697,7 +697,7 @@ return (
                               'Contract Report'
                             )
                           }
-                          className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                          className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white shape-sm transition-colors"
                         >
                           <FileText className="w-4 h-4 mr-2" />
                           Export PDF
@@ -705,7 +705,7 @@ return (
                       </div>
                     </div>
 
-                    <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+                    <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
                       <div className="overflow-x-auto">
                         <table className="w-full">
                           <thead className="bg-gray-50 dark:bg-slate-700">
@@ -771,7 +771,7 @@ return (
                               'Tasks'
                             )
                           }
-                          className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                          className="flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white shape-sm transition-colors"
                         >
                           <FileSpreadsheet className="w-4 h-4 mr-2" />
                           Export Excel
@@ -785,7 +785,7 @@ return (
                               'Task Report'
                             )
                           }
-                          className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                          className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white shape-sm transition-colors"
                         >
                           <FileText className="w-4 h-4 mr-2" />
                           Export PDF
@@ -793,7 +793,7 @@ return (
                       </div>
                     </div>
 
-                    <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+                    <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
                       <div className="overflow-x-auto">
                         <table className="w-full">
                           <thead className="bg-gray-50 dark:bg-slate-700">
@@ -854,7 +854,7 @@ return (
                 {selectedReport === 'revenue' && (
                   <div className="space-y-6">
                     {/* Revenue Period Selection */}
-                    <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-4">
+                    <div className="bg-gray-50 dark:bg-slate-700 shape-sm p-4">
                       <div className="flex items-center gap-4 mb-4">
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Revenue Period:</span>
                         <div className="flex space-x-1">
@@ -862,7 +862,7 @@ return (
                             <button
                               key={period.id}
                               onClick={() => setRevenuePeriod(period.id)}
-                              className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                              className={`px-3 py-1 text-sm shape-sm transition-colors ${
                                 revenuePeriod === period.id
                                   ? 'bg-cyan-100 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300'
                                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600'
@@ -881,7 +881,7 @@ return (
                           <select
                             value={selectedMonth}
                             onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                            className="px-3 py-1 border border-gray-300 dark:border-slate-600 rounded-md text-sm dark:bg-slate-700 dark:text-slate-100"
+                            className="px-3 py-1 border border-gray-300 dark:border-slate-600 shape-sm text-sm dark:bg-slate-700 dark:text-slate-100"
                           >
                             {Array.from({ length: 12 }, (_, i) => (
                               <option key={i} value={i}>
@@ -892,7 +892,7 @@ return (
                           <select
                             value={selectedYear}
                             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                            className="px-3 py-1 border border-gray-300 dark:border-slate-600 rounded-md text-sm dark:bg-slate-700 dark:text-slate-100"
+                            className="px-3 py-1 border border-gray-300 dark:border-slate-600 shape-sm text-sm dark:bg-slate-700 dark:text-slate-100"
                           >
                             {Array.from({ length: 3 }, (_, i) => {
                               const year = new Date().getFullYear() - 1 + i
@@ -913,7 +913,7 @@ return (
                         <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+                          className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
                         >
                           <div className="flex items-center justify-between">
                             <div>
@@ -930,7 +930,7 @@ return (
                                 {new Date().getFullYear()}
                               </p>
                             </div>
-                            <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
+                            <div className="p-3 bg-green-100 dark:bg-green-900 shape-sm">
                               <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400" />
                             </div>
                           </div>
@@ -941,7 +941,7 @@ return (
                         <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+                          className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
                         >
                           <div className="flex items-center justify-between">
                             <div>
@@ -964,7 +964,7 @@ return (
                                 Includes contracts active during any part of the month
                               </p>
                             </div>
-                            <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                            <div className="p-3 bg-blue-100 dark:bg-blue-900 shape-sm">
                               <DollarSign className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                             </div>
                           </div>
@@ -975,7 +975,7 @@ return (
                         <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+                          className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
                         >
                           <div className="flex items-center justify-between">
                             <div>
@@ -992,7 +992,7 @@ return (
                                 Remaining {12 - new Date().getMonth()} months
                               </p>
                             </div>
-                            <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                            <div className="p-3 bg-purple-100 dark:bg-purple-900 shape-sm">
                               <TrendingUp className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                             </div>
                           </div>
@@ -1004,7 +1004,7 @@ return (
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+                        className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
                       >
                         <div className="flex items-center justify-between">
                           <div>
@@ -1013,7 +1013,7 @@ return (
                               {reportData.contracts.filter(c => c.status === 'active').length}
                             </p>
                           </div>
-                          <div className="p-3 bg-orange-100 dark:bg-orange-900 rounded-lg">
+                          <div className="p-3 bg-orange-100 dark:bg-orange-900 shape-sm">
                             <FileText className="w-6 h-6 text-orange-600 dark:text-orange-400" />
                           </div>
                         </div>
@@ -1023,7 +1023,7 @@ return (
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+                        className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
                       >
                         <div className="flex items-center justify-between">
                           <div>
@@ -1044,7 +1044,7 @@ return (
                               )}
                             </p>
                           </div>
-                          <div className="p-3 bg-cyan-100 dark:bg-cyan-900 rounded-lg">
+                          <div className="p-3 bg-cyan-100 dark:bg-cyan-900 shape-sm">
                             <TrendingUp className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
                           </div>
                         </div>

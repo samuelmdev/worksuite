@@ -73,8 +73,8 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 p-8">
-          <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-lg border border-gray-200 dark:border-slate-700 p-8">
+          <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 shape-sm">
             <p className="text-sm text-slate-700 dark:text-slate-300">{t('auth.employeeLoginNote')}</p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -88,7 +88,7 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('auth.placeholder.email')}
                   required
                 />
@@ -105,7 +105,7 @@ export default function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-12 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full pl-10 pr-12 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('auth.placeholder.password')}
                   required
                 />
@@ -123,7 +123,7 @@ export default function LoginPage() {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+                className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm"
               >
                 <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
               </motion.div>
@@ -132,7 +132,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-cyan-400 text-white rounded-lg transition-colors"
+              className="w-full flex items-center justify-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-cyan-400 text-white shape-sm transition-colors"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -145,7 +145,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 p-4 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg">
+          <div className="mt-6 p-4 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 shape-sm">
             <h3 className="text-sm font-medium text-cyan-900 dark:text-cyan-100 mb-2">
               {t('auth.demo.title')}
             </h3>

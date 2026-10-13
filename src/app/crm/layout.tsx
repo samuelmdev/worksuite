@@ -77,7 +77,7 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
                     // Force sidebar to collapse after navigation
                     setTimeout(() => setSidebarExpanded(false), 100)
                   }}
-                  className={`flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  className={`flex items-center px-3 py-3 shape-sm text-sm font-medium transition-all duration-300 ${
                     isActive
                       ? 'bg-cyan-100 dark:bg-cyan-900 text-cyan-700 dark:text-cyan-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] dark:hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]'
@@ -121,7 +121,7 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
                 <span className="text-lg font-bold text-slate-900 dark:text-slate-100">CRM</span>
                 <button
                   onClick={() => setMobileSidebarOpen(false)}
-                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700"
+                  className="p-2 shape-sm hover:bg-gray-100 dark:hover:bg-slate-700"
                 >
                   <X className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                 </button>
@@ -142,7 +142,7 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
                       <Link
                         href={item.href}
                         onClick={() => setMobileSidebarOpen(false)}
-                        className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                        className={`flex items-center px-3 py-2 shape-sm text-sm font-medium transition-all duration-300 ${
                           isActive
                             ? 'bg-cyan-100 dark:bg-cyan-900 text-cyan-700 dark:text-cyan-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]'
                             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] dark:hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]'
@@ -166,7 +166,7 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
         <div className="md:hidden flex items-center justify-between h-16 px-4 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
           <button
             onClick={() => setMobileSidebarOpen(true)}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700"
+            className="p-2 shape-sm hover:bg-gray-100 dark:hover:bg-slate-700"
           >
             <Menu className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </button>

@@ -77,7 +77,7 @@ export default function InvoicesPage() {
           </div>
           <Link
             href="/billing/create"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white shape-sm font-medium transition-colors"
           >
             <PlusCircle className="w-4 h-4" />
             {t('billing.nav.createInvoice')}
@@ -87,7 +87,7 @@ export default function InvoicesPage() {
         {loading ? (
           <p className="text-gray-500 dark:text-gray-400">{t('common.loading')}</p>
         ) : invoices.length === 0 ? (
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-12 text-center">
+          <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-12 text-center">
             <FileText className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
             <p className="text-gray-500 dark:text-gray-400 mb-4">{t('billing.invoices.empty')}</p>
             <Link href="/billing/create" className="text-blue-600 dark:text-blue-400 hover:underline">
@@ -95,7 +95,7 @@ export default function InvoicesPage() {
             </Link>
           </div>
         ) : (
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50 dark:bg-slate-700/50">
@@ -137,14 +137,14 @@ export default function InvoicesPage() {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => handleExport(invoice)}
-                            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-500 dark:text-gray-400"
+                            className="p-1.5 shape-sm hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-500 dark:text-gray-400"
                             title={t('common.export')}
                           >
                             <Download className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(invoice.id)}
-                            className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500"
+                            className="p-1.5 shape-sm hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500"
                             title={t('common.delete')}
                           >
                             <Trash2 className="w-4 h-4" />

@@ -181,7 +181,7 @@ export default function ClientDetailPage() {
             </h1>
             <button
               onClick={() => router.push('/crm/clients')}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t('crm.clientDetail.back')}
@@ -240,21 +240,21 @@ export default function ClientDetailPage() {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => setIsActivityModalOpen(true)}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 shape-sm"
               >
                 <Plus className="w-4 h-4 mr-1.5" />
                 {t('crm.timeline.logActivity')}
               </button>
               <button
                 onClick={() => setIsEditModalOpen(true)}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700"
               >
                 <Edit className="w-4 h-4 mr-1.5" />
                 {t('crm.clients.editClient')}
               </button>
               <button
                 onClick={() => setIsDeleteDialogOpen(true)}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-red-700 dark:text-red-400 bg-white dark:bg-slate-800 border border-red-300 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-red-700 dark:text-red-400 bg-white dark:bg-slate-800 border border-red-300 dark:border-red-800 shape-sm hover:bg-red-50 dark:hover:bg-red-900/20"
               >
                 <Trash2 className="w-4 h-4 mr-1.5" />
                 {t('crm.clients.deleteClient')}
@@ -271,7 +271,7 @@ export default function ClientDetailPage() {
             { label: t('crm.clientDetail.stats.tasks'), value: tasks.length, icon: CheckSquare, color: 'text-purple-600 dark:text-purple-400' },
             { label: t('crm.clientDetail.stats.deals'), value: deals.length, icon: GitBranch, color: 'text-orange-600 dark:text-orange-400' },
           ].map(({ label, value, icon: Icon, color }) => (
-            <div key={label} className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-3">
+            <div key={label} className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700 p-3">
               <div className="flex items-center justify-between">
                 <div className="min-w-0">
                   <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{label}</p>
@@ -319,7 +319,7 @@ export default function ClientDetailPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               {/* Contact info */}
-              <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700 p-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">{t('crm.clientDetail.contactInfo')}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
@@ -354,14 +354,14 @@ export default function ClientDetailPage() {
 
               {/* Notes */}
               {client.notes && (
-                <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+                <div className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700 p-6">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-3">{t('crm.clientDetail.notes')}</h2>
                   <p className="text-sm text-gray-600 dark:text-slate-400 whitespace-pre-wrap">{client.notes}</p>
                 </div>
               )}
 
               {/* Recent timeline preview */}
-              <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700 p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{t('crm.clientDetail.activity')}</h2>
                   <button
@@ -383,7 +383,7 @@ export default function ClientDetailPage() {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700 p-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">{t('crm.clientDetail.details')}</h2>
                 <dl className="space-y-3 text-sm">
                   <div className="flex justify-between">
@@ -415,7 +415,7 @@ export default function ClientDetailPage() {
                 </dl>
               </div>
 
-              <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700 p-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">{t('crm.clientDetail.quickActions')}</h2>
                 <div className="space-y-2">
                   {[
@@ -427,7 +427,7 @@ export default function ClientDetailPage() {
                     <button
                       key={label}
                       onClick={action}
-                      className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                      className="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 shape-sm transition-colors"
                     >
                       <Icon className="w-4 h-4 mr-3 text-gray-400" />
                       {label}
@@ -437,7 +437,7 @@ export default function ClientDetailPage() {
               </div>
 
               {/* Interaction breakdown */}
-              <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700 p-6">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">{t('crm.clientDetail.stats.interactions')}</h2>
                 <div className="grid grid-cols-2 gap-3">
                   {[
@@ -446,7 +446,7 @@ export default function ClientDetailPage() {
                     { label: t('modal.activity.type.meeting'), value: activityStats.meetings_scheduled, color: 'text-purple-600' },
                     { label: t('crm.clientDetail.stats.interactions'), value: activityStats.total_interactions, color: 'text-cyan-600' },
                   ].map(({ label, value, color }) => (
-                    <div key={label} className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
+                    <div key={label} className="text-center p-3 bg-gray-50 dark:bg-slate-700/50 shape-sm">
                       <p className={`text-xl font-bold ${color}`}>{value}</p>
                       <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">{label}</p>
                     </div>
@@ -458,7 +458,7 @@ export default function ClientDetailPage() {
         )}
 
         {activeTab === 'timeline' && (
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-6">
+          <div className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700 p-6">
             <ClientActivityTimeline
               clientId={clientId}
               client={client}
@@ -470,14 +470,14 @@ export default function ClientDetailPage() {
         )}
 
         {activeTab === 'contracts' && (
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700">
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
                 {t('crm.clientDetail.contractsTab')} ({contracts.length})
               </h2>
               <button
                 onClick={() => setIsContractModalOpen(true)}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 shape-sm"
               >
                 <Plus className="w-4 h-4 mr-1.5" />
                 {t('crm.clients.addContract')}
@@ -523,14 +523,14 @@ export default function ClientDetailPage() {
         )}
 
         {activeTab === 'tasks' && (
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700">
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
                 {t('crm.clientDetail.tasksTab')} ({tasks.length})
               </h2>
               <button
                 onClick={() => setIsTaskModalOpen(true)}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 shape-sm"
               >
                 <Plus className="w-4 h-4 mr-1.5" />
                 {t('crm.clients.addTask')}
@@ -564,14 +564,14 @@ export default function ClientDetailPage() {
         )}
 
         {activeTab === 'deals' && (
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 shape border border-gray-200 dark:border-slate-700">
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
                 {t('crm.clientDetail.dealsTab')} ({deals.length})
               </h2>
               <button
                 onClick={() => setIsDealModalOpen(true)}
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 shape-sm"
               >
                 <Plus className="w-4 h-4 mr-1.5" />
                 {t('crm.clients.addDeal')}

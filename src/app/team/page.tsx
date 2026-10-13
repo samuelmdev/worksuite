@@ -53,7 +53,7 @@ export default function TeamOverviewPage() {
         </div>
 
         {currentOrganization && (
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-5">
+          <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-5">
             <p className="text-sm text-gray-500 dark:text-gray-400">{t('team.overview.organization')}</p>
             <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mt-1">{currentOrganization.name}</p>
           </div>
@@ -68,7 +68,7 @@ export default function TeamOverviewPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.08 }}
-                className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-5"
+                className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-5"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -77,7 +77,7 @@ export default function TeamOverviewPage() {
                       {loading ? '—' : card.value}
                     </p>
                   </div>
-                  <div className="p-3 bg-red-100 dark:bg-red-900/40 rounded-lg">
+                  <div className="p-3 bg-red-100 dark:bg-red-900/40 shape-sm">
                     <Icon className="w-5 h-5 text-red-600 dark:text-red-400" />
                   </div>
                 </div>
@@ -86,7 +86,7 @@ export default function TeamOverviewPage() {
           })}
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700">
           <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{t('team.overview.recentMembers')}</h2>
             <Link href="/team/members" className="text-sm text-red-600 dark:text-red-400 hover:underline flex items-center gap-1">

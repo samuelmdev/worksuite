@@ -44,7 +44,7 @@ export default function LandingPricing({ compact = false }: LandingPricingProps)
         </div>
 
         <div className="grid sm:grid-cols-2 gap-5 mb-8">
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+          <div className="p-6 shape bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
             <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-3">
               {t('landing.monthlyPlan')}
             </p>
@@ -54,13 +54,13 @@ export default function LandingPricing({ compact = false }: LandingPricingProps)
             </div>
             <Link
               href="/auth/signup?plan=monthly"
-              className="block text-center py-2.5 rounded-xl text-sm font-semibold border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="block text-center py-2.5 shape text-sm font-semibold border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
               {t('landing.subscribeCta')}
             </Link>
           </div>
 
-          <div className="relative p-6 rounded-2xl bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/50 dark:to-blue-950/50 border-2 border-cyan-400/50 dark:border-cyan-500/40">
+          <div className="relative p-6 shape bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/50 dark:to-blue-950/50 border-2 border-cyan-400/50 dark:border-cyan-500/40">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
               <span className="bg-cyan-600 text-white px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide">
                 {t('landing.annualSave')}
@@ -78,14 +78,14 @@ export default function LandingPricing({ compact = false }: LandingPricingProps)
             </p>
             <Link
               href="/auth/signup?plan=annual"
-              className="block text-center py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:from-cyan-700 hover:to-blue-700 transition-all"
+              className="block text-center py-2.5 shape text-sm font-semibold bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:from-cyan-700 hover:to-blue-700 transition-all"
             >
               {t('landing.subscribeCta')}
             </Link>
           </div>
         </div>
 
-        <div className="p-8 rounded-2xl bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/50 dark:to-blue-950/50 border-2 border-cyan-400/50 dark:border-cyan-500/40 shadow-lg dark:shadow-cyan-900/20">
+        <div className="p-8 shape bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-950/50 dark:to-blue-950/50 border-2 border-cyan-400/50 dark:border-cyan-500/40 shadow-lg dark:shadow-cyan-900/20">
           <h3 className="text-xl font-bold text-slate-900 dark:text-white text-center mb-6">{t('landing.fullSuite')}</h3>
           <ul className="space-y-2.5 mb-6">
             {FEATURE_KEYS.map((featureKey) => (
@@ -99,14 +99,14 @@ export default function LandingPricing({ compact = false }: LandingPricingProps)
           </ul>
           <Link
             href="/auth/signup"
-            className="block text-center py-3 rounded-xl font-semibold bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:from-cyan-700 hover:to-blue-700 transition-all shadow-lg shadow-cyan-500/25 mb-4"
+            className="block text-center py-3 shape font-semibold bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:from-cyan-700 hover:to-blue-700 transition-all shadow-lg shadow-cyan-500/25 mb-4"
           >
             {t('landing.subscribeCta')}
           </Link>
           <p className="text-xs text-slate-500 dark:text-slate-400 text-center">{t('landing.businessSignupNote')}</p>
         </div>
 
-        <div className="mt-10 text-center p-6 rounded-2xl bg-white/70 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 backdrop-blur-sm">
+        <div className="mt-10 text-center p-6 shape bg-white/70 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 backdrop-blur-sm">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{t('landing.moreUsers')}</h3>
           <p className="text-sm text-slate-600 dark:text-slate-400">
             {t('landing.moreUsersDesc', { price: t('landing.moreUsersPrice') })}

@@ -263,7 +263,7 @@ export default function ProjectsListPage() {
           </div>
           <button
             onClick={handleAddProject}
-            className="flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors"
+            className="flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white shape-sm transition-colors"
           >
             <Plus className="w-4 h-4 mr-2" />
             {t('projects.listPage.add')}
@@ -279,13 +279,13 @@ export default function ProjectsListPage() {
               placeholder={t('projects.listPage.search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
             />
           </div>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+            className="px-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
           >
             <option value="all">{t('common.allStatus')}</option>
             <option value="planning">{t('enum.projectStatus.planning')}</option>
@@ -297,7 +297,7 @@ export default function ProjectsListPage() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+            className="px-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
           >
             <option value="all">{t('projects.listPage.filter.allTypes')}</option>
             <option value="general">{t('projects.type.general')}</option>
@@ -306,7 +306,7 @@ export default function ProjectsListPage() {
         </div>
 
         {/* Projects List */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
           {loading ? (
             <div className="p-8 text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto mb-4"></div>
@@ -327,7 +327,7 @@ export default function ProjectsListPage() {
               {!searchTerm && statusFilter === 'all' && typeFilter === 'all' && (
                 <button
                   onClick={handleAddProject}
-                  className="inline-flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors"
+                  className="inline-flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white shape-sm transition-colors"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   {t('projects.listPage.add')}

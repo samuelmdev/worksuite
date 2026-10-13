@@ -18,7 +18,7 @@ const ALL_NAV_ITEMS: { nameKey: TranslationKey; href: string; color: string }[] 
   { nameKey: 'nav.timeTracking', href: '/time-tracking', color: 'emerald' },
   { nameKey: 'nav.projects', href: '/projects', color: 'violet' },
   { nameKey: 'nav.billing', href: '/billing', color: 'blue' },
-  { nameKey: 'nav.finance', href: '/finance', color: 'amber' },
+  { nameKey: 'nav.finance', href: '/finance', color: 'gold' },
   { nameKey: 'nav.team', href: '/team', color: 'red' },
   { nameKey: 'nav.settings', href: '/settings', color: 'slate' },
 ]
@@ -74,13 +74,13 @@ export default function HeaderWithNav() {
       shadow: 'shadow-blue-300/50',
       shadowDark: 'dark:shadow-blue-800/50',
     },
-    amber: {
-      bg: 'bg-amber-200',
-      bgDark: 'dark:bg-amber-700',
-      text: 'text-amber-800',
-      textDark: 'dark:text-amber-200',
-      shadow: 'shadow-amber-300/50',
-      shadowDark: 'dark:shadow-amber-800/50',
+    gold: {
+      bg: 'bg-yellow-200',
+      bgDark: 'dark:bg-yellow-700',
+      text: 'text-yellow-800',
+      textDark: 'dark:text-yellow-100',
+      shadow: 'shadow-yellow-300/50',
+      shadowDark: 'dark:shadow-yellow-800/50',
     },
     red: {
       bg: 'bg-red-200',
@@ -127,21 +127,29 @@ export default function HeaderWithNav() {
   return (
     <header className={headerClasses}>
       <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center xl:items-end h-16 xl:pb-1">
+        {/* The nav flexes, so without a gap here the tabs would run straight
+            into the wordmark and the controls on a narrow desktop. */}
+        <div className="flex justify-between items-center xl:items-end h-16 xl:pb-1 gap-2 xl:gap-4 2xl:gap-8">
           <div className="flex items-center shrink-0 xl:mb-1">
-            <Link href="/" className="text-xl font-bold text-slate-900 dark:text-slate-100">
+            <Link
+              href="/"
+              className="display-tight text-2xl text-slate-900 dark:text-slate-100"
+            >
               WorkSuite
             </Link>
           </div>
           <div className="flex-1 flex justify-center min-w-0 self-end">
-            <nav className="hidden xl:flex items-end gap-2 relative">
+            {/* Tabs share whatever room is left between the logo and the
+                controls, so they stay inside the bar at the xl breakpoint and
+                only reach their full width once there is space for it. */}
+            <nav className="hidden xl:flex items-end gap-1 2xl:gap-2 relative w-full">
               {navItems.map((item, index) => {
                 const active = isActive(item.href)
                 const colors = getColorClasses(item.color)
                 return (
                   <motion.div
                     key={item.href}
-                    className="relative flex items-center justify-center"
+                    className="relative flex items-center justify-center flex-1 min-w-0 max-w-40"
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
@@ -152,10 +160,10 @@ export default function HeaderWithNav() {
                   >
                     <Link
                       href={item.href}
-                      className={`relative px-4 py-2 text-md transition-all duration-400 w-40 ${
+                      className={`relative px-1 2xl:px-4 py-2 text-sm 2xl:text-base whitespace-nowrap transition-all duration-400 w-full ${
                         active
-                          ? `${colors.bg} ${colors.bgDark} ${colors.text} ${colors.textDark} rounded-t-lg rounded-b-none font-medium text-center shadow-none`
-                          : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] dark:hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-md shadow-slate-500/30 dark:shadow-black/40 rounded-lg hover:cursor-pointer font-medium text-center'
+                          ? `${colors.bg} ${colors.bgDark} ${colors.text} ${colors.textDark} shape-tab font-medium text-center shadow-none`
+                          : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] dark:hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-md shadow-slate-500/30 dark:shadow-black/40 rounded-xl hover:cursor-pointer font-medium text-center'
                       }`}
                       style={{
                         transform: active ? 'translateY(4px)' : 'translateY(1px)',

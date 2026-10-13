@@ -27,7 +27,7 @@ export default function TeamLayout({ children }: { children: React.ReactNode }) 
   }, [pathname])
 
   const navLinkClass = (isActive: boolean) =>
-    `flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
+    `flex items-center px-3 py-3 shape-sm text-sm font-medium transition-all duration-300 ${
       isActive
         ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]'
         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] dark:hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]'
@@ -101,7 +101,7 @@ export default function TeamLayout({ children }: { children: React.ReactNode }) 
             >
               <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-slate-700">
                 <span className="text-lg font-bold text-slate-900 dark:text-slate-100">{t('nav.team')}</span>
-                <button onClick={() => setMobileSidebarOpen(false)} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700">
+                <button onClick={() => setMobileSidebarOpen(false)} className="p-2 shape-sm hover:bg-gray-100 dark:hover:bg-slate-700">
                   <X className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                 </button>
               </div>
@@ -124,7 +124,7 @@ export default function TeamLayout({ children }: { children: React.ReactNode }) 
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="md:hidden flex items-center justify-between h-16 px-4 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
-          <button onClick={() => setMobileSidebarOpen(true)} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700">
+          <button onClick={() => setMobileSidebarOpen(true)} className="p-2 shape-sm hover:bg-gray-100 dark:hover:bg-slate-700">
             <Menu className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </button>
           <span className="text-lg font-bold text-slate-900 dark:text-slate-100">{t('nav.team')}</span>

@@ -256,7 +256,7 @@ export default function ClientLogsPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setIsActivityModalOpen(true)}
-                className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+                className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 {t('crm.logsPage.add')}
@@ -265,7 +265,7 @@ export default function ClientLogsPage() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 mb-6">
+          <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 mb-6">
             <div className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -278,7 +278,7 @@ export default function ClientLogsPage() {
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-md hover:bg-gray-200 dark:hover:bg-slate-600"
+                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-200 dark:hover:bg-slate-600"
               >
                 <Filter className="w-4 h-4 mr-2" />
                 {showFilters ? t('common.hideFilters') : t('common.showFilters')}
@@ -294,7 +294,7 @@ export default function ClientLogsPage() {
                   placeholder={t('crm.logsPage.search')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
                 />
               </div>
 
@@ -308,7 +308,7 @@ export default function ClientLogsPage() {
                     <select
                       value={selectedClient}
                       onChange={(e) => setSelectedClient(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
                     >
                       <option value="">{t('crm.logsPage.filter.client')}</option>
                       {clients.map((client) => (
@@ -327,7 +327,7 @@ export default function ClientLogsPage() {
                     <select
                       value={selectedType}
                       onChange={(e) => setSelectedType(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
                     >
                       <option value="">{t('crm.logsPage.filter.type')}</option>
                       {activityTypes.map(type => (
@@ -348,14 +348,14 @@ export default function ClientLogsPage() {
                         type="date"
                         value={dateRange.start}
                         onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
-                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
                         aria-label={t('crm.logsPage.filter.dateFrom')}
                       />
                       <input
                         type="date"
                         value={dateRange.end}
                         onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
-                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
                         aria-label={t('crm.logsPage.filter.dateTo')}
                       />
                     </div>
@@ -375,14 +375,14 @@ export default function ClientLogsPage() {
             <div className="flex items-center space-x-3">
               <button
                 onClick={exportToExcel}
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-md hover:bg-gray-50 dark:hover:bg-slate-600"
+                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-600"
               >
                 <FileSpreadsheet className="w-4 h-4 mr-2" />
                 {t('crm.logsPage.export.excel')}
               </button>
               <button
                 onClick={exportToPDF}
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-md hover:bg-gray-50 dark:hover:bg-slate-600"
+                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-600"
               >
                 <PDFIcon className="w-4 h-4 mr-2" />
                 {t('crm.logsPage.export.pdf')}
@@ -396,7 +396,7 @@ export default function ClientLogsPage() {
               <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
               <button
                 onClick={loadLogs}
-                className="px-4 py-2 text-sm font-medium text-cyan-600 bg-cyan-50 border border-cyan-200 rounded-md hover:bg-cyan-100"
+                className="px-4 py-2 text-sm font-medium text-cyan-600 bg-cyan-50 border border-cyan-200 shape-sm hover:bg-cyan-100"
               >
                 {t('common.retry')}
               </button>
@@ -422,7 +422,7 @@ export default function ClientLogsPage() {
                     key={log.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700"
+                    className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700"
                   >
                     <div className="p-6">
                       <div className="flex items-start justify-between">

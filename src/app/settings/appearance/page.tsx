@@ -20,7 +20,7 @@ export default function AppearanceSettingsPage() {
             <button
               type="button"
               onClick={() => setTheme('light')}
-              className={`flex flex-col items-center gap-3 p-5 rounded-xl border-2 transition-all ${
+              className={`flex flex-col items-center gap-3 p-5 shape border-2 transition-all ${
                 theme === 'light'
                   ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20'
                   : 'border-gray-200 dark:border-slate-600 hover:border-gray-300 dark:hover:border-slate-500'
@@ -32,7 +32,7 @@ export default function AppearanceSettingsPage() {
             <button
               type="button"
               onClick={() => setTheme('dark')}
-              className={`flex flex-col items-center gap-3 p-5 rounded-xl border-2 transition-all ${
+              className={`flex flex-col items-center gap-3 p-5 shape border-2 transition-all ${
                 theme === 'dark'
                   ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20'
                   : 'border-gray-200 dark:border-slate-600 hover:border-gray-300 dark:hover:border-slate-500'
@@ -54,7 +54,7 @@ export default function AppearanceSettingsPage() {
                 key={lang.code}
                 type="button"
                 onClick={() => setLocale(lang.code)}
-                className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
+                className={`flex items-center gap-3 p-4 shape border-2 transition-all ${
                   locale === lang.code
                     ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20'
                     : 'border-gray-200 dark:border-slate-600 hover:border-gray-300 dark:hover:border-slate-500'

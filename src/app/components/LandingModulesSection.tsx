@@ -39,9 +39,9 @@ export default function LandingModulesSection({ compact = false }: LandingModule
                   key={mod.id}
                   type="button"
                   onClick={() => setSelectedModule(mod)}
-                  className={`group relative p-8 rounded-2xl border text-left bg-slate-50/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-black/20 hover:-translate-y-1 cursor-pointer ${colors.accent} border-slate-200 dark:border-slate-700`}
+                  className={`group relative p-8 shape border text-left bg-slate-50/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-black/20 hover:-translate-y-1 cursor-pointer ${colors.accent} border-slate-200 dark:border-slate-700`}
                 >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 ${colors.icon}`}>
+                  <div className={`w-12 h-12 shape flex items-center justify-center mb-6 ${colors.icon}`}>
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={mod.icon} />
                     </svg>

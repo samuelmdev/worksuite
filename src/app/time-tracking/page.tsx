@@ -153,7 +153,7 @@ export default function TimeIndex() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setIsTimeEntryModalOpen(true)}
-            className="flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+            className="flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white shape-sm transition-colors"
           >
             <Plus className="w-4 h-4 mr-2" />
             {t('time.overview.addEntry')}
@@ -170,7 +170,7 @@ export default function TimeIndex() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+                className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -181,7 +181,7 @@ export default function TimeIndex() {
                       {loadingStats ? '...' : stat.value}
                     </p>
                   </div>
-                  <div className={`p-3 rounded-lg ${
+                  <div className={`p-3 shape-sm ${
                     stat.color === 'cyan' ? 'bg-cyan-200 dark:bg-cyan-900' :
                     stat.color === 'emerald' ? 'bg-emerald-200 dark:bg-emerald-900' :
                     stat.color === 'green' ? 'bg-green-200 dark:bg-green-900' :
@@ -203,7 +203,7 @@ export default function TimeIndex() {
         </div>
 
         {/* Recent Time Entries */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
           <div className="p-6 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
               {t('time.recent.title')}
@@ -235,7 +235,7 @@ export default function TimeIndex() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setIsTimeEntryModalOpen(true)}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white shape-sm transition-colors"
                 >
                   {t('time.overview.addEntry')}
                 </motion.button>
@@ -306,7 +306,7 @@ export default function TimeIndex() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
             {t('common.quickActions')}
           </h2>
@@ -315,7 +315,7 @@ export default function TimeIndex() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsTimeEntryModalOpen(true)}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <Clock className="w-6 h-6 text-emerald-600 dark:text-emerald-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('time.quickActions.addEntry')}</h3>
@@ -325,7 +325,7 @@ export default function TimeIndex() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <Calendar className="w-6 h-6 text-emerald-600 dark:text-emerald-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('time.quickActions.calendar')}</h3>
@@ -335,7 +335,7 @@ export default function TimeIndex() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <TrendingUp className="w-6 h-6 text-violet-600 dark:text-violet-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('time.quickActions.reports')}</h3>

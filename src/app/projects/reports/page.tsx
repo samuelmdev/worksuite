@@ -15,7 +15,7 @@ export default function ProjectReportsPage() {
         </p>
         <div className="mt-4 flex items-center gap-3">
           <span className="text-sm text-gray-500 dark:text-gray-400">{t('projects.reportsPage.loading')}</span>
-          <button className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-sm transition-colors">
+          <button className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white shape-sm text-sm transition-colors">
             {t('projects.reportsPage.export')}
           </button>
         </div>

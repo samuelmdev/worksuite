@@ -32,7 +32,7 @@ export default function OrganizationSwitcher() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+        className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 shape-sm transition-colors"
       >
         <Building className="w-4 h-4" />
         <span className="max-w-32 truncate">
@@ -43,7 +43,7 @@ export default function OrganizationSwitcher() {
 
       {isOpen && (
         <>
-          <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+          <div className="absolute top-full left-0 mt-1 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shape-sm shadow-lg z-50">
             <div className="p-2">
               <div className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                 {t('org.organizations')}
@@ -52,7 +52,7 @@ export default function OrganizationSwitcher() {
                 <button
                   key={org.id}
                   onClick={() => handleOrganizationSwitch(org.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${
+                  className={`w-full flex items-center justify-between px-3 py-2 text-sm shape-sm transition-colors ${
                     currentOrganization?.id === org.id
                       ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'

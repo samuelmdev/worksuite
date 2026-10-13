@@ -141,7 +141,7 @@ export default function LandingMarketing() {
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <Link
               href="/auth/signup"
-              className="inline-flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 shape-sm font-medium hover:opacity-90 transition-opacity"
             >
               <Building2 className="w-4 h-4" />
               {t('landing.subscribeCta')}
@@ -149,7 +149,7 @@ export default function LandingMarketing() {
             </Link>
             <Link
               href="/?view=employees"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 shape-sm font-medium text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
             >
               <Users className="w-4 h-4" />
               {t('landing.forEmployees')}

@@ -18,7 +18,7 @@ export default function AudienceSelector({ variant = 'section' }: AudienceSelect
         <div className="grid sm:grid-cols-2 gap-4 w-full">
           <Link
             href="/?view=business"
-            className="group flex flex-col items-start p-6 rounded-2xl border-2 border-cyan-200 dark:border-cyan-800 bg-white dark:bg-slate-900 hover:border-cyan-500 dark:hover:border-cyan-500 hover:shadow-xl transition-all text-left"
+            className="group flex flex-col items-start p-6 shape border-2 border-cyan-200 dark:border-cyan-800 bg-white dark:bg-slate-900 hover:border-cyan-500 dark:hover:border-cyan-500 hover:shadow-xl transition-all text-left"
           >
             <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
               {t('landing.forBusiness')}
@@ -34,7 +34,7 @@ export default function AudienceSelector({ variant = 'section' }: AudienceSelect
 
           <Link
             href="/?view=employees"
-            className="group flex flex-col items-start p-6 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-xl transition-all text-left"
+            className="group flex flex-col items-start p-6 shape border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-xl transition-all text-left"
           >
             <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
               {t('landing.forEmployees')}
@@ -51,7 +51,7 @@ export default function AudienceSelector({ variant = 'section' }: AudienceSelect
 
         <a
           href="#features"
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-2.5 shape text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
         >
           {t('landing.exploreFeatures')}
           <ArrowRight className="w-4 h-4" />
@@ -64,7 +64,7 @@ export default function AudienceSelector({ variant = 'section' }: AudienceSelect
     <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
       <Link
         href="/?view=business"
-        className="group p-8 rounded-2xl border-2 border-cyan-200 dark:border-cyan-800 bg-white dark:bg-slate-900 hover:border-cyan-500 dark:hover:border-cyan-500 hover:shadow-xl transition-all"
+        className="group p-8 shape border-2 border-cyan-200 dark:border-cyan-800 bg-white dark:bg-slate-900 hover:border-cyan-500 dark:hover:border-cyan-500 hover:shadow-xl transition-all"
       >
         <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-cyan-600 dark:group-hover:text-cyan-400">
           {t('landing.forBusiness')}
@@ -80,7 +80,7 @@ export default function AudienceSelector({ variant = 'section' }: AudienceSelect
 
       <Link
         href="/?view=employees"
-        className="group p-8 rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-xl transition-all"
+        className="group p-8 shape border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-slate-400 dark:hover:border-slate-500 hover:shadow-xl transition-all"
       >
         <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3">
           {t('landing.forEmployees')}

@@ -42,7 +42,7 @@ const modules: {
   descKey: TranslationKey
   ctaKey: TranslationKey
   href: string
-  color: 'cyan' | 'emerald' | 'violet' | 'blue' | 'amber' | 'red'
+  color: 'cyan' | 'emerald' | 'violet' | 'blue' | 'gold' | 'red'
   icon: typeof Users
 }[] = [
   {
@@ -82,7 +82,7 @@ const modules: {
     descKey: 'home.financeDesc',
     ctaKey: 'home.accessFinance',
     href: '/finance',
-    color: 'amber',
+    color: 'gold',
     icon: Wallet,
   },
   {
@@ -95,42 +95,50 @@ const modules: {
   },
 ]
 
+/**
+ * Cards are flat panels with a hairline border, the way DigiShift draws them.
+ * The module's colour appears in three places only — the icon tile, the border
+ * on hover, and the call to action — so six cards side by side read as one set
+ * rather than a swatch chart. `rule` is the short line under the heading that
+ * ties the card back to its tab in the header.
+ */
 const colorStyles = {
   cyan: {
-    card: 'border-cyan-200/80 dark:border-cyan-800/60 bg-gradient-to-br from-cyan-50/80 to-white dark:from-cyan-950/40 dark:to-slate-900 hover:border-cyan-300 dark:hover:border-cyan-700',
-    icon: 'bg-cyan-100 dark:bg-cyan-900/60 text-cyan-600 dark:text-cyan-400',
-    cta: 'bg-cyan-600 hover:bg-cyan-700 text-white',
-    glow: 'group-hover:shadow-cyan-500/10',
+    card: 'border-slate-200 dark:border-slate-800 hover:border-cyan-400 dark:hover:border-cyan-700',
+    icon: 'bg-cyan-100 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300',
+    rule: 'bg-cyan-500',
+    cta: 'group-hover:bg-cyan-600 group-hover:text-white',
   },
   emerald: {
-    card: 'border-emerald-200/80 dark:border-emerald-800/60 bg-gradient-to-br from-emerald-50/80 to-white dark:from-emerald-950/40 dark:to-slate-900 hover:border-emerald-300 dark:hover:border-emerald-700',
-    icon: 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400',
-    cta: 'bg-emerald-600 hover:bg-emerald-700 text-white',
-    glow: 'group-hover:shadow-emerald-500/10',
+    card: 'border-slate-200 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-700',
+    icon: 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300',
+    rule: 'bg-emerald-500',
+    cta: 'group-hover:bg-emerald-600 group-hover:text-white',
   },
   violet: {
-    card: 'border-violet-200/80 dark:border-violet-800/60 bg-gradient-to-br from-violet-50/80 to-white dark:from-violet-950/40 dark:to-slate-900 hover:border-violet-300 dark:hover:border-violet-700',
-    icon: 'bg-violet-100 dark:bg-violet-900/60 text-violet-600 dark:text-violet-400',
-    cta: 'bg-violet-600 hover:bg-violet-700 text-white',
-    glow: 'group-hover:shadow-violet-500/10',
+    card: 'border-slate-200 dark:border-slate-800 hover:border-violet-400 dark:hover:border-violet-700',
+    icon: 'bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300',
+    rule: 'bg-violet-500',
+    cta: 'group-hover:bg-violet-600 group-hover:text-white',
   },
   blue: {
-    card: 'border-blue-200/80 dark:border-blue-800/60 bg-gradient-to-br from-blue-50/80 to-white dark:from-blue-950/40 dark:to-slate-900 hover:border-blue-300 dark:hover:border-blue-700',
-    icon: 'bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400',
-    cta: 'bg-blue-600 hover:bg-blue-700 text-white',
-    glow: 'group-hover:shadow-blue-500/10',
+    card: 'border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-700',
+    icon: 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300',
+    rule: 'bg-blue-500',
+    cta: 'group-hover:bg-blue-600 group-hover:text-white',
   },
-  amber: {
-    card: 'border-amber-200/80 dark:border-amber-800/60 bg-gradient-to-br from-amber-50/80 to-white dark:from-amber-950/40 dark:to-slate-900 hover:border-amber-300 dark:hover:border-amber-700',
-    icon: 'bg-amber-100 dark:bg-amber-900/60 text-amber-600 dark:text-amber-400',
-    cta: 'bg-amber-600 hover:bg-amber-700 text-white',
-    glow: 'group-hover:shadow-amber-500/10',
+  gold: {
+    // Gold is light at full strength, so it takes dark text rather than white.
+    card: 'border-slate-200 dark:border-slate-800 hover:border-yellow-400 dark:hover:border-yellow-700',
+    icon: 'bg-yellow-100 dark:bg-yellow-950 text-yellow-700 dark:text-yellow-300',
+    rule: 'bg-yellow-500',
+    cta: 'group-hover:bg-yellow-500 group-hover:text-slate-950',
   },
   red: {
-    card: 'border-red-200/80 dark:border-red-800/60 bg-gradient-to-br from-red-50/80 to-white dark:from-red-950/40 dark:to-slate-900 hover:border-red-300 dark:hover:border-red-700',
-    icon: 'bg-red-100 dark:bg-red-900/60 text-red-600 dark:text-red-400',
-    cta: 'bg-red-600 hover:bg-red-700 text-white',
-    glow: 'group-hover:shadow-red-500/10',
+    card: 'border-slate-200 dark:border-slate-800 hover:border-red-400 dark:hover:border-red-700',
+    icon: 'bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300',
+    rule: 'bg-red-500',
+    cta: 'group-hover:bg-red-600 group-hover:text-white',
   },
 }
 
@@ -169,8 +177,9 @@ export default function LoggedInHome() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:4rem_4rem] dark:bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)]" />
-        <div className="absolute top-0 right-0 w-[500px] h-[400px] bg-gradient-to-bl from-cyan-400/15 via-violet-400/10 to-transparent dark:from-cyan-500/10 dark:via-violet-500/5 blur-3xl rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[300px] bg-emerald-400/10 dark:bg-emerald-500/5 blur-3xl rounded-full pointer-events-none" />
+        {/* Two drifting spots, ember and silver, the way DigiShift lights a hero. */}
+        <div aria-hidden className="spot drift -top-32 -right-24 size-[26rem] bg-ember/40" />
+        <div aria-hidden className="spot drift-slow -bottom-28 left-[8%] size-72 bg-silver/50" />
 
         <div className="relative px-4 sm:px-6 lg:px-8 pt-10 pb-8 max-w-6xl mx-auto">
           <motion.div
@@ -178,26 +187,26 @@ export default function LoggedInHome() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-sm font-medium text-cyan-600 dark:text-cyan-400 mb-2">
+            <p className="label text-slate-500 dark:text-slate-400 mb-4">
               {t(getGreetingKey())}, {firstName}
             </p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
+            <h1 className="display-tight text-[clamp(2rem,5.5vw,3.75rem)] text-slate-900 dark:text-white mb-4">
               {t('home.welcomeBack', { name: user.name })}
             </h1>
             <p className="text-slate-600 dark:text-slate-400 max-w-xl text-lg">
               {t('home.dashboardSubtitle')}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 mt-6">
+            <div className="flex flex-wrap items-center gap-2 mt-7">
               {currentOrganization && (
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 backdrop-blur-sm text-sm">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 shape-sm bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 backdrop-blur-sm">
                   <Building2 className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-                  <span className="text-slate-700 dark:text-slate-300 font-medium">
+                  <span className="label text-slate-700 dark:text-slate-300">
                     {currentOrganization.name}
                   </span>
                 </div>
               )}
-              <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-800 dark:text-cyan-300 text-sm font-medium capitalize">
+              <span className="inline-flex items-center px-3 py-1.5 shape-sm bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 label">
                 {getRoleLabel(currentOrganization?.role, t)}
               </span>
             </div>
@@ -211,7 +220,7 @@ export default function LoggedInHome() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-5"
+          className="label text-slate-500 dark:text-slate-400 mb-5 border-t border-slate-200 dark:border-slate-800 pt-5"
         >
           {t('home.yourModules')}
         </motion.h2>
@@ -229,18 +238,20 @@ export default function LoggedInHome() {
               <motion.div key={mod.href} variants={fadeUpItem}>
                 <Link
                   href={mod.href}
-                  className={`group relative flex flex-col h-full p-6 rounded-2xl border shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${styles.card} ${styles.glow}`}
+                  className={`group relative flex flex-col h-full p-6 shape border bg-white dark:bg-slate-900 transition-[border-color,translate] duration-300 ease-shift hover:-translate-y-1 ${styles.card}`}
                 >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${styles.icon}`}>
-                    <Icon className="w-6 h-6" />
+                  <div className={`w-12 h-12 shape-sm flex items-center justify-center mb-5 ${styles.icon}`}>
+                    <Icon className="w-6 h-6" strokeWidth={1.75} />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                  <h3 className="display-tight text-2xl text-slate-900 dark:text-white mb-3">
                     {t(mod.nameKey)}
                   </h3>
+                  {/* The same colour as this module's tab in the header. */}
+                  <span aria-hidden className={`block h-0.5 w-10 mb-4 ${styles.rule}`} />
                   <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed flex-1 mb-6">
                     {t(mod.descKey)}
                   </p>
-                  <span className={`inline-flex items-center gap-2 self-start px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${styles.cta}`}>
+                  <span className={`inline-flex items-center gap-2 self-start px-4 py-2 shape-sm text-sm font-semibold transition-colors bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 ${styles.cta}`}>
                     {t(mod.ctaKey)}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </span>
@@ -257,7 +268,7 @@ export default function LoggedInHome() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45, duration: 0.4 }}
-          className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm p-6"
+          className="shape border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm p-6"
         >
           <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4">
             {t('home.quickLinks')}
@@ -265,9 +276,9 @@ export default function LoggedInHome() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Link
               href="/settings/profile"
-              className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"
+              className="flex items-center gap-4 p-4 shape border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"
             >
-              <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+              <div className="w-10 h-10 shape-sm bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
                 <User className="w-5 h-5 text-slate-600 dark:text-slate-400" />
               </div>
               <div className="flex-1 min-w-0">
@@ -279,9 +290,9 @@ export default function LoggedInHome() {
 
             <Link
               href="/settings"
-              className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"
+              className="flex items-center gap-4 p-4 shape border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"
             >
-              <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+              <div className="w-10 h-10 shape-sm bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
                 <Settings className="w-5 h-5 text-slate-600 dark:text-slate-400" />
               </div>
               <div className="flex-1 min-w-0">

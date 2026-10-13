@@ -154,12 +154,12 @@ export default function ProjectsAnalyticsPage() {
             <select
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+              className="px-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
             >
               <option value="month">{t('projects.analyticsPage.period.month')}</option>
               <option value="quarter">{t('projects.analyticsPage.period.quarter')}</option>
             </select>
-            <button className="flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors">
+            <button className="flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white shape-sm transition-colors">
               <Download className="w-4 h-4 mr-2" />
               {t('projects.analyticsPage.export')}
             </button>
@@ -171,7 +171,7 @@ export default function ProjectsAnalyticsPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -180,7 +180,7 @@ export default function ProjectsAnalyticsPage() {
                   {loading ? '...' : currentData.totalProjects}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-violet-200 dark:bg-violet-900">
+              <div className="p-3 shape-sm bg-violet-200 dark:bg-violet-900">
                 <FolderOpen className="w-6 h-6 text-violet-600 dark:text-violet-400" />
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function ProjectsAnalyticsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -199,7 +199,7 @@ export default function ProjectsAnalyticsPage() {
                   {loading ? '...' : currentData.completedProjects}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-green-200 dark:bg-green-900">
+              <div className="p-3 shape-sm bg-green-200 dark:bg-green-900">
                 <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
             </div>
@@ -209,7 +209,7 @@ export default function ProjectsAnalyticsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -218,7 +218,7 @@ export default function ProjectsAnalyticsPage() {
                   {loading ? '...' : `$${currentData.spentBudget.toLocaleString()}`}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-emerald-200 dark:bg-emerald-900">
+              <div className="p-3 shape-sm bg-emerald-200 dark:bg-emerald-900">
                 <DollarSign className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
             </div>
@@ -228,7 +228,7 @@ export default function ProjectsAnalyticsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -237,7 +237,7 @@ export default function ProjectsAnalyticsPage() {
                   {loading ? '...' : `${currentData.teamProductivity}%`}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-blue-200 dark:bg-blue-900">
+              <div className="p-3 shape-sm bg-blue-200 dark:bg-blue-900">
                 <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
             </div>
@@ -250,7 +250,7 @@ export default function ProjectsAnalyticsPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
               {t('projects.analyticsPage.projectTimeline')}
@@ -300,7 +300,7 @@ export default function ProjectsAnalyticsPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
               {selectedPeriod === 'month' ? 'Monthly Trends' : 'Quarterly Trends'}
@@ -309,7 +309,7 @@ export default function ProjectsAnalyticsPage() {
               {loading ? (
                 <div className="space-y-3">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                    <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 shape-sm">
                       <div className="space-y-2">
                         <div className="h-4 bg-gray-200 dark:bg-slate-600 rounded w-12 animate-pulse"></div>
                         <div className="h-3 bg-gray-200 dark:bg-slate-600 rounded w-24 animate-pulse"></div>
@@ -320,7 +320,7 @@ export default function ProjectsAnalyticsPage() {
                 </div>
               ) : (
                 currentData.monthlyTrends.map((trend, index) => (
-                  <div key={trend.month} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                  <div key={trend.month} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 shape-sm">
                     <div>
                       <p className="font-medium text-gray-900 dark:text-slate-100">{trend.month}</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -344,7 +344,7 @@ export default function ProjectsAnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+          className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
         >
           <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
             Performance Insights

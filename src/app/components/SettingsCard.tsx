@@ -12,7 +12,7 @@ export function SettingsCard({
   children: React.ReactNode
 }) {
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6 space-y-4">
+    <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-6 space-y-4">
       {(title || description) && (
         <div>
           {title && (
@@ -75,4 +75,4 @@ export function SettingsField({
 }
 
 export const inputClass =
-  'w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-transparent'
+  'w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-transparent'

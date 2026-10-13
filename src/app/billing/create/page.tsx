@@ -105,7 +105,7 @@ export default function CreateInvoicePage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6 space-y-4">
+          <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-6 space-y-4">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{t('billing.create.details')}</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -116,7 +116,7 @@ export default function CreateInvoicePage() {
                   onChange={(e) => setForm(prev => ({ ...prev, client_id: e.target.value }))}
                   required
                   disabled={loadingClients}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 shape-sm border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
                 >
                   {clients.length === 0 && <option value="">{t('billing.create.noClients')}</option>}
                   {clients.map(c => (
@@ -133,7 +133,7 @@ export default function CreateInvoicePage() {
                   step="0.1"
                   value={form.tax_rate}
                   onChange={(e) => setForm(prev => ({ ...prev, tax_rate: parseFloat(e.target.value) || 0 }))}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 shape-sm border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
                 />
               </div>
               <div>
@@ -143,7 +143,7 @@ export default function CreateInvoicePage() {
                   value={form.issue_date}
                   onChange={(e) => setForm(prev => ({ ...prev, issue_date: e.target.value }))}
                   required
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 shape-sm border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
                 />
               </div>
               <div>
@@ -153,7 +153,7 @@ export default function CreateInvoicePage() {
                   value={form.due_date}
                   onChange={(e) => setForm(prev => ({ ...prev, due_date: e.target.value }))}
                   required
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 shape-sm border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
                 />
               </div>
             </div>
@@ -164,12 +164,12 @@ export default function CreateInvoicePage() {
                 value={form.notes}
                 onChange={(e) => setForm(prev => ({ ...prev, notes: e.target.value }))}
                 rows={2}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
+                className="w-full px-3 py-2 shape-sm border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
               />
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6 space-y-4">
+          <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-6 space-y-4">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{t('billing.create.sources')}</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -179,7 +179,7 @@ export default function CreateInvoicePage() {
                   type="date"
                   value={form.start_date}
                   onChange={(e) => setForm(prev => ({ ...prev, start_date: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 shape-sm border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
                 />
               </div>
               <div>
@@ -188,13 +188,13 @@ export default function CreateInvoicePage() {
                   type="date"
                   value={form.end_date}
                   onChange={(e) => setForm(prev => ({ ...prev, end_date: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
+                  className="w-full px-3 py-2 shape-sm border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
                 />
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <label className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 dark:border-slate-600 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 flex-1">
+              <label className="flex items-center gap-3 p-4 shape-sm border border-gray-200 dark:border-slate-600 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 flex-1">
                 <input
                   type="checkbox"
                   checked={form.include_time_entries}
@@ -207,7 +207,7 @@ export default function CreateInvoicePage() {
                   <p className="text-sm text-gray-500 dark:text-gray-400">{t('billing.create.includeTimeDesc')}</p>
                 </div>
               </label>
-              <label className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 dark:border-slate-600 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 flex-1">
+              <label className="flex items-center gap-3 p-4 shape-sm border border-gray-200 dark:border-slate-600 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 flex-1">
                 <input
                   type="checkbox"
                   checked={form.include_projects}
@@ -223,7 +223,7 @@ export default function CreateInvoicePage() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6">
+          <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 flex items-center gap-2">
                 <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -269,7 +269,7 @@ export default function CreateInvoicePage() {
             <button
               type="button"
               onClick={() => router.push('/billing')}
-              className="px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
+              className="px-4 py-2 shape-sm border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
             >
               {t('common.cancel')}
             </button>
@@ -277,7 +277,7 @@ export default function CreateInvoicePage() {
               type="submit"
               disabled={submitting || previewItems.length === 0 || !form.client_id}
               whileTap={{ scale: 0.98 }}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white shape-sm font-medium transition-colors flex items-center gap-2"
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
               {t('billing.create.generate')}

@@ -111,7 +111,7 @@ export default function FinancePage() {
             <select
               value={year}
               onChange={(e) => setYear(Number(e.target.value))}
-              className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-sm text-gray-900 dark:text-slate-100"
+              className="px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-sm text-gray-900 dark:text-slate-100"
             >
               {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(y => (
                 <option key={y} value={y}>{y}</option>
@@ -119,7 +119,7 @@ export default function FinancePage() {
             </select>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-lg text-sm font-medium hover:opacity-90"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-slate-100 text-white dark:text-slate-900 shape-sm text-sm font-medium hover:opacity-90"
             >
               <Plus className="w-4 h-4" />
               {t('finance.addTransaction')}
@@ -128,7 +128,7 @@ export default function FinancePage() {
         </div>
 
         {error && (
-          <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
+          <div className="p-4 shape-sm bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-600 dark:text-red-400">
             {error}
           </div>
         )}
@@ -142,7 +142,7 @@ export default function FinancePage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.06 }}
-                className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-5"
+                className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-5"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -151,7 +151,7 @@ export default function FinancePage() {
                       {loading ? '—' : money(card.value)}
                     </p>
                   </div>
-                  <div className="p-3 bg-gray-100 dark:bg-slate-700 rounded-lg">
+                  <div className="p-3 bg-gray-100 dark:bg-slate-700 shape-sm">
                     <Icon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                   </div>
                 </div>
@@ -161,7 +161,7 @@ export default function FinancePage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6">
+          <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-6">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
               {t('finance.monthlyFlow')}
             </h2>
@@ -199,7 +199,7 @@ export default function FinancePage() {
             )}
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6">
+          <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-6">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
               {t('finance.byCategory')}
             </h2>
@@ -229,7 +229,7 @@ export default function FinancePage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
           <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
               {t('finance.transactions')}

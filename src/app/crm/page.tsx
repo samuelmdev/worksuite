@@ -217,7 +217,7 @@ export default function CRMIndexPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6 ${
+                className={`bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6 ${
                   stat.link ? 'cursor-pointer hover:shadow-md transition-shadow' : ''
                 }`}
                 title={stat.tooltip}
@@ -238,7 +238,7 @@ export default function CRMIndexPage() {
                       {stat.change} {t('common.stats.fromLastMonth')}
                     </p>
                   </div>
-                  <div className={`p-3 rounded-lg ${
+                  <div className={`p-3 shape-sm ${
                     stat.color === 'blue' ? 'bg-cyan-200 dark:bg-cyan-900' :
                     stat.color === 'green' ? 'bg-green-200 dark:bg-green-900' :
                     stat.color === 'violet' ? 'bg-violet-200 dark:bg-violet-900' :
@@ -269,7 +269,7 @@ export default function CRMIndexPage() {
         </div>
 
         {/* Activity Dashboard */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
           <div className="p-6 border-b border-gray-200 dark:border-slate-700">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
@@ -285,7 +285,7 @@ export default function CRMIndexPage() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-2 px-4 py-2 shape-sm text-sm font-medium transition-colors ${
                       activeTab === tab.id
                         ? 'bg-cyan-100 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300'
                         : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700'
@@ -324,7 +324,7 @@ export default function CRMIndexPage() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => setIsTaskModalOpen(true)}
-                            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+                            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
                           >
                             {t('crm.tasks.create')}
                           </motion.button>
@@ -334,7 +334,7 @@ export default function CRMIndexPage() {
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.3 }}
                           onClick={() => router.push('/crm/tasks')}
-                          className="w-full px-4 py-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
+                          className="w-full px-4 py-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 shape-sm hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
                         >
                           {t('crm.tasks.viewAll')}
                         </motion.button>
@@ -396,7 +396,7 @@ export default function CRMIndexPage() {
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.5 }}
                           onClick={() => router.push('/crm/tasks')}
-                          className="w-full mt-4 px-4 py-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
+                          className="w-full mt-4 px-4 py-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 shape-sm hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
                         >
                           {t('crm.tasks.viewAll')}
                         </motion.button>
@@ -443,7 +443,7 @@ export default function CRMIndexPage() {
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: index * 0.1 }}
-                              className="flex items-start space-x-3 p-4 bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700"
+                              className="flex items-start space-x-3 p-4 bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700"
                             >
                               <div className="flex-shrink-0 w-8 h-8 bg-cyan-100 dark:bg-cyan-900/20 rounded-full flex items-center justify-center text-lg">
                                 {getActivityIcon(activity.type)}
@@ -469,7 +469,7 @@ export default function CRMIndexPage() {
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.5 }}
                           onClick={() => router.push('/crm/logs')}
-                          className="w-full mt-4 px-4 py-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
+                          className="w-full mt-4 px-4 py-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 shape-sm hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
                         >
                           {t('crm.clientActivity.viewAll')}
                         </motion.button>
@@ -544,7 +544,7 @@ export default function CRMIndexPage() {
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: index * 0.05 }}
-                              className="flex items-start space-x-3 p-4 bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700"
+                              className="flex items-start space-x-3 p-4 bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700"
                             >
                               <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-lg ${getActivityColor(activity.action)}`}>
                                 {getActivityIcon(activity.action)}
@@ -575,7 +575,7 @@ export default function CRMIndexPage() {
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.4 }}
                           onClick={() => router.push('/crm/settings?section=users')}
-                          className="w-full mt-4 px-4 py-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
+                          className="w-full mt-4 px-4 py-2 text-sm font-medium text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 shape-sm hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
                         >
                           {t('crm.userActivity.viewAll')}
                         </motion.button>
@@ -589,7 +589,7 @@ export default function CRMIndexPage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
             {t('common.quickActions')}
           </h2>
@@ -598,7 +598,7 @@ export default function CRMIndexPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsClientModalOpen(true)}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <UserPlus className="w-6 h-6 text-cyan-600 dark:text-cyan-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('crm.quickActions.addClient')}</h3>
@@ -609,7 +609,7 @@ export default function CRMIndexPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsContractModalOpen(true)}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <FilePlus className="w-6 h-6 text-green-600 dark:text-green-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('crm.quickActions.addContract')}</h3>
@@ -620,7 +620,7 @@ export default function CRMIndexPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsTaskModalOpen(true)}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <CheckSquare className="w-6 h-6 text-orange-600 dark:text-orange-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('crm.quickActions.addTask')}</h3>
@@ -631,7 +631,7 @@ export default function CRMIndexPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsActivityModalOpen(true)}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <Plus className="w-6 h-6 text-violet-600 dark:text-violet-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('crm.quickActions.addLog')}</h3>
@@ -642,7 +642,7 @@ export default function CRMIndexPage() {
 
         {/* Error Display */}
         {(error || errors.stats || errors.activities) && (
-          <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm">
             <p className="text-sm text-red-600 dark:text-red-400">
               {error || errors.stats || errors.activities}
             </p>

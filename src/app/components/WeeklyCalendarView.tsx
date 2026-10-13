@@ -73,7 +73,7 @@ export default function WeeklyCalendarView({
   }
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+    <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
       {/* Calendar Header */}
       <div className="p-6 border-b border-gray-200 dark:border-slate-700">
         <div className="flex items-center justify-between">
@@ -120,7 +120,7 @@ export default function WeeklyCalendarView({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className={`min-h-[200px] rounded-lg border-2 transition-all duration-200 ${
+              className={`min-h-[200px] shape-sm border-2 transition-all duration-200 ${
                 isToday(slot.date)
                   ? 'border-emerald-300 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-900/20'
                   : isPastDate(slot.date)
@@ -173,7 +173,7 @@ export default function WeeklyCalendarView({
                       key={entry.id}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className={`p-2 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${getStatusBorderColor(entry.status)} ${
+                      className={`p-2 shape-sm cursor-pointer transition-all duration-200 hover:shadow-md ${getStatusBorderColor(entry.status)} ${
                         getStatusColor(entry.status)
                       }`}
                       onClick={() => onEditTimeEntry?.(entry)}
@@ -215,7 +215,7 @@ export default function WeeklyCalendarView({
         </div>
 
         {/* Week Summary */}
-        <div className="mt-6 p-4 bg-gray-50 dark:bg-slate-700 rounded-lg">
+        <div className="mt-6 p-4 bg-gray-50 dark:bg-slate-700 shape-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">

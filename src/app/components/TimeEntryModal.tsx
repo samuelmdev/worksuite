@@ -278,7 +278,7 @@ export default function TimeEntryModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-slate-800 shape-sm shadow-xl w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-slate-700">
           <div className="flex-1 min-w-0">
@@ -299,7 +299,7 @@ export default function TimeEntryModal({
 
         <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm p-4">
               <div className="flex items-center">
                 <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" />
                 <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
@@ -317,7 +317,7 @@ export default function TimeEntryModal({
               <select
                 value={formData.user_id}
                 onChange={(e) => handleInputChange('user_id', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 required
               >
                 <option value="">{t('common.selectEmployee')}</option>
@@ -339,7 +339,7 @@ export default function TimeEntryModal({
             <select
               value={formData.client_id || ''}
               onChange={(e) => handleInputChange('client_id', e.target.value || null)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             >
               <option value="">{t('common.selectClient')}</option>
               {clients.map((client) => (
@@ -367,7 +367,7 @@ export default function TimeEntryModal({
                   project_name: project?.name || '',
                 }))
               }}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               required
             >
               <option value="">{t('modal.timeEntry.selectProject')}</option>
@@ -393,7 +393,7 @@ export default function TimeEntryModal({
             <textarea
               value={formData.description || ''}
               onChange={(e) => handleInputChange('description', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               placeholder={t('modal.timeEntry.placeholder.description')}
               rows={3}
               required
@@ -416,7 +416,7 @@ export default function TimeEntryModal({
                   type="date"
                   value={startDate}
                   onChange={(e) => handleStartDateChange(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   required
                 />
               </div>
@@ -429,7 +429,7 @@ export default function TimeEntryModal({
                   type="time"
                   value={startTime}
                   onChange={(e) => handleStartTimeChange(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   required
                 />
               </div>
@@ -452,7 +452,7 @@ export default function TimeEntryModal({
                   type="date"
                   value={endDate}
                   onChange={(e) => handleEndDateChange(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   required
                 />
               </div>
@@ -465,7 +465,7 @@ export default function TimeEntryModal({
                   type="time"
                   value={endTime}
                   onChange={(e) => handleEndTimeChange(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   required
                 />
               </div>
@@ -478,7 +478,7 @@ export default function TimeEntryModal({
               <Clock className="w-4 h-4 inline mr-1" />
               {t('modal.timeEntry.billableHours')}
             </label>
-            <div className={`w-full px-3 py-2 border rounded-lg text-gray-900 dark:text-slate-100 ${
+            <div className={`w-full px-3 py-2 border shape-sm text-gray-900 dark:text-slate-100 ${
               billableHours > 0 
                 ? 'border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-600' 
                 : 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20'
@@ -510,7 +510,7 @@ export default function TimeEntryModal({
               <select
                 value={formData.status}
                 onChange={(e) => handleInputChange('status', e.target.value as any)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               >
                 {Object.entries(timeStatusKeys).map(([value, key]) => (
                   <option key={value} value={value}>{t(key)}</option>
@@ -524,14 +524,14 @@ export default function TimeEntryModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-3 sm:py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+              className="px-4 py-3 sm:py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-3 sm:py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 rounded-lg transition-colors flex items-center justify-center"
+              className="px-4 py-3 sm:py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 shape-sm transition-colors flex items-center justify-center"
             >
               {isSubmitting ? (
                 <>
