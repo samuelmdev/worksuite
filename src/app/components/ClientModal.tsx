@@ -205,7 +205,7 @@ export default function ClientModal({ isOpen, onClose, onSave, client, mode }: C
           />
           
           <motion.div
-            className="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+            className="relative bg-white dark:bg-slate-800 shape-sm shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
@@ -217,7 +217,7 @@ export default function ClientModal({ isOpen, onClose, onSave, client, mode }: C
               </h2>
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                className="p-2 shape-sm hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
               >
                 <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
               </button>
@@ -233,7 +233,7 @@ export default function ClientModal({ isOpen, onClose, onSave, client, mode }: C
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+                    className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                       errors.name ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                     }`}
                     placeholder={t('modal.client.placeholder.name')}
@@ -251,7 +251,7 @@ export default function ClientModal({ isOpen, onClose, onSave, client, mode }: C
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+                    className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                       errors.email ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                     }`}
                     placeholder={t('modal.client.placeholder.email')}
@@ -269,7 +269,7 @@ export default function ClientModal({ isOpen, onClose, onSave, client, mode }: C
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                     placeholder={t('modal.client.placeholder.phone')}
                   />
                 </div>
@@ -282,7 +282,7 @@ export default function ClientModal({ isOpen, onClose, onSave, client, mode }: C
                     type="text"
                     value={formData.company}
                     onChange={(e) => handleInputChange('company', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+                    className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                       errors.company ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                     }`}
                     placeholder={t('modal.client.placeholder.company')}
@@ -302,7 +302,7 @@ export default function ClientModal({ isOpen, onClose, onSave, client, mode }: C
                       onChange={(e) => handleInputChange('address', e.target.value)}
                       onBlur={handleAddressBlur}
                       rows={3}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
+                      className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
                         errors.address ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                       }`}
                       placeholder={t('modal.client.placeholder.address')}
@@ -339,7 +339,7 @@ export default function ClientModal({ isOpen, onClose, onSave, client, mode }: C
                       <button
                         type="button"
                         onClick={handleBypassValidation}
-                        className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors"
+                        className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 shape-sm hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors"
                       >
                         <AlertTriangle className="w-3 h-3 mr-1.5" />
                         {t('modal.client.saveAnyway')}
@@ -361,7 +361,7 @@ export default function ClientModal({ isOpen, onClose, onSave, client, mode }: C
                   value={formData.notes}
                   onChange={(e) => handleInputChange('notes', e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('modal.client.placeholder.notes')}
                 />
               </div>
@@ -370,14 +370,14 @@ export default function ClientModal({ isOpen, onClose, onSave, client, mode }: C
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+                  className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
                 >
                   <XCircle className="w-4 h-4 mr-2" />
                   {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
-                  className="flex items-center px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors"
+                  className="flex items-center px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 shape-sm transition-colors"
                 >
                   <Save className="w-4 h-4 mr-2" />
                   {mode === 'create' ? t('modal.client.createButton') : t('modal.client.saveChanges')}

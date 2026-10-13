@@ -109,17 +109,17 @@ function BillingSettings() {
     <RoleGuard>
       <SettingsSubpage titleKey="settings.section.billing" descKey="settings.section.billingDesc" maxWidth="3xl">
         {checkoutResult === 'success' && (
-          <div className="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-sm text-emerald-700 dark:text-emerald-300">
+          <div className="p-4 shape-sm bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-sm text-emerald-700 dark:text-emerald-300">
             {t('settings.subscription.checkoutSuccess')}
           </div>
         )}
         {checkoutResult === 'cancelled' && (
-          <div className="p-4 rounded-lg bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm text-gray-600 dark:text-gray-300">
+          <div className="p-4 shape-sm bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm text-gray-600 dark:text-gray-300">
             {t('settings.subscription.checkoutCancelled')}
           </div>
         )}
         {error && (
-          <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-center gap-2">
+          <div className="p-4 shape-sm bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
             <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
           </div>
@@ -133,7 +133,7 @@ function BillingSettings() {
             </div>
           ) : isEntitled && subscription ? (
             <>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-xl bg-gray-50 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 shape bg-gray-50 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700">
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">{t('settings.subscription.planLabel')}</p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">WorkSuite</p>
@@ -169,7 +169,7 @@ function BillingSettings() {
                 <button
                   onClick={handleManage}
                   disabled={busy}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-60"
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm text-sm text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-60"
                 >
                   {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <ExternalLink className="w-4 h-4" />}
                   {t('settings.subscription.manage')}
@@ -187,7 +187,7 @@ function BillingSettings() {
                   <button
                     key={option}
                     onClick={() => setInterval(option)}
-                    className={`text-left p-4 rounded-xl border transition-colors ${
+                    className={`text-left p-4 shape border transition-colors ${
                       interval === option
                         ? 'border-gray-900 dark:border-slate-200 bg-gray-50 dark:bg-slate-800'
                         : 'border-gray-200 dark:border-slate-700 hover:border-gray-300 dark:hover:border-slate-600'
@@ -213,7 +213,7 @@ function BillingSettings() {
                 <button
                   onClick={handleSubscribe}
                   disabled={busy}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-60"
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-slate-100 text-white dark:text-slate-900 shape-sm text-sm font-medium hover:opacity-90 disabled:opacity-60"
                 >
                   {busy && <Loader2 className="w-4 h-4 animate-spin" />}
                   {t('settings.subscription.subscribe')}
@@ -262,7 +262,7 @@ function BillingSettings() {
               {history.map(entry => (
                 <div key={entry.id} className="flex items-center justify-between py-3">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-100 dark:bg-slate-700 rounded-lg">
+                    <div className="p-2 bg-gray-100 dark:bg-slate-700 shape-sm">
                       <CreditCard className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                     </div>
                     <div>

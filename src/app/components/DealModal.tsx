@@ -252,7 +252,7 @@ export default function DealModal({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          className="bg-white dark:bg-slate-800 shape-sm shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         >
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
@@ -306,7 +306,7 @@ export default function DealModal({
                   type="text"
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
+                  className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
                     errors.title ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                   }`}
                   placeholder={t('modal.deal.placeholder.title')}
@@ -329,7 +329,7 @@ export default function DealModal({
                           handleClientSelect(selectedClient)
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                     >
                       <option value="">{t('common.selectClient')}</option>
                       {clients.map(client => (
@@ -339,7 +339,7 @@ export default function DealModal({
                       ))}
                     </select>
                   ) : (
-                    <div className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-700 text-gray-500 dark:text-gray-400">
+                    <div className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-gray-50 dark:bg-slate-700 text-gray-500 dark:text-gray-400">
                       {t('modal.deal.loadingClients')}
                     </div>
                   )}
@@ -356,7 +356,7 @@ export default function DealModal({
                     type="text"
                     value={formData.clientName}
                     onChange={(e) => handleInputChange('clientName', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
+                    className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
                       errors.clientName ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                     }`}
                     placeholder={t('modal.deal.placeholder.clientName')}
@@ -372,7 +372,7 @@ export default function DealModal({
                     type="email"
                     value={formData.clientEmail}
                     onChange={(e) => handleInputChange('clientEmail', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
+                    className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
                       errors.clientEmail ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                     }`}
                     placeholder="client@company.com"
@@ -388,7 +388,7 @@ export default function DealModal({
                     type="text"
                     value={formData.clientCompany}
                     onChange={(e) => handleInputChange('clientCompany', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
+                    className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
                       errors.clientCompany ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                     }`}
                     placeholder={t('modal.deal.placeholder.company')}
@@ -404,7 +404,7 @@ export default function DealModal({
                     type="tel"
                     value={formData.clientPhone}
                     onChange={(e) => handleInputChange('clientPhone', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                     placeholder="+1 (555) 123-4567"
                   />
                 </div>
@@ -424,7 +424,7 @@ export default function DealModal({
                       step="0.01"
                       value={formData.value}
                       onChange={(e) => handleInputChange('value', parseFloat(e.target.value) || 0)}
-                      className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
+                      className={`w-full pl-10 pr-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
                         errors.value ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                       }`}
                       placeholder="0"
@@ -443,7 +443,7 @@ export default function DealModal({
                     max="100"
                     value={formData.probability}
                     onChange={(e) => handleInputChange('probability', parseInt(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   />
                 </div>
 
@@ -455,7 +455,7 @@ export default function DealModal({
                     type="date"
                     value={formData.expectedCloseDate}
                     onChange={(e) => handleInputChange('expectedCloseDate', e.target.value)}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
+                    className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 ${
                       errors.expectedCloseDate ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                     }`}
                   />
@@ -472,7 +472,7 @@ export default function DealModal({
                   <select
                     value={formData.stage}
                     onChange={(e) => handleInputChange('stage', e.target.value as DealFormData['stage'])}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   >
                     {Object.entries(pipelineStageKeys).map(([key, labelKey]) => (
                       <option key={key} value={key}>
@@ -489,7 +489,7 @@ export default function DealModal({
                   <select
                     value={formData.source}
                     onChange={(e) => handleInputChange('source', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   >
                     {Object.entries(dealSourceKeys).map(([value, key]) => (
                       <option key={value} value={value}>
@@ -509,7 +509,7 @@ export default function DealModal({
                   type="text"
                   value={formData.assignedTo}
                   onChange={(e) => handleInputChange('assignedTo', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('modal.deal.placeholder.assignee')}
                 />
               </div>
@@ -523,7 +523,7 @@ export default function DealModal({
                   value={formData.notes}
                   onChange={(e) => handleInputChange('notes', e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('modal.deal.placeholder.notes')}
                 />
               </div>
@@ -540,7 +540,7 @@ export default function DealModal({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white shape-sm transition-colors"
                 >
                   {isSubmitting ? t('common.saving') : mode === 'edit' ? t('modal.deal.updateButton') : t('modal.deal.createButton')}
                 </button>

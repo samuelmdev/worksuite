@@ -205,7 +205,7 @@ export default function TaskModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-slate-800 shape-sm shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
             {mode === 'edit' ? t('modal.task.editTitle') : t('modal.task.createTitle')}
@@ -220,7 +220,7 @@ export default function TaskModal({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {errors.submit && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm p-4">
               <div className="flex items-center">
                 <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" />
                 <p className="text-sm text-red-600 dark:text-red-400">{errors.submit}</p>
@@ -236,7 +236,7 @@ export default function TaskModal({
             <select
               value={formData.client_id || ''}
               onChange={(e) => handleInputChange('client_id', e.target.value === '' ? null : e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+              className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                 errors.client_id ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
               }`}
             >
@@ -251,7 +251,7 @@ export default function TaskModal({
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.client_id}</p>
             )}
             {selectedClient && (
-              <div className="mt-2 p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+              <div className="mt-2 p-3 bg-gray-50 dark:bg-slate-700 shape-sm">
                 <p className="text-sm text-gray-600 dark:text-slate-300">
                   <strong>{t('common.selected')}</strong> {selectedClient.name}
                   {selectedClient.company && ` - ${selectedClient.company}`}
@@ -274,7 +274,7 @@ export default function TaskModal({
               type="text"
               value={formData.title}
               onChange={(e) => handleInputChange('title', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+              className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                 errors.title ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
               }`}
               placeholder={t('modal.task.placeholder.title')}
@@ -293,7 +293,7 @@ export default function TaskModal({
               value={formData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               placeholder={t('modal.task.placeholder.description')}
             />
             {formData.client_id && (formData.task_type === 'call' || formData.task_type === 'email') && selectedClient && (
@@ -313,7 +313,7 @@ export default function TaskModal({
               <select
                 value={formData.task_type}
                 onChange={(e) => handleInputChange('task_type', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               >
                 {Object.entries(taskTypeKeys).map(([value, key]) => (
                   <option key={value} value={value}>{t(key)}</option>
@@ -328,7 +328,7 @@ export default function TaskModal({
               <select
                 value={formData.priority}
                 onChange={(e) => handleInputChange('priority', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               >
                 {Object.entries(priorityKeys).map(([value, key]) => (
                   <option key={value} value={value}>{t(key)}</option>
@@ -346,7 +346,7 @@ export default function TaskModal({
               type="date"
               value={formData.due_date}
               onChange={(e) => handleInputChange('due_date', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
             />
           </div>
 
@@ -373,7 +373,7 @@ export default function TaskModal({
               type="text"
               value={formData.assigned_to || ''}
               onChange={(e) => handleInputChange('assigned_to', e.target.value || null)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               placeholder={t('modal.task.placeholder.assignee')}
             />
           </div>
@@ -383,14 +383,14 @@ export default function TaskModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              className="px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 shape-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
             >
               {isLoading ? (
                 <>

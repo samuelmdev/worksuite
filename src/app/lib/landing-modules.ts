@@ -2,7 +2,7 @@ import type { TranslationKey } from './translations'
 
 export type LandingModuleId = 'crm' | 'time' | 'projects' | 'billing' | 'finance' | 'team'
 
-export type LandingModuleColor = 'cyan' | 'emerald' | 'violet' | 'blue' | 'amber' | 'red'
+export type LandingModuleColor = 'cyan' | 'emerald' | 'violet' | 'blue' | 'gold' | 'red'
 
 export type LandingModule = {
   id: LandingModuleId
@@ -87,7 +87,7 @@ export const LANDING_MODULES: LandingModule[] = [
   {
     id: 'finance',
     nameKey: 'nav.finance',
-    color: 'amber',
+    color: 'gold',
     icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
     descKey: 'landing.financeDesc',
     itemKeys: ['landing.financeItem1', 'landing.financeItem2', 'landing.financeItem3'],
@@ -150,12 +150,12 @@ export function getModuleColorClasses(color: LandingModuleColor) {
         accent: 'hover:border-blue-400 dark:hover:border-blue-600',
         header: 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
       }
-    case 'amber':
+    case 'gold':
       return {
-        icon: 'bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400',
-        check: 'text-amber-500',
-        accent: 'hover:border-amber-400 dark:hover:border-amber-600',
-        header: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
+        icon: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-600 dark:text-yellow-400',
+        check: 'text-yellow-500',
+        accent: 'hover:border-yellow-400 dark:hover:border-yellow-600',
+        header: 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300',
       }
     default:
       return {

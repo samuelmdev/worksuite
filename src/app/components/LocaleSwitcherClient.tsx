@@ -45,7 +45,7 @@ export default function LocaleSwitcher() {
         ref={buttonRef}
         type="button"
         onClick={toggleOpen}
-        className="flex items-center justify-center h-10 w-10 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shrink-0"
+        className="flex items-center justify-center h-10 w-10 border border-slate-200 dark:border-slate-700 shape-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shrink-0"
       >
         <span className="text-lg leading-none">{currentLanguage.flag}</span>
       </button>
@@ -59,7 +59,7 @@ export default function LocaleSwitcher() {
                 onClick={closeMenu}
               />
               <div
-                className="fixed bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg z-[70] min-w-[10rem]"
+                className="fixed bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shape-sm shadow-lg z-[70] min-w-[10rem]"
                 style={{ top: menuPos.top, right: menuPos.right }}
               >
                 {languages.map((language) => (

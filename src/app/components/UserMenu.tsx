@@ -33,9 +33,14 @@ export default function UserMenu() {
 
   const closeMenu = () => setIsOpen(false)
 
-  const handleLogout = () => {
-    logout()
-    router.push('/auth/login')
+  // Await the sign-out before navigating. Firing it and pushing immediately
+  // raced the teardown, so the next page could mount while the session was
+  // still present and sign the user straight back in.
+  const handleLogout = async () => {
+    closeMenu()
+    await logout()
+    router.replace('/auth/login')
+    router.refresh()
   }
 
   if (!user) {
@@ -49,7 +54,7 @@ export default function UserMenu() {
         </a>
         <a
           href="/auth/signup"
-          className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors"
+          className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium shape-sm transition-colors"
         >
           {t('auth.signUp')}
         </a>
@@ -76,7 +81,7 @@ export default function UserMenu() {
         ref={buttonRef}
         type="button"
         onClick={toggleOpen}
-        className="flex items-center justify-center h-10 w-10 sm:w-auto sm:h-auto sm:gap-2 sm:px-2 sm:py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors shrink-0"
+        className="flex items-center justify-center h-10 w-10 sm:w-auto sm:h-auto sm:gap-2 sm:px-2 sm:py-2 shape-sm hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors shrink-0"
       >
         <div className="w-8 h-8 bg-cyan-100 dark:bg-cyan-900 rounded-full flex items-center justify-center shrink-0">
           <User className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
@@ -107,7 +112,7 @@ export default function UserMenu() {
               />
               <motion.div
                 key="user-menu-panel"
-                className="fixed w-64 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 z-[70]"
+                className="fixed w-64 bg-white dark:bg-slate-800 shape-sm shadow-lg border border-gray-200 dark:border-slate-700 z-[70]"
                 style={{ top: menuPos.top, right: menuPos.right }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

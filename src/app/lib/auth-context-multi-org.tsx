@@ -56,15 +56,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Load user profile with organizations
   const loadUserProfile = async (supabaseUser: SupabaseUser) => {
     try {
-      // Get user basic info
+      /*
+       * A signed-in account with no profile row is a real state, not an
+       * error: signup can be interrupted between creating the auth user and
+       * creating the workspace. maybeSingle() so that case comes back as null
+       * instead of throwing.
+       *
+       * This previously used single() and returned early on the error, which
+       * left the context holding whatever it had before — the account stayed
+       * "signed in" with no way to recover, because signing out was never
+       * reached.
+       */
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('id, first_name, last_name')
         .eq('id', supabaseUser.id)
-        .single()
+        .maybeSingle()
 
       if (userError) {
         console.error('Error fetching user data:', userError)
+        // Surface the account anyway so the UI can offer sign-out rather
+        // than stranding it in a half-loaded state.
+        setUser({
+          id: supabaseUser.id,
+          email: supabaseUser.email || '',
+          name: supabaseUser.email || '',
+          organizations: [],
+          currentOrganizationId: null,
+        })
+        setCurrentOrganization(null)
+        setNeedsOrganization(true)
         return
       }
 
@@ -83,10 +104,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (orgError) {
         console.error('Error fetching organizations:', orgError)
+        // Same reasoning as the missing profile above: keep the account
+        // visible so it can be signed out of.
+        setUser({
+          id: supabaseUser.id,
+          email: supabaseUser.email || '',
+          name: supabaseUser.email || '',
+          organizations: [],
+          currentOrganizationId: null,
+        })
+        setCurrentOrganization(null)
+        setNeedsOrganization(true)
         return
       }
 
-      const organizations: Organization[] = (orgData as unknown as MembershipRow[]).map(row => ({
+      const organizations: Organization[] = ((orgData ?? []) as unknown as MembershipRow[]).map(row => ({
         id: row.organization_id,
         name: row.organizations.name,
         slug: row.organizations.slug,
@@ -97,9 +129,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userProfile: User = {
         id: supabaseUser.id,
         email: supabaseUser.email || '',
-        name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim() || supabaseUser.email || '',
-        first_name: userData.first_name,
-        last_name: userData.last_name,
+        name: `${userData?.first_name || ''} ${userData?.last_name || ''}`.trim() || supabaseUser.email || '',
+        first_name: userData?.first_name ?? undefined,
+        last_name: userData?.last_name ?? undefined,
         organizations,
         currentOrganizationId: null
       }
@@ -164,16 +196,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     getInitialSession()
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    /*
+     * Auth events fire while the client holds its auth lock.
+     *
+     * In @supabase/auth-js, _initialize() runs inside _acquireLock(), and
+     * _recoverAndRefresh() notifies subscribers from in there. Every
+     * supabase.from(...) call goes through _useSession(), which wants the same
+     * lock — and _acquireLock queues re-entrant work behind whatever is
+     * already pending. So querying from inside this callback makes the query
+     * wait on the callback, and the callback wait on the query.
+     *
+     * The result is that EVERY supabase call in the app stalls, not just this
+     * one, which is why it surfaced as a 30s timeout over in crm-context.
+     *
+     * Scheduling the work on a later tick lets the lock be released first.
+     * The callback itself must stay synchronous.
+     */
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
-        await loadUserProfile(session.user)
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null)
-        setCurrentOrganization(null)
-        setNeedsOrganization(false)
-        localStorage.removeItem('currentOrganizationId')
+        const signedInUser = session.user
+        setTimeout(() => {
+          void loadUserProfile(signedInUser).finally(() => setIsLoading(false))
+        }, 0)
+        return
       }
+
+      if (event === 'SIGNED_OUT') {
+        // Also fires when a refresh token is rejected, so this is the single
+        // place that tears down state no matter how the session ended.
+        // Touches no supabase methods, so it is safe to run inline.
+        clearLocalAuthState()
+      }
+
       setIsLoading(false)
     })
 
@@ -229,51 +283,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return false
       }
 
-      // Create organization
-      const { data: orgData, error: orgError } = await supabase
-        .from('organizations')
-        .insert([{
-          name: organizationName,
-          slug: organizationName.toLowerCase().replace(/[^a-z0-9]/g, '-'),
-          email: organizationEmail || email,
-        }])
-        .select()
-        .single()
-
-      if (orgError) {
-        console.error('Organization creation error:', orgError)
-        return false
-      }
-
-      // Create user profile
       const [firstName, ...lastNameParts] = name.split(' ')
       const lastName = lastNameParts.join(' ')
 
-      const { error: userError } = await supabase
-        .from('users')
-        .insert([{
-          id: authData.user.id,
-          first_name: firstName,
-          last_name: lastName,
-        }])
+      /*
+       * One call creates the organization, the profile and the admin
+       * membership together.
+       *
+       * These used to be three separate inserts from here, which could not be
+       * made atomic and could not read the organization back: the SELECT
+       * policy requires a membership row that does not exist until the last
+       * step, so `.select().single()` failed after the organization had
+       * already been committed, stranding it with no members.
+       */
+      const { data: orgData, error: orgError } = await supabase
+        .rpc('create_organization_with_owner', {
+          p_name: organizationName,
+          p_email: organizationEmail || email,
+          p_first_name: firstName,
+          p_last_name: lastName,
+        })
+        .single()
 
-      if (userError) {
-        console.error('User profile creation error:', userError)
-        return false
-      }
-
-      // Add user to organization as admin — the subscriber owns the workspace
-      const { error: userOrgError } = await supabase
-        .from('organization_members')
-        .insert([{
-          user_id: authData.user.id,
-          organization_id: orgData.id,
-          role: 'admin',
-          is_active: true,
-        }])
-
-      if (userOrgError) {
-        console.error('User-organization link error:', userOrgError)
+      if (orgError || !orgData) {
+        console.error('Organization creation error:', orgError)
         return false
       }
 
@@ -287,8 +320,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   // Logout function
+  /** Clears everything this context owns. Safe to call more than once. */
+  const clearLocalAuthState = () => {
+    setUser(null)
+    setCurrentOrganization(null)
+    setNeedsOrganization(false)
+    try {
+      localStorage.removeItem('currentOrganizationId')
+      // supabase-js keys its stored session as sb-<project-ref>-auth-token.
+      // If the server round-trip failed it may still be sitting there, and
+      // leaving it means the next page load signs straight back in.
+      for (const key of Object.keys(localStorage)) {
+        if (key.startsWith('sb-') && key.includes('-auth-token')) {
+          localStorage.removeItem(key)
+        }
+      }
+    } catch {
+      // Private mode or blocked storage; nothing more we can do here.
+    }
+  }
+
+  /**
+   * Signing out must succeed locally even when the server call does not.
+   *
+   * The default 'global' scope POSTs to /auth/v1/logout. A network failure or
+   * 5xx leaves supabase-js holding the stored session, so the user appears
+   * signed in again on the next load. Falling back to a local sign-out and
+   * then clearing storage ourselves makes the outcome the same either way.
+   */
   const logout = async () => {
-    await supabase.auth.signOut()
+    const { error } = await supabase.auth.signOut()
+
+    if (error) {
+      console.error('Sign out failed on the server, clearing locally:', error)
+      try {
+        await supabase.auth.signOut({ scope: 'local' })
+      } catch (localError) {
+        console.error('Local sign out also failed:', localError)
+      }
+    }
+
+    // Do not wait for the SIGNED_OUT event: it never fires if signOut bailed
+    // early, which is exactly the case this needs to handle.
+    clearLocalAuthState()
   }
 
   const value: AuthContextType = {

@@ -4,7 +4,7 @@ import React from 'react'
  * Hero backdrop: a slow mesh gradient built from the module colours, so the
  * background belongs to this product rather than being generic decoration.
  * Each field maps to a module — cyan CRM, violet Projects, emerald Time,
- * amber Finance — the same palette as the chain directly below it.
+ * gold Finance — the same palette as the chain directly below it.
  *
  * The colour and grid rules live in globals.css: Tailwind v4 does not resolve
  * theme() inside arbitrary values, so writing them here would silently produce

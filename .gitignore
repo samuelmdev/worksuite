@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# verification build output (see scripts/build-check.mjs)
+.next-verify/
+
+# MCP server config — local only, holds a project-specific endpoint
+.mcp.json
+
+# Claude Code local state; skills here are absolute symlinks into .agents
+.claude/settings.local.json
+.claude/skills/
+
+# Vendored third-party agent skills; reproducible from skills-lock.json
+.agents/

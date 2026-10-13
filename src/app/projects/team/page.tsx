@@ -102,7 +102,7 @@ export default function ProjectsTeamPage() {
               {t('projects.teamPage.subtitle')}
             </p>
           </div>
-          <button className="flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors">
+          <button className="flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white shape-sm transition-colors">
             <UserPlus className="w-4 h-4 mr-2" />
             Add Member
           </button>
@@ -113,7 +113,7 @@ export default function ProjectsTeamPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -122,7 +122,7 @@ export default function ProjectsTeamPage() {
                   {teamMembers.length}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-violet-200 dark:bg-violet-900">
+              <div className="p-3 shape-sm bg-violet-200 dark:bg-violet-900">
                 <Users className="w-6 h-6 text-violet-600 dark:text-violet-400" />
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function ProjectsTeamPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -141,7 +141,7 @@ export default function ProjectsTeamPage() {
                   {teamMembers.filter(member => member.status === 'active').length}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-green-200 dark:bg-green-900">
+              <div className="p-3 shape-sm bg-green-200 dark:bg-green-900">
                 <Users className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
             </div>
@@ -151,7 +151,7 @@ export default function ProjectsTeamPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -160,7 +160,7 @@ export default function ProjectsTeamPage() {
                   {new Set(teamMembers.map(member => member.role)).size}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-blue-200 dark:bg-blue-900">
+              <div className="p-3 shape-sm bg-blue-200 dark:bg-blue-900">
                 <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
             </div>
@@ -175,7 +175,7 @@ export default function ProjectsTeamPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow cursor-pointer"
+              className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow cursor-pointer"
               onClick={() => setSelectedMember(selectedMember === member.id ? null : member.id)}
             >
               <div className="flex items-start space-x-4">
@@ -263,7 +263,7 @@ export default function ProjectsTeamPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-8 text-center"
+          className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-8 text-center"
         >
           <div className="w-16 h-16 bg-violet-200 dark:bg-violet-900 rounded-full flex items-center justify-center mx-auto mb-4">
             <Plus className="w-8 h-8 text-violet-600 dark:text-violet-400" />
@@ -274,7 +274,7 @@ export default function ProjectsTeamPage() {
           <p className="text-gray-600 dark:text-gray-400 mb-4">
             Add new team members to collaborate on your projects
           </p>
-          <button className="inline-flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors">
+          <button className="inline-flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white shape-sm transition-colors">
             <UserPlus className="w-4 h-4 mr-2" />
             Add Team Member
           </button>

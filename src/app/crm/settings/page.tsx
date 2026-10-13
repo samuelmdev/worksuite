@@ -288,7 +288,7 @@ export default function CRMSettingsPage() {
               setShowGrantModal(true)
             }}
             disabled={employeesWithoutCrm.length === 0}
-            className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+            className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white shape-sm transition-colors"
           >
             <UserPlus className="w-4 h-4 mr-2" />
             {t('crm.settingsPage.grantAccess')}
@@ -302,7 +302,7 @@ export default function CRMSettingsPage() {
           <p className="text-gray-600 dark:text-gray-400 mt-2">{t('common.loading')}</p>
         </div>
       ) : (
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
               <thead className="bg-gray-50 dark:bg-slate-700">
@@ -399,7 +399,7 @@ export default function CRMSettingsPage() {
           </h3>
           <button 
             onClick={loadUserActivities}
-            className="px-3 py-1 text-sm bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+            className="px-3 py-1 text-sm bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
           >
             Refresh
           </button>
@@ -411,7 +411,7 @@ export default function CRMSettingsPage() {
             <p className="text-gray-600 dark:text-gray-400 mt-2">Loading activities...</p>
           </div>
         ) : (
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+          <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
             {userActivities.length === 0 ? (
               <div className="p-6 text-center text-gray-500 dark:text-gray-400">
                 <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -479,7 +479,7 @@ export default function CRMSettingsPage() {
 
       {showGrantModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-gray-200 dark:border-slate-700 w-full max-w-md">
+          <div className="bg-white dark:bg-slate-800 shape-sm shadow-xl border border-gray-200 dark:border-slate-700 w-full max-w-md">
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
                 {t('crm.settingsPage.grantAccessTitle')}
@@ -507,7 +507,7 @@ export default function CRMSettingsPage() {
                   <select
                     value={grantUserId}
                     onChange={(e) => setGrantUserId(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
                   >
                     <option value="">{t('crm.settingsPage.grantAccessSelect')}</option>
                     {employeesWithoutCrm.map((member) => (
@@ -522,14 +522,14 @@ export default function CRMSettingsPage() {
             <div className="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-slate-700">
               <button
                 onClick={() => setShowGrantModal(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 shape-sm hover:bg-gray-200 dark:hover:bg-slate-600"
               >
                 {t('common.cancel')}
               </button>
               <button
                 onClick={handleGrantAccess}
                 disabled={!grantUserId || grantingAccess}
-                className="px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 rounded-lg transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 shape-sm transition-colors"
               >
                 {grantingAccess ? t('common.loading') : t('crm.settingsPage.grantAccess')}
               </button>
@@ -545,7 +545,7 @@ export default function CRMSettingsPage() {
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">{t('crm.settingsPage.section.notifications')}</h2>
       
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+      <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -642,7 +642,7 @@ export default function CRMSettingsPage() {
           <button
             onClick={saveNotificationSettings}
             disabled={loading}
-            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors disabled:opacity-50"
           >
             <Save className="w-4 h-4 mr-2 inline" />
             {t('crm.settingsPage.save')}
@@ -656,7 +656,7 @@ export default function CRMSettingsPage() {
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">{t('crm.settingsPage.section.security')}</h2>
       
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+      <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -681,7 +681,7 @@ export default function CRMSettingsPage() {
               type="number"
               value={securitySettings.session_timeout}
               onChange={(e) => setSecuritySettings(prev => ({ ...prev, session_timeout: parseInt(e.target.value) }))}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               min="5"
               max="480"
             />
@@ -701,7 +701,7 @@ export default function CRMSettingsPage() {
                     ...prev, 
                     password_policy: { ...prev.password_policy, min_length: parseInt(e.target.value) }
                   }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
                   min="6"
                   max="32"
                 />
@@ -770,7 +770,7 @@ export default function CRMSettingsPage() {
           <button
             onClick={saveSecuritySettings}
             disabled={loading}
-            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors disabled:opacity-50"
           >
             <Save className="w-4 h-4 mr-2 inline" />
             {t('crm.settingsPage.save')}
@@ -785,7 +785,7 @@ export default function CRMSettingsPage() {
       <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">{t('crm.settingsPage.section.data')}</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6">
           <h3 className="text-lg font-medium text-gray-900 dark:text-slate-100 mb-4">Export Data</h3>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
             Export your CRM data for backup or analysis purposes
@@ -794,7 +794,7 @@ export default function CRMSettingsPage() {
             <button
               onClick={() => exportData('clients')}
               disabled={loading}
-              className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
+              className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white shape-sm transition-colors disabled:opacity-50 flex items-center justify-center"
             >
               <Download className="w-4 h-4 mr-2" />
               Export Clients
@@ -802,7 +802,7 @@ export default function CRMSettingsPage() {
             <button
               onClick={() => exportData('contracts')}
               disabled={loading}
-              className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
+              className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white shape-sm transition-colors disabled:opacity-50 flex items-center justify-center"
             >
               <Download className="w-4 h-4 mr-2" />
               Export Contracts
@@ -810,7 +810,7 @@ export default function CRMSettingsPage() {
             <button
               onClick={() => exportData('tasks')}
               disabled={loading}
-              className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
+              className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white shape-sm transition-colors disabled:opacity-50 flex items-center justify-center"
             >
               <Download className="w-4 h-4 mr-2" />
               Export Tasks
@@ -818,7 +818,7 @@ export default function CRMSettingsPage() {
             <button
               onClick={() => exportData('all')}
               disabled={loading}
-              className="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
+              className="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white shape-sm transition-colors disabled:opacity-50 flex items-center justify-center"
             >
               <Download className="w-4 h-4 mr-2" />
               Export All Data
@@ -826,7 +826,7 @@ export default function CRMSettingsPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6">
           <h3 className="text-lg font-medium text-gray-900 dark:text-slate-100 mb-4">Data Backup</h3>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
             Create automated backups of your CRM data
@@ -834,14 +834,14 @@ export default function CRMSettingsPage() {
           <div className="space-y-2">
             <button
               disabled={loading}
-              className="w-full px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
+              className="w-full px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors disabled:opacity-50 flex items-center justify-center"
             >
               <Upload className="w-4 h-4 mr-2" />
               Create Backup
             </button>
             <button
               disabled={loading}
-              className="w-full px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
+              className="w-full px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white shape-sm transition-colors disabled:opacity-50 flex items-center justify-center"
             >
               <Calendar className="w-4 h-4 mr-2" />
               Schedule Backups
@@ -850,14 +850,14 @@ export default function CRMSettingsPage() {
         </div>
       </div>
 
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm p-6">
         <h3 className="text-lg font-medium text-red-900 dark:text-red-100 mb-2">Danger Zone</h3>
         <p className="text-sm text-red-700 dark:text-red-300 mb-4">
           These actions are irreversible. Please proceed with caution.
         </p>
         <button
           disabled={loading}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50"
+          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white shape-sm transition-colors disabled:opacity-50"
         >
           <Trash2 className="w-4 h-4 mr-2 inline" />
           Delete All Data
@@ -879,7 +879,7 @@ export default function CRMSettingsPage() {
 
         {/* Error/Success Messages */}
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm p-4">
             <div className="flex items-center">
               <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" />
               <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
@@ -888,7 +888,7 @@ export default function CRMSettingsPage() {
         )}
 
         {success && (
-          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 shape-sm p-4">
             <div className="flex items-center">
               <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 mr-2" />
               <p className="text-sm text-green-600 dark:text-green-400">{success}</p>
@@ -899,11 +899,11 @@ export default function CRMSettingsPage() {
         {/* Settings Navigation */}
         <div className="relative">
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-1 bg-gray-100 dark:bg-slate-700 rounded-lg p-1">
+          <div className="hidden md:flex space-x-1 bg-gray-100 dark:bg-slate-700 shape-sm p-1">
             {/* Sections Overview Button */}
             <button
               onClick={() => setActiveSection(null)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`flex items-center space-x-2 px-4 py-2 shape-sm text-sm font-medium transition-colors ${
                 !activeSection
                   ? 'bg-white dark:bg-slate-800 text-cyan-700 dark:text-cyan-300 shadow-sm'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
@@ -920,7 +920,7 @@ export default function CRMSettingsPage() {
                 <button
                   key={section.id}
                   onClick={() => setActiveSection(activeSection === section.id ? null : section.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center space-x-2 px-4 py-2 shape-sm text-sm font-medium transition-colors ${
                     activeSection === section.id
                       ? 'bg-white dark:bg-slate-800 text-cyan-700 dark:text-cyan-300 shadow-sm'
                       : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
@@ -937,7 +937,7 @@ export default function CRMSettingsPage() {
           <div className="md:hidden dropdown-container">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="w-full flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shape-sm shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <div className="flex items-center space-x-2">
                 {activeSection ? (
@@ -969,7 +969,7 @@ export default function CRMSettingsPage() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg z-10"
+                className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shape-sm shadow-lg z-10"
               >
                 <div className="py-1">
                   <button
@@ -1017,7 +1017,7 @@ export default function CRMSettingsPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             {activeSection === 'users' && renderUserManagement()}
             {activeSection === 'notifications' && renderNotifications()}
@@ -1038,10 +1038,10 @@ export default function CRMSettingsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => setActiveSection(section.id)}
-                  className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow cursor-pointer"
+                  className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow cursor-pointer"
                 >
                   <div className="flex items-start space-x-4">
-                    <div className={`p-3 rounded-lg ${
+                    <div className={`p-3 shape-sm ${
                       section.color === 'blue' ? 'bg-cyan-200 dark:bg-cyan-900' :
                       section.color === 'green' ? 'bg-green-200 dark:bg-green-900' :
                       section.color === 'red' ? 'bg-red-200 dark:bg-red-900' :

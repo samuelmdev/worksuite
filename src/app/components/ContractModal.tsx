@@ -268,7 +268,7 @@ export default function ContractModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-slate-800 shape-sm shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
             {modalTitle}
@@ -278,7 +278,7 @@ export default function ContractModal({
               <button
                 type="button"
                 onClick={() => setIsEditing(true)}
-                className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
+                className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 shape-sm hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors"
               >
                 <Edit className="w-4 h-4 mr-1.5" />
                 {t('common.edit')}
@@ -335,7 +335,7 @@ export default function ContractModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
               >
                 {t('common.close')}
               </button>
@@ -344,7 +344,7 @@ export default function ContractModal({
         ) : (
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {errors.submit && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm p-4">
               <div className="flex items-center">
                 <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2" />
                 <p className="text-sm text-red-600 dark:text-red-400">{errors.submit}</p>
@@ -360,7 +360,7 @@ export default function ContractModal({
             <select
               value={formData.client_id}
               onChange={(e) => handleInputChange('client_id', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+              className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                 errors.client_id ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
               }`}
             >
@@ -375,7 +375,7 @@ export default function ContractModal({
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.client_id}</p>
             )}
             {selectedClient && (
-              <div className="mt-2 p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+              <div className="mt-2 p-3 bg-gray-50 dark:bg-slate-700 shape-sm">
                 <p className="text-sm text-gray-600 dark:text-slate-300">
                   <strong>{t('common.selected')}</strong> {selectedClient.name}
                   {selectedClient.company && ` - ${selectedClient.company}`}
@@ -399,7 +399,7 @@ export default function ContractModal({
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+                className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                   errors.name ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                 }`}
                 placeholder={t('modal.contract.placeholder.name')}
@@ -416,7 +416,7 @@ export default function ContractModal({
               <select
                 value={formData.type}
                 onChange={(e) => handleInputChange('type', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               >
                 {Object.entries(contractTypeKeys).map(([value, key]) => (
                   <option key={value} value={value}>{t(key)}</option>
@@ -434,7 +434,7 @@ export default function ContractModal({
               value={formData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               placeholder={t('modal.contract.placeholder.description')}
             />
           </div>
@@ -449,7 +449,7 @@ export default function ContractModal({
                 type="number"
                 value={formData.value}
                 onChange={(e) => handleInputChange('value', parseFloat(e.target.value) || 0)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+                className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                   errors.value ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                 }`}
                 placeholder="0.00"
@@ -470,7 +470,7 @@ export default function ContractModal({
                   type="number"
                   value={formData.monthly_value}
                   onChange={(e) => handleInputChange('monthly_value', parseFloat(e.target.value) || 0)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+                  className={`w-full px-3 py-2 border shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                     errors.monthly_value ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                   }`}
                   placeholder="0.00"
@@ -494,7 +494,7 @@ export default function ContractModal({
                 type="date"
                 value={formData.start_date}
                 onChange={(e) => handleInputChange('start_date', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               />
             </div>
 
@@ -506,7 +506,7 @@ export default function ContractModal({
                 type="date"
                 value={formData.end_date}
                 onChange={(e) => handleInputChange('end_date', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               />
             </div>
           </div>
@@ -520,7 +520,7 @@ export default function ContractModal({
               <select
                 value={formData.billing_frequency}
                 onChange={(e) => handleInputChange('billing_frequency', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               >
                 {Object.entries(billingFrequencyKeys).map(([value, key]) => (
                   <option key={value} value={value}>{t(key)}</option>
@@ -536,7 +536,7 @@ export default function ContractModal({
                 type="date"
                 value={formData.next_billing_date}
                 onChange={(e) => handleInputChange('next_billing_date', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               />
             </div>
           </div>
@@ -564,7 +564,7 @@ export default function ContractModal({
               value={formData.notes}
               onChange={(e) => handleInputChange('notes', e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:bg-slate-700 dark:text-slate-100"
               placeholder={t('modal.contract.placeholder.notes')}
             />
           </div>
@@ -574,14 +574,14 @@ export default function ContractModal({
             <button
               type="button"
               onClick={handleCancel}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              className="px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 shape-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
             >
               {isLoading ? (
                 <>

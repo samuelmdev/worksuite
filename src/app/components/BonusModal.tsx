@@ -16,7 +16,7 @@ interface BonusModalProps {
 }
 
 const inputClass =
-  'w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-gray-900 dark:focus:ring-slate-300 focus:border-transparent'
+  'w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-gray-900 dark:focus:ring-slate-300 focus:border-transparent'
 
 export default function BonusModal({
   isOpen,
@@ -75,7 +75,7 @@ export default function BonusModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-md">
+      <div className="bg-white dark:bg-slate-800 shape-sm shadow-xl w-full max-w-md">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
             {t('team.compensation.addBonus')}
@@ -87,7 +87,7 @@ export default function BonusModal({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center gap-2">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm p-4 flex items-center gap-2">
               <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0" />
               <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
             </div>
@@ -149,14 +149,14 @@ export default function BonusModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg"
+              className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 shape-sm"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 bg-gray-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-lg disabled:opacity-60"
+              className="px-4 py-2 bg-gray-900 dark:bg-slate-100 text-white dark:text-slate-900 shape-sm disabled:opacity-60"
             >
               {isSubmitting ? t('common.loading') : t('common.save')}
             </button>

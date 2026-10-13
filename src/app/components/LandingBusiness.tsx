@@ -49,14 +49,14 @@ export default function LandingBusiness() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/auth/signup"
-              className="group inline-flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-3.5 rounded-xl font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all shadow-xl hover:-translate-y-0.5"
+              className="group inline-flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-3.5 shape font-semibold hover:bg-slate-800 dark:hover:bg-slate-100 transition-all shadow-xl hover:-translate-y-0.5"
             >
               {t('landing.subscribeCta')}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             <a
               href="#features"
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 transition-all"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 shape font-semibold text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-600 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 transition-all"
             >
               {t('landing.exploreFeatures')}
             </a>
@@ -75,7 +75,7 @@ export default function LandingBusiness() {
           <p className="text-slate-600 dark:text-slate-400 mb-8">{t('landing.businessHeroDesc')}</p>
           <Link
             href="/auth/signup"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-all shadow-lg"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 py-3.5 shape font-semibold transition-all shadow-lg"
           >
             {t('landing.subscribeCta')}
             <ArrowRight className="w-4 h-4" />

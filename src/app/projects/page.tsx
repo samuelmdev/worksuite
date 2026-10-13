@@ -311,7 +311,7 @@ export default function ProjectsIndex() {
                 key={stat.type}
                 variants={fadeUpItem}
                 onClick={() => handleStatCardClick(stat.type)}
-                className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6 cursor-pointer hover:shadow-md hover:border-violet-300 dark:hover:border-violet-600 transition-[box-shadow,border-color] duration-200"
+                className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6 cursor-pointer hover:shadow-md hover:border-violet-300 dark:hover:border-violet-600 transition-[box-shadow,border-color] duration-200"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -331,7 +331,7 @@ export default function ProjectsIndex() {
                       {stat.change} {t('common.stats.fromLastMonth')}
                     </p>
                   </div>
-                  <div className={`p-3 rounded-lg ${
+                  <div className={`p-3 shape-sm ${
                     stat.color === 'violet' ? 'bg-violet-200 dark:bg-violet-900' :
                     stat.color === 'green' ? 'bg-green-200 dark:bg-green-900' :
                     stat.color === 'emerald' ? 'bg-emerald-200 dark:bg-emerald-900' :
@@ -351,7 +351,7 @@ export default function ProjectsIndex() {
         </motion.div>
 
         {/* Recent Activity */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
           <div className="p-6 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
               {t('projects.recent.title')}
@@ -436,7 +436,7 @@ export default function ProjectsIndex() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
             {t('common.quickActions')}
           </h2>
@@ -445,7 +445,7 @@ export default function ProjectsIndex() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCreateProject}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <FolderOpen className="w-6 h-6 text-violet-600 dark:text-violet-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('projects.quickActions.new')}</h3>
@@ -456,7 +456,7 @@ export default function ProjectsIndex() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => router.push('/projects/team')}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <Users className="w-6 h-6 text-emerald-600 dark:text-emerald-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('projects.quickActions.team')}</h3>
@@ -467,7 +467,7 @@ export default function ProjectsIndex() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => router.push('/projects/analytics')}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <TrendingUp className="w-6 h-6 text-emerald-600 dark:text-emerald-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('projects.quickActions.analytics')}</h3>
@@ -477,7 +477,7 @@ export default function ProjectsIndex() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="p-4 text-left border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              className="p-4 text-left border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
             >
               <Calendar className="w-6 h-6 text-orange-600 dark:text-orange-400 mb-2" />
               <h3 className="font-medium text-gray-900 dark:text-slate-100">{t('projects.quickActions.timeline')}</h3>

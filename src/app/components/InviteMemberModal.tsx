@@ -65,11 +65,11 @@ export default function InviteMemberModal({
   if (!isOpen) return null
 
   const inputClass =
-    'w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-red-500 focus:border-transparent'
+    'w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-red-500 focus:border-transparent'
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-slate-800 shape-sm shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
           <div>
             <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
@@ -89,7 +89,7 @@ export default function InviteMemberModal({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm p-4 flex items-center">
               <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2 shrink-0" />
               <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
             </div>
@@ -160,14 +160,14 @@ export default function InviteMemberModal({
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+              className="px-4 py-2 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 shape-sm transition-colors"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white rounded-lg transition-colors"
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white shape-sm transition-colors"
             >
               {isSubmitting ? t('common.loading') : t('team.members.sendInvite')}
             </button>

@@ -51,9 +51,9 @@ const NODES: {
   {
     nameKey: 'nav.finance',
     icon: Wallet,
-    dot: 'bg-amber-500',
-    ring: 'ring-amber-500/20 group-hover:ring-amber-500/40',
-    text: 'text-amber-700 dark:text-amber-300',
+    dot: 'bg-yellow-500',
+    ring: 'ring-yellow-500/20 group-hover:ring-yellow-500/40',
+    text: 'text-yellow-700 dark:text-yellow-300',
   },
 ]
 
@@ -67,7 +67,7 @@ export default function LandingChain() {
           ends so it reads as a path between them, not a full-width rule. */}
       <div
         aria-hidden
-        className="hidden sm:block absolute left-[10%] right-[10%] top-5 h-px bg-gradient-to-r from-cyan-500/30 via-emerald-500/30 to-amber-500/30"
+        className="hidden sm:block absolute left-[10%] right-[10%] top-5 h-px bg-gradient-to-r from-cyan-500/30 via-emerald-500/30 to-yellow-500/30"
       />
 
       <ol className="relative grid grid-cols-2 sm:grid-cols-5 gap-x-2 gap-y-6">

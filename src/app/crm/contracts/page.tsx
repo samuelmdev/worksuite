@@ -278,7 +278,7 @@ export default function CRMContractsPage() {
               {t('crm.contractsPage.subtitle')}
             </p>
             {error && (
-              <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm">
                 <p className="text-sm text-red-600 dark:text-red-400 mb-2">{error}</p>
                 <button
                   onClick={() => loadContracts()}
@@ -292,7 +292,7 @@ export default function CRMContractsPage() {
           </div>
           <button
             onClick={handleAddContract}
-            className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+            className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
           >
             <Plus className="w-4 h-4 mr-2" />
             {t('crm.contractsPage.add')}
@@ -308,7 +308,7 @@ export default function CRMContractsPage() {
               placeholder={t('crm.contractsPage.search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
             />
           </div>
           
@@ -317,7 +317,7 @@ export default function CRMContractsPage() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="pl-10 pr-8 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 appearance-none bg-white dark:bg-slate-700"
+              className="pl-10 pr-8 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 appearance-none bg-white dark:bg-slate-700"
             >
               <option value="all">{t('crm.contractsPage.filter.allStatus')}</option>
               {contractStatuses.map(status => (
@@ -332,7 +332,7 @@ export default function CRMContractsPage() {
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="pl-3 pr-8 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 appearance-none bg-white dark:bg-slate-700"
+              className="pl-3 pr-8 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 appearance-none bg-white dark:bg-slate-700"
             >
               <option value="all">{t('crm.contractsPage.filter.allTypes')}</option>
               {contractTypes.map(type => (
@@ -354,7 +354,7 @@ export default function CRMContractsPage() {
         </div>
 
         {/* Contracts List */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
           {loading ? (
             <div className="p-8 text-center">
               <Loader2 className="w-8 h-8 text-cyan-600 animate-spin mx-auto mb-4" />
@@ -376,7 +376,7 @@ export default function CRMContractsPage() {
               {!searchTerm && filterStatus === 'all' && filterType === 'all' && (
                 <button
                   onClick={handleAddContract}
-                  className="inline-flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+                  className="inline-flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   {t('crm.contractsPage.add')}
@@ -434,7 +434,7 @@ export default function CRMContractsPage() {
                       </div>
                       
                       {contract.description && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-slate-700 p-3 rounded-lg">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-slate-700 p-3 shape-sm">
                           {contract.description}
                         </p>
                       )}

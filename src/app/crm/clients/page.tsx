@@ -394,7 +394,7 @@ export default function CRMClientsPage() {
               {t('crm.clients.subtitle')}
             </p>
             {(error || errors.clients) && (
-              <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm">
                 <p className="text-sm text-red-600 dark:text-red-400">{error || errors.clients}</p>
               </div>
             )}
@@ -404,14 +404,14 @@ export default function CRMClientsPage() {
             <div className="relative export-menu">
               <button
                 onClick={() => setShowExportMenu(!showExportMenu)}
-                className="flex items-center px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-colors"
+                className="flex items-center px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white shape-sm transition-colors"
               >
                 <Download className="w-4 h-4 mr-2" />
                 {t('common.export')}
               </button>
               
               {showExportMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 z-10">
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 shape-sm shadow-lg border border-gray-200 dark:border-slate-700 z-10">
                   <div className="py-1">
                     <button
                       onClick={handleExportExcel}
@@ -434,7 +434,7 @@ export default function CRMClientsPage() {
             
             <button
               onClick={handleAddClient}
-              className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+              className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
             >
               <Plus className="w-4 h-4 mr-2" />
               {t('crm.clients.add')}
@@ -451,7 +451,7 @@ export default function CRMClientsPage() {
               placeholder={t('crm.clients.search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
             />
           </div>
           
@@ -460,7 +460,7 @@ export default function CRMClientsPage() {
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="pl-10 pr-8 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 appearance-none bg-white dark:bg-slate-700"
+              className="pl-10 pr-8 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 appearance-none bg-white dark:bg-slate-700"
             >
               {filterOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -481,7 +481,7 @@ export default function CRMClientsPage() {
         </div>
 
         {/* Client List */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
           {loading.clients ? (
             <div className="p-8 text-center">
               <Loader2 className="w-8 h-8 text-cyan-600 animate-spin mx-auto mb-4" />
@@ -501,7 +501,7 @@ export default function CRMClientsPage() {
                   </p>
                   <button
                     onClick={handleAddClient}
-                    className="inline-flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+                    className="inline-flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     {t('crm.clients.addFirst')}
@@ -527,7 +527,7 @@ export default function CRMClientsPage() {
                   {!searchTerm && (
                     <button
                       onClick={handleAddClient}
-                      className="inline-flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+                      className="inline-flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       {t('crm.clients.addNew')}
@@ -619,7 +619,7 @@ export default function CRMClientsPage() {
                             </button>
 
                             {showBlockMenu === client.id && (
-                              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 z-10">
+                              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 shape-sm shadow-lg border border-gray-200 dark:border-slate-700 z-10">
                                 <div className="py-1">
                                   <button
                                     onClick={() => { handleViewClient(client); setShowBlockMenu(null) }}
@@ -818,7 +818,7 @@ export default function CRMClientsPage() {
         {/* Contract Termination Dialog */}
         {isContractTerminationDialogOpen && clientToBlock && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-6 max-w-md w-full mx-4">
+            <div className="bg-white dark:bg-slate-800 shape-sm p-6 max-w-md w-full mx-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
                 {t('crm.clients.block.terminateTitle')}
               </h3>
@@ -833,7 +833,7 @@ export default function CRMClientsPage() {
                   value={blockReason}
                   onChange={(e) => setBlockReason(e.target.value)}
                   placeholder={t('crm.clients.block.reasonPlaceholder')}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   rows={3}
                 />
               </div>
@@ -847,7 +847,7 @@ export default function CRMClientsPage() {
                 <button
                   onClick={handleTerminateContractsAndBlock}
                   disabled={!blockReason.trim()}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white shape-sm transition-colors"
                 >
                   {t('crm.clients.block.terminateConfirm')}
                 </button>
@@ -859,7 +859,7 @@ export default function CRMClientsPage() {
         {/* Block Client Dialog */}
         {isBlockDialogOpen && clientToBlock && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-6 max-w-md w-full mx-4">
+            <div className="bg-white dark:bg-slate-800 shape-sm p-6 max-w-md w-full mx-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
                 {t('crm.clients.block.restrictTitle')}
               </h3>
@@ -874,7 +874,7 @@ export default function CRMClientsPage() {
                   value={blockReason}
                   onChange={(e) => setBlockReason(e.target.value)}
                   placeholder={t('crm.clients.block.reasonPlaceholder')}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   rows={3}
                 />
               </div>
@@ -888,7 +888,7 @@ export default function CRMClientsPage() {
                 <button
                   onClick={handleConfirmBlock}
                   disabled={!blockReason.trim()}
-                  className="px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+                  className="px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white shape-sm transition-colors"
                 >
                   {t('crm.clients.restrictAccess')}
                 </button>

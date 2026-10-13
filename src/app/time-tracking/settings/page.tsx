@@ -60,10 +60,10 @@ export default function TimeTrackingSettingsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow cursor-pointer"
+                className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex items-start space-x-4">
-                  <div className={`p-3 rounded-lg ${
+                  <div className={`p-3 shape-sm ${
                     section.color === 'cyan' ? 'bg-cyan-200 dark:bg-cyan-900' :
                     section.color === 'emerald' ? 'bg-emerald-200 dark:bg-emerald-900' :
                     section.color === 'green' ? 'bg-green-200 dark:bg-green-900' :
@@ -98,7 +98,7 @@ export default function TimeTrackingSettingsPage() {
           })}
         </div>
 
-        <div className="bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-lg p-6">
+        <div className="bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 shape-sm p-6">
           <div className="flex items-center space-x-3">
             <Settings className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
             <div>

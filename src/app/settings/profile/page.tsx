@@ -100,7 +100,7 @@ export default function ProfileSettingsPage() {
             <div className="flex items-center gap-3 pt-2">
               <button
                 type="submit"
-                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg font-medium transition-colors"
+                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm font-medium transition-colors"
               >
                 {t('common.save')}
               </button>

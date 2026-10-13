@@ -148,7 +148,7 @@ export default function ClientActivityTimeline({
         <p className="text-red-600 mb-4">{error}</p>
         <button
           onClick={loadActivities}
-          className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100"
+          className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 shape-sm hover:bg-blue-100"
         >
           {t('crm.timeline.tryAgain')}
         </button>
@@ -173,7 +173,7 @@ export default function ClientActivityTimeline({
         {showAddButton && (
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent shape-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <Plus className="w-4 h-4 mr-2" />
             {t('crm.timeline.logActivity')}
@@ -194,7 +194,7 @@ export default function ClientActivityTimeline({
           {showAddButton && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent shape-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {t('crm.timeline.logFirst')}
             </button>
@@ -220,7 +220,7 @@ export default function ClientActivityTimeline({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="flex items-start space-x-3 p-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:border-gray-300 dark:hover:border-slate-600 transition-colors"
+                    className="flex items-start space-x-3 p-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shape-sm hover:border-gray-300 dark:hover:border-slate-600 transition-colors"
                   >
                     {/* Icon */}
                     <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${getActivityColor(activity.action)}`}>

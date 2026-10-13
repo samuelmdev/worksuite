@@ -211,10 +211,10 @@ export default function TimeHoursPage() {
           
           <div className="flex items-center space-x-4">
             {/* View Mode Toggle */}
-            <div className="flex items-center bg-gray-100 dark:bg-slate-700 rounded-lg p-1">
+            <div className="flex items-center bg-gray-100 dark:bg-slate-700 shape-sm p-1">
               <button
                 onClick={() => setViewMode('list')}
-                className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                className={`px-3 py-1 text-sm font-medium shape-sm transition-colors ${
                   viewMode === 'list'
                     ? 'bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 shadow-sm'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-slate-100'
@@ -224,7 +224,7 @@ export default function TimeHoursPage() {
               </button>
           <button
                 onClick={() => setViewMode('calendar')}
-                className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                className={`px-3 py-1 text-sm font-medium shape-sm transition-colors ${
                   viewMode === 'calendar'
                     ? 'bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 shadow-sm'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-slate-100'
@@ -242,7 +242,7 @@ export default function TimeHoursPage() {
                 setSelectedDate('')
                 setIsTimeEntryModalOpen(true)
               }}
-            className="flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+            className="flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white shape-sm transition-colors"
           >
             <Plus className="w-4 h-4 mr-2" />
               {t('time.hoursPage.add')}
@@ -251,7 +251,7 @@ export default function TimeHoursPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-4">
@@ -263,13 +263,13 @@ export default function TimeHoursPage() {
                     placeholder={t('time.hoursPage.search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-                    className="px-3 py-1 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
+                    className="px-3 py-1 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm"
             />
           </div>
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-md hover:bg-gray-200 dark:hover:bg-slate-600"
+                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-200 dark:hover:bg-slate-600"
               >
                 <Filter className="w-4 h-4 mr-2" />
                 {showFilters ? t('common.hideFilters') : t('common.showFilters')}
@@ -294,7 +294,7 @@ export default function TimeHoursPage() {
                     <select
                       value={filters.user_id || ''}
                       onChange={(e) => setFilters({ ...filters, user_id: e.target.value || undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     >
                       <option value="">{t('common.allEmployees')}</option>
                       {users.map((user) => (
@@ -315,7 +315,7 @@ export default function TimeHoursPage() {
           <select
                     value={filters.status || ''}
                     onChange={(e) => setFilters({ ...filters, status: e.target.value as any || undefined })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   >
                     <option value="">{t('time.hoursPage.filter.allStatus')}</option>
             <option value="draft">{t('enum.timeStatus.draft')}</option>
@@ -334,7 +334,7 @@ export default function TimeHoursPage() {
                   <select
                     value={filters.client_id || ''}
                     onChange={(e) => setFilters({ ...filters, client_id: e.target.value || undefined })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   >
                     <option value="">{t('common.all')}</option>
                     {clients.map((client) => (
@@ -364,7 +364,7 @@ export default function TimeHoursPage() {
         {/* Content Area */}
         {viewMode === 'list' ? (
           /* Time Entries List */
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
           <div className="p-6 border-b border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">
               {t('time.hoursPage.title')} ({filteredTimeEntries.length})
@@ -396,7 +396,7 @@ export default function TimeHoursPage() {
                     setEditingTimeEntry(null)
                     setIsTimeEntryModalOpen(true)
                   }}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white shape-sm transition-colors"
                 >
                   {t('time.hoursPage.add')}
                 </motion.button>
@@ -414,7 +414,7 @@ export default function TimeHoursPage() {
                   >
                     <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 w-10 h-10 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg flex items-center justify-center">
+                      <div className="flex-shrink-0 w-10 h-10 bg-emerald-100 dark:bg-emerald-900/20 shape-sm flex items-center justify-center">
                         <Clock className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                       </div>
                       

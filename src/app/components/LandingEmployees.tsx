@@ -50,7 +50,7 @@ export default function LandingEmployees() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950" />
         <div className="relative px-4 sm:px-6 lg:px-8 pt-20 pb-16 max-w-3xl mx-auto text-center">
-          <div className="w-16 h-16 rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 shape bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center mx-auto mb-6">
             <Users className="w-8 h-8" />
           </div>
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
@@ -61,7 +61,7 @@ export default function LandingEmployees() {
           </p>
           <Link
             href="/auth/login"
-            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-semibold bg-cyan-600 hover:bg-cyan-700 text-white transition-all shadow-lg"
+            className="inline-flex items-center justify-center gap-2 px-8 py-3.5 shape font-semibold bg-cyan-600 hover:bg-cyan-700 text-white transition-all shadow-lg"
           >
             <LogIn className="w-5 h-5" />
             {t('landing.employeesLogin')}
@@ -87,9 +87,9 @@ export default function LandingEmployees() {
               return (
                 <div
                   key={mod.nameKey}
-                  className="p-8 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50"
+                  className="p-8 shape border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50"
                 >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
+                  <div className={`w-12 h-12 shape flex items-center justify-center mb-5 ${
                     mod.color === 'emerald'
                       ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400'
                       : 'bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400'
@@ -118,14 +118,14 @@ export default function LandingEmployees() {
       {/* Access note + login */}
       <section className="py-16">
         <div className="px-4 sm:px-6 lg:px-8 max-w-lg mx-auto text-center">
-          <div className="text-left p-5 mb-8 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-sm text-amber-900 dark:text-amber-200 space-y-2">
+          <div className="text-left p-5 mb-8 shape bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-sm text-amber-900 dark:text-amber-200 space-y-2">
             <p>{t('landing.employeesNote1')}</p>
             <p>{t('landing.employeesNote2')}</p>
           </div>
 
           <Link
             href="/auth/login"
-            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 rounded-xl font-semibold bg-cyan-600 hover:bg-cyan-700 text-white transition-all shadow-lg"
+            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 shape font-semibold bg-cyan-600 hover:bg-cyan-700 text-white transition-all shadow-lg"
           >
             <LogIn className="w-5 h-5" />
             {t('landing.employeesLogin')}

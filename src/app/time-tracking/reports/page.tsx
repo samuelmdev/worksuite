@@ -241,12 +241,12 @@ export default function TimeTrackingReportsPage() {
             <select
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value as 'week' | 'month')}
-              className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+              className="px-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
             >
               <option value="week">{t('time.reportsPage.period.week')}</option>
               <option value="month">{t('time.reportsPage.period.month')}</option>
             </select>
-            <button className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors">
+            <button className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors">
               <Download className="w-4 h-4 mr-2" />
               {t('time.reportsPage.export')}
             </button>
@@ -254,11 +254,11 @@ export default function TimeTrackingReportsPage() {
         </div>
 
         {/* Period Navigation */}
-        <div className="flex items-center justify-between bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+        <div className="flex items-center justify-between bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-4">
           <div className="flex items-center space-x-4">
             <button
               onClick={goToPreviousPeriod}
-              className="flex items-center px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+              className="flex items-center px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-700 shape-sm transition-colors"
             >
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -268,7 +268,7 @@ export default function TimeTrackingReportsPage() {
             
             <button
               onClick={goToCurrentPeriod}
-              className="px-4 py-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 rounded-lg transition-colors font-medium"
+              className="px-4 py-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 shape-sm transition-colors font-medium"
             >
               Current {selectedPeriod === 'week' ? 'Week' : 'Month'}
             </button>
@@ -276,7 +276,7 @@ export default function TimeTrackingReportsPage() {
             <button
               onClick={goToNextPeriod}
               disabled={!canGoToNext()}
-              className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+              className={`flex items-center px-3 py-2 shape-sm transition-colors ${
                 canGoToNext()
                   ? 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-700'
                   : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
@@ -307,7 +307,7 @@ export default function TimeTrackingReportsPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -316,7 +316,7 @@ export default function TimeTrackingReportsPage() {
                   {summaryStats.totalHours}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-cyan-200 dark:bg-cyan-900">
+              <div className="p-3 shape-sm bg-cyan-200 dark:bg-cyan-900">
                 <Clock className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
               </div>
             </div>
@@ -326,7 +326,7 @@ export default function TimeTrackingReportsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -335,7 +335,7 @@ export default function TimeTrackingReportsPage() {
                   {summaryStats.billableHours}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-emerald-200 dark:bg-emerald-900">
+              <div className="p-3 shape-sm bg-emerald-200 dark:bg-emerald-900">
                 <TrendingUp className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
             </div>
@@ -345,7 +345,7 @@ export default function TimeTrackingReportsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -354,7 +354,7 @@ export default function TimeTrackingReportsPage() {
                   ${summaryStats.totalRevenue.toLocaleString()}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-violet-200 dark:bg-violet-900">
+              <div className="p-3 shape-sm bg-violet-200 dark:bg-violet-900">
                 <DollarSign className="w-6 h-6 text-violet-600 dark:text-violet-400" />
               </div>
             </div>
@@ -364,7 +364,7 @@ export default function TimeTrackingReportsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -373,7 +373,7 @@ export default function TimeTrackingReportsPage() {
                   {summaryStats.entriesCount}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-orange-200 dark:bg-orange-900">
+              <div className="p-3 shape-sm bg-orange-200 dark:bg-orange-900">
                 <BarChart3 className="w-6 h-6 text-orange-600 dark:text-orange-400" />
               </div>
             </div>
@@ -386,7 +386,7 @@ export default function TimeTrackingReportsPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
               {selectedPeriod === 'week' ? 'Daily Hours' : 'Weekly Hours'}
@@ -425,7 +425,7 @@ export default function TimeTrackingReportsPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
               {t('time.reportsPage.tab.clients')}
@@ -433,7 +433,7 @@ export default function TimeTrackingReportsPage() {
             <div className="space-y-4">
               {clientData.length > 0 ? (
                 clientData.slice(0, 5).map((client, index) => (
-                  <div key={client.client_id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 rounded-lg">
+                  <div key={client.client_id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-700 shape-sm">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
                         <Building className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -466,7 +466,7 @@ export default function TimeTrackingReportsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+          className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
         >
           <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
             {t('time.reportsPage.tab.employees')}
@@ -526,7 +526,7 @@ export default function TimeTrackingReportsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
               {t('time.reportsPage.tab.insights')}
@@ -562,15 +562,15 @@ export default function TimeTrackingReportsPage() {
             </div>
             
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-gray-50 dark:bg-slate-700 rounded-lg">
+              <div className="text-center p-4 bg-gray-50 dark:bg-slate-700 shape-sm">
                 <h5 className="font-medium text-gray-900 dark:text-slate-100 mb-1">Most Productive Day</h5>
                 <p className="text-sm text-cyan-600 dark:text-cyan-400">{insights.most_productive_day}</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 dark:bg-slate-700 rounded-lg">
+              <div className="text-center p-4 bg-gray-50 dark:bg-slate-700 shape-sm">
                 <h5 className="font-medium text-gray-900 dark:text-slate-100 mb-1">Least Productive Day</h5>
                 <p className="text-sm text-orange-600 dark:text-orange-400">{insights.least_productive_day}</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 dark:bg-slate-700 rounded-lg">
+              <div className="text-center p-4 bg-gray-50 dark:bg-slate-700 shape-sm">
                 <h5 className="font-medium text-gray-900 dark:text-slate-100 mb-1">Top Performer</h5>
                 <p className="text-sm text-emerald-600 dark:text-emerald-400">{insights.top_performing_employee}</p>
               </div>

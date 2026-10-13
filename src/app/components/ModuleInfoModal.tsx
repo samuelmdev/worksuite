@@ -47,7 +47,7 @@ export default function ModuleInfoModal({ module, onClose }: ModuleInfoModalProp
             role="dialog"
             aria-modal="true"
             aria-labelledby="module-modal-title"
-            className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col"
+            className="relative bg-white dark:bg-slate-800 shape shadow-xl w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col"
             initial={{ opacity: 0, scale: 0.95, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 12 }}
@@ -56,7 +56,7 @@ export default function ModuleInfoModal({ module, onClose }: ModuleInfoModalProp
             <div className={`px-6 py-5 border-b border-slate-200 dark:border-slate-700 ${colors.header}`}>
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center bg-white/70 dark:bg-slate-900/50 ${colors.icon}`}>
+                  <div className={`w-11 h-11 shape flex items-center justify-center bg-white/70 dark:bg-slate-900/50 ${colors.icon}`}>
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={module.icon} />
                     </svg>
@@ -68,7 +68,7 @@ export default function ModuleInfoModal({ module, onClose }: ModuleInfoModalProp
                 <button
                   type="button"
                   onClick={onClose}
-                  className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                  className="p-1.5 shape-sm hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
                   aria-label={t('landing.moduleModal.close')}
                 >
                   <X className="w-5 h-5 text-slate-600 dark:text-slate-300" />
@@ -99,7 +99,7 @@ export default function ModuleInfoModal({ module, onClose }: ModuleInfoModalProp
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full py-2.5 rounded-xl font-medium text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                className="w-full py-2.5 shape font-medium text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
               >
                 {t('landing.moduleModal.close')}
               </button>

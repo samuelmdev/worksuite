@@ -258,7 +258,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
           
           {/* Modal */}
           <motion.div
-            className="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+            className="relative bg-white dark:bg-slate-800 shape-sm shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
@@ -271,7 +271,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
               </h2>
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
+                className="p-2 shape-sm hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
               >
                 <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
               </button>
@@ -291,7 +291,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                       type="text"
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+                      className={`w-full pl-10 pr-4 py-2 border shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                         errors.name ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                       }`}
                       placeholder={t('modal.project.placeholder.name')}
@@ -310,7 +310,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                   <select
                     value={formData.type}
                     onChange={(e) => handleInputChange('type', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   >
                     {Object.entries(projectTypeKeys).map(([value, key]) => (
                       <option key={value} value={value}>{t(key)}</option>
@@ -326,7 +326,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                   <select
                     value={formData.status}
                     onChange={(e) => handleInputChange('status', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   >
                     {Object.entries(projectStatusKeys).map(([value, key]) => (
                       <option key={value} value={value}>{t(key)}</option>
@@ -342,7 +342,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                   <select
                     value={formData.priority}
                     onChange={(e) => handleInputChange('priority', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   >
                     {Object.entries(priorityKeys).map(([value, key]) => (
                       <option key={value} value={value}>{t(key)}</option>
@@ -361,7 +361,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                       type="date"
                       value={formData.start_date}
                       onChange={(e) => handleInputChange('start_date', e.target.value)}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+                      className={`w-full pl-10 pr-4 py-2 border shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                         errors.start_date ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                       }`}
                     />
@@ -382,7 +382,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                       type="date"
                       value={formData.end_date}
                       onChange={(e) => handleInputChange('end_date', e.target.value)}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
+                      className={`w-full pl-10 pr-4 py-2 border shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 ${
                         errors.end_date ? 'border-red-500' : 'border-gray-300 dark:border-slate-600'
                       }`}
                     />
@@ -404,7 +404,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                       step="0.01"
                       value={formData.budget}
                       onChange={(e) => handleInputChange('budget', e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                       placeholder="0.00"
                     />
                   </div>
@@ -422,7 +422,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                       step="0.01"
                       value={formData.hourly_rate}
                       onChange={(e) => handleInputChange('hourly_rate', e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                       placeholder="0.00"
                     />
                   </div>
@@ -439,7 +439,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                     max="100"
                     value={formData.progress}
                     onChange={(e) => handleInputChange('progress', parseInt(e.target.value))}
-                    className="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-2 bg-gray-200 dark:bg-slate-700 shape-sm appearance-none cursor-pointer"
                   />
                 </div>
               </div>
@@ -453,14 +453,14 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('modal.project.placeholder.description')}
                 />
               </div>
 
               {/* Route-specific fields */}
               {formData.type === 'route' && (
-                <div className="space-y-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div className="space-y-4 p-4 bg-blue-50 dark:bg-blue-900/20 shape-sm border border-blue-200 dark:border-blue-800">
                   <div className="flex items-center space-x-2">
                     <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                     <h3 className="text-lg font-medium text-blue-900 dark:text-blue-100">{t('modal.project.routeDetails')}</h3>
@@ -479,7 +479,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                           step="0.5"
                           value={formData.estimated_duration_hours}
                           onChange={(e) => handleInputChange('estimated_duration_hours', e.target.value)}
-                          className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                          className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                           placeholder="0.0"
                         />
                       </div>
@@ -495,7 +495,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                       value={formData.route_notes}
                       onChange={(e) => handleInputChange('route_notes', e.target.value)}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                       placeholder={t('modal.project.placeholder.routeNotes')}
                     />
                   </div>
@@ -518,7 +518,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                       </div>
                     ) : (
                       clients.map(client => (
-                        <label key={client.id} className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
+                        <label key={client.id} className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
                           <input
                             type="checkbox"
                             checked={selectedClients.includes(client.id)}
@@ -551,7 +551,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                     </div>
                   ) : (
                     users.map(user => (
-                    <label key={user.id} className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
+                    <label key={user.id} className="flex items-center space-x-3 p-3 border border-gray-200 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={selectedUsers.some(u => u.user_id === user.id)}
@@ -577,7 +577,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
+                  className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 shape-sm hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
                 >
                   <XCircle className="w-4 h-4 mr-2" />
                   {t('common.cancel')}
@@ -585,7 +585,7 @@ export default function ProjectModal({ isOpen, onClose, onSave, project, mode, p
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex items-center px-4 py-2 text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 disabled:cursor-not-allowed rounded-lg transition-colors"
+                  className="flex items-center px-4 py-2 text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 disabled:cursor-not-allowed shape-sm transition-colors"
                 >
                   <Save className="w-4 h-4 mr-2" />
                   {loading ? t('common.saving') : (mode === 'create' ? t('modal.project.createButton') : t('modal.client.saveChanges'))}

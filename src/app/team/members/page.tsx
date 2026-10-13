@@ -75,7 +75,7 @@ export default function TeamMembersPage() {
           {isAdmin && (
             <button
               onClick={() => setIsInviteOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white shape-sm transition-colors"
             >
               <UserPlus className="w-4 h-4" />
               {t('team.members.invite')}
@@ -86,12 +86,12 @@ export default function TeamMembersPage() {
         {loading ? (
           <p className="text-gray-500 dark:text-gray-400">{t('common.loading')}</p>
         ) : members.length === 0 ? (
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-12 text-center">
+          <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-12 text-center">
             <User className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
             <p className="text-gray-500 dark:text-gray-400">{t('team.members.empty')}</p>
           </div>
         ) : (
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50 dark:bg-slate-700/50">
@@ -156,7 +156,7 @@ export default function TeamMembersPage() {
                               <button
                                 onClick={() => handleRemoveMember(member.id)}
                                 title={t('team.members.remove')}
-                                className="inline-flex items-center justify-center p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                                className="inline-flex items-center justify-center p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 shape-sm hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>

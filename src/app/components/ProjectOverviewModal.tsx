@@ -161,7 +161,7 @@ export default function ProjectOverviewModal({ isOpen, onClose, project }: Proje
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-slate-700">
@@ -311,7 +311,7 @@ export default function ProjectOverviewModal({ isOpen, onClose, project }: Proje
                     ) : clients.length > 0 ? (
                       <div className="space-y-4">
                         {clients.map((client) => (
-                          <div key={client.id} className="border border-gray-200 dark:border-slate-700 rounded-lg p-4">
+                          <div key={client.id} className="border border-gray-200 dark:border-slate-700 shape-sm p-4">
                             <div className="flex items-start justify-between mb-3">
                               <div>
                                 <h4 className="font-medium text-gray-900 dark:text-slate-100">{client.name}</h4>

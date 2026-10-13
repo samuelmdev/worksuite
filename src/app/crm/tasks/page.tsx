@@ -251,7 +251,7 @@ export default function CRMTasksPage() {
               {t('crm.tasksPage.subtitle')}
             </p>
             {error && (
-              <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm">
                 <p className="text-sm text-red-600 dark:text-red-400 mb-2">{error}</p>
                 <button
                   onClick={() => window.location.reload()}
@@ -271,7 +271,7 @@ export default function CRMTasksPage() {
               setModalMode('create')
               setIsModalOpen(true)
             }}
-            className="flex items-center space-x-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>{t('crm.tasksPage.add')}</span>
@@ -279,7 +279,7 @@ export default function CRMTasksPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-4">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* Search */}
             <div className="relative">
@@ -289,7 +289,7 @@ export default function CRMTasksPage() {
                 placeholder={t('crm.tasksPage.search')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
               />
             </div>
 
@@ -297,7 +297,7 @@ export default function CRMTasksPage() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+              className="px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
             >
               <option value="all">{t('common.allStatuses')}</option>
               {statuses.map(status => (
@@ -311,7 +311,7 @@ export default function CRMTasksPage() {
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+              className="px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
             >
               <option value="all">{t('common.allTypes')}</option>
               {taskTypes.map(type => (
@@ -325,7 +325,7 @@ export default function CRMTasksPage() {
             <select
               value={filterPriority}
               onChange={(e) => setFilterPriority(e.target.value)}
-              className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+              className="px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
             >
               <option value="all">{t('common.allPriorities')}</option>
               {priorities.map(priority => (
@@ -344,7 +344,7 @@ export default function CRMTasksPage() {
         </div>
 
         {/* Tasks List */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700">
           {loading ? (
             <div className="p-8 text-center">
               <Loader2 className="w-8 h-8 text-cyan-600 animate-spin mx-auto mb-4" />
@@ -372,7 +372,7 @@ export default function CRMTasksPage() {
                     setModalMode('create')
                     setIsModalOpen(true)
                   }}
-                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
                 >
                   {t('crm.tasksPage.add')}
                 </motion.button>
@@ -465,7 +465,7 @@ export default function CRMTasksPage() {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => handleEditTask(task)}
-                          className="p-2 text-gray-400 hover:text-cyan-600 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 rounded-lg transition-colors"
+                          className="p-2 text-gray-400 hover:text-cyan-600 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 shape-sm transition-colors"
                         >
                           <Edit className="w-4 h-4" />
                         </motion.button>
@@ -474,7 +474,7 @@ export default function CRMTasksPage() {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => handleDeleteTask(task)}
-                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 shape-sm transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </motion.button>
@@ -487,7 +487,7 @@ export default function CRMTasksPage() {
                             // TODO: Implement calendar integration
                             console.log('Add to calendar:', task)
                           }}
-                          className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
+                          className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 shape-sm transition-colors"
                           title="Add to Google Calendar/Outlook"
                         >
                           <Calendar className="w-4 h-4" />

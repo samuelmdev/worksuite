@@ -40,10 +40,10 @@ export default function IntegrationsSettingsPage() {
             {integrations.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-4 rounded-lg border border-gray-200 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors"
+                className="flex items-center justify-between p-4 shape-sm border border-gray-200 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-lg">
+                  <div className="p-2 bg-slate-100 dark:bg-slate-700 shape-sm">
                     <Plug className="w-5 h-5 text-slate-600 dark:text-slate-400" />
                   </div>
                   <div>
@@ -54,7 +54,7 @@ export default function IntegrationsSettingsPage() {
                 <button
                   type="button"
                   onClick={() => toggle(item.id)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 shape-sm text-sm font-medium transition-colors ${
                     connected[item.id]
                       ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50'
                       : 'bg-cyan-600 hover:bg-cyan-700 text-white'

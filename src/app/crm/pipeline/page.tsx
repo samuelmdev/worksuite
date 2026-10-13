@@ -596,12 +596,12 @@ export default function CRMPipelinePage() {
               {t('crm.pipelinePage.subtitle')}
             </p>
             {error && (
-              <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 shape-sm">
                 <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
               </div>
             )}
             {commissionNotice && (
-              <div className="mt-2 flex items-center justify-between gap-3 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg">
+              <div className="mt-2 flex items-center justify-between gap-3 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 shape-sm">
                 <p className="text-sm text-emerald-700 dark:text-emerald-400">{commissionNotice}</p>
                 <button
                   onClick={() => setCommissionNotice(null)}
@@ -615,7 +615,7 @@ export default function CRMPipelinePage() {
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setShowArchived(!showArchived)}
-              className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
+              className={`flex items-center px-4 py-2 shape-sm transition-colors ${
                 showArchived 
                   ? 'bg-gray-600 hover:bg-gray-700 text-white' 
                   : 'bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300'
@@ -626,7 +626,7 @@ export default function CRMPipelinePage() {
             </button>
             <button 
               onClick={handleAddDeal}
-              className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+              className="flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
             >
               <Plus className="w-4 h-4 mr-2" />
               {t('crm.pipelinePage.add')}
@@ -639,14 +639,14 @@ export default function CRMPipelinePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Pipeline</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">{formatCurrency(totalValue)}</p>
               </div>
-              <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
+              <div className="p-3 bg-blue-100 dark:bg-blue-900 shape-sm">
                 <TrendingUp className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
             </div>
@@ -656,14 +656,14 @@ export default function CRMPipelinePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Weighted Value</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">{formatCurrency(weightedValue)}</p>
               </div>
-              <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
+              <div className="p-3 bg-green-100 dark:bg-green-900 shape-sm">
                 <Target className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
             </div>
@@ -673,14 +673,14 @@ export default function CRMPipelinePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Won Deals</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">{formatCurrency(wonValue)}</p>
               </div>
-              <div className="p-3 bg-violet-100 dark:bg-violet-900 rounded-lg">
+              <div className="p-3 bg-violet-100 dark:bg-violet-900 shape-sm">
                 <DollarSign className="w-6 h-6 text-violet-600 dark:text-violet-400" />
               </div>
             </div>
@@ -690,14 +690,14 @@ export default function CRMPipelinePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6"
+            className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6"
           >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Items</p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">{activePipelineItems.length}</p>
               </div>
-              <div className="p-3 bg-orange-100 dark:bg-orange-900 rounded-lg">
+              <div className="p-3 bg-orange-100 dark:bg-orange-900 shape-sm">
                 <Clock className="w-6 h-6 text-orange-600 dark:text-orange-400" />
               </div>
             </div>
@@ -713,7 +713,7 @@ export default function CRMPipelinePage() {
               placeholder={t('crm.pipelinePage.search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
             />
           </div>
           
@@ -722,7 +722,7 @@ export default function CRMPipelinePage() {
             <select
               value={filterStage}
               onChange={(e) => setFilterStage(e.target.value)}
-              className="pl-10 pr-8 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 appearance-none bg-white dark:bg-slate-700"
+              className="pl-10 pr-8 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100 appearance-none bg-white dark:bg-slate-700"
             >
               <option value="all">{t('crm.pipelinePage.filter.allStages')}</option>
               {stages.map(stage => (
@@ -751,10 +751,10 @@ export default function CRMPipelinePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: stageIndex * 0.1 }}
-                className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700"
+                className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700"
               >
                 {/* Stage Header */}
-                <div className={`p-4 rounded-t-lg ${stage.color}`}>
+                <div className={`p-4 shape-tab ${stage.color}`}>
                   <div className="flex items-center justify-between">
                     <h3 className={`font-semibold ${stage.textColor}`}>{t(stage.labelKey)}</h3>
                     <span className={`text-sm ${stage.textColor}`}>
@@ -798,7 +798,7 @@ export default function CRMPipelinePage() {
                         draggable={!isMobileView}
                         onDragStart={(e: React.DragEvent) => handleDragStart(e, item)}
                         onDragEnd={handleDragEnd}
-                        className={`p-3 rounded-lg border hover:shadow-md transition-all ${
+                        className={`p-3 shape-sm border hover:shadow-md transition-all ${
                           isMobileView ? 'cursor-pointer' : 'cursor-move'
                         } ${
                           draggedItem?.id === item.id 
@@ -904,7 +904,7 @@ export default function CRMPipelinePage() {
                               e.stopPropagation()
                               handleMobileStageChange(item.id, e.target.value)
                             }}
-                            className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                            className="w-full shape-sm border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                           >
                             {stages.map((stage) => (
                               <option key={stage.key} value={stage.key}>
@@ -1055,7 +1055,7 @@ export default function CRMPipelinePage() {
         {/* Delete Confirmation Dialog */}
         {isDeleteDialogOpen && itemToDelete && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-6 max-w-md w-full mx-4">
+            <div className="bg-white dark:bg-slate-800 shape-sm p-6 max-w-md w-full mx-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
                 {t('crm.pipelinePage.delete.title')}
               </h3>
@@ -1071,7 +1071,7 @@ export default function CRMPipelinePage() {
                 </button>
                 <button
                   onClick={handleConfirmDelete}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white shape-sm transition-colors"
                 >
                   {t('common.delete')}
                 </button>
@@ -1083,7 +1083,7 @@ export default function CRMPipelinePage() {
         {/* Block Confirmation Dialog */}
         {isBlockDialogOpen && itemToBlock && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-6 max-w-md w-full mx-4">
+            <div className="bg-white dark:bg-slate-800 shape-sm p-6 max-w-md w-full mx-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
                 {t('crm.pipelinePage.block.title')}
               </h3>
@@ -1098,7 +1098,7 @@ export default function CRMPipelinePage() {
                   value={blockReason}
                   onChange={(e) => setBlockReason(e.target.value)}
                   placeholder={t('crm.pipelinePage.block.reasonPlaceholder')}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   rows={3}
                 />
               </div>
@@ -1112,7 +1112,7 @@ export default function CRMPipelinePage() {
                 <button
                   onClick={handleConfirmBlock}
                   disabled={!blockReason.trim()}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white shape-sm transition-colors"
                 >
                   {t('crm.pipelinePage.actions.block')}
                 </button>

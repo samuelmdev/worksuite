@@ -43,7 +43,7 @@ export default function RoleGuard({ allowedRoles, children, fallback }: RoleGuar
           </p>
           <a
             href="/auth/login"
-            className="inline-flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white shape-sm transition-colors"
           >
             {t('auth.signIn')}
           </a>

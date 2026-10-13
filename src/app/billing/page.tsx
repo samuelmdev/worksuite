@@ -72,7 +72,7 @@ export default function BillingOverviewPage() {
           </div>
           <Link
             href="/billing/create"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white shape-sm font-medium transition-colors"
           >
             <PlusCircle className="w-4 h-4" />
             {t('billing.nav.createInvoice')}
@@ -88,7 +88,7 @@ export default function BillingOverviewPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.08 }}
-                className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-5"
+                className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-5"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -97,7 +97,7 @@ export default function BillingOverviewPage() {
                       {loading ? '—' : card.value}
                     </p>
                   </div>
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
+                  <div className="p-3 bg-blue-100 dark:bg-blue-900/40 shape-sm">
                     <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export default function BillingOverviewPage() {
           })}
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700">
           <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-slate-700">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{t('billing.overview.recentInvoices')}</h2>
             <Link href="/billing/invoices" className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">

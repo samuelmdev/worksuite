@@ -45,9 +45,9 @@ function SettingsLinkCard({ section, t }: { section: SettingsSection; t: (key: T
 
   return (
     <Link href={section.href} className="block h-full">
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-black/50 border border-gray-200 dark:border-slate-700 p-6 h-full transition-[box-shadow,border-color] duration-200 hover:shadow-lg dark:hover:shadow-black/30 hover:border-cyan-300 dark:hover:border-cyan-700 cursor-pointer">
+      <div className="bg-white dark:bg-slate-800 shape-sm shadow-md dark:shadow-black/50 border border-gray-200 dark:border-slate-700 p-6 h-full transition-[box-shadow,border-color] duration-200 hover:shadow-lg dark:hover:shadow-black/30 hover:border-cyan-300 dark:hover:border-cyan-700 cursor-pointer">
         <div className="flex items-start space-x-4">
-          <div className={`p-3 rounded-lg ${bg}`}>
+          <div className={`p-3 shape-sm ${bg}`}>
             <Icon className={`w-6 h-6 ${text}`} />
           </div>
           <div className="flex-1">
@@ -114,10 +114,10 @@ export default function SettingsPage() {
 
             {/* Current Organization Info */}
             {currentOrganization && (
-              <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-violet-100 dark:bg-violet-900 rounded-lg">
+                    <div className="p-2 bg-violet-100 dark:bg-violet-900 shape-sm">
                       <Building className="w-5 h-5 text-violet-600 dark:text-violet-400" />
                     </div>
                     <div>
@@ -151,7 +151,7 @@ export default function SettingsPage() {
 
             {/* User Info */}
             {user && (
-              <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+              <div className="bg-white dark:bg-slate-800 shape-sm shadow-sm border border-gray-200 dark:border-slate-700 p-6">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-cyan-200 dark:bg-cyan-900 rounded-full flex items-center justify-center">
                     <User className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
@@ -193,7 +193,7 @@ export default function SettingsPage() {
                 </h2>
                 
                 {/* Organization Management */}
-                <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6 mb-6">
+                <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 dark:text-slate-100">
@@ -207,7 +207,7 @@ export default function SettingsPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setShowNewOrgModal(true)}
-                      className="flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors"
+                      className="flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white shape-sm transition-colors"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       {t('settings.orgManagement.newOrg')}
@@ -215,7 +215,7 @@ export default function SettingsPage() {
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 border border-gray-200 dark:border-slate-600 rounded-lg">
+                    <div className="p-4 border border-gray-200 dark:border-slate-600 shape-sm">
                       <div className="flex items-center space-x-3">
                         <Building className="w-5 h-5 text-violet-600" />
                         <div>
@@ -232,7 +232,7 @@ export default function SettingsPage() {
                 </div>
 
                 {/* User Management */}
-                <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-6 mb-6">
+                <div className="bg-white dark:bg-slate-800 shape-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 dark:text-slate-100">
@@ -246,7 +246,7 @@ export default function SettingsPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setShowAddUserModal(true)}
-                      className="flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+                      className="flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white shape-sm transition-colors"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       {t('settings.team.addUser')}
@@ -263,7 +263,7 @@ export default function SettingsPage() {
                       </div>
                     ) : (
                       organizationUsers.map((orgUser) => (
-                        <div key={orgUser.id} className="flex items-center justify-between p-4 border border-gray-200 dark:border-slate-600 rounded-lg">
+                        <div key={orgUser.id} className="flex items-center justify-between p-4 border border-gray-200 dark:border-slate-600 shape-sm">
                           <div className="flex items-center space-x-3">
                             <div className="w-8 h-8 bg-violet-100 dark:bg-violet-900 rounded-full flex items-center justify-center">
                               <User className="w-4 h-4 text-violet-600 dark:text-violet-400" />
@@ -280,7 +280,7 @@ export default function SettingsPage() {
                           <div className="flex items-center space-x-2">
                             <select 
                               value={orgUser.role}
-                              className="px-3 py-1 text-sm border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
+                              className="px-3 py-1 text-sm border border-gray-300 dark:border-slate-600 shape-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100"
                             >
                               <option value="member">{t('settings.role.member')}</option>
                               <option value="manager">{t('settings.role.manager')}</option>
@@ -311,7 +311,7 @@ export default function SettingsPage() {
       {/* Add User Modal */}
       {showAddUserModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-slate-800 rounded-lg p-6 w-full max-w-md mx-4">
+          <div className="bg-white dark:bg-slate-800 shape-sm p-6 w-full max-w-md mx-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
               {t('settings.modal.addTeamMember')}
             </h3>
@@ -322,7 +322,7 @@ export default function SettingsPage() {
                 </label>
                 <input
                   type="email"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder="user@example.com"
                 />
               </div>
@@ -330,7 +330,7 @@ export default function SettingsPage() {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('common.role')}
                 </label>
-                <select className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100">
+                <select className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100">
                   <option value="member">{t('settings.role.member')}</option>
                   <option value="manager">{t('settings.role.manager')}</option>
                   <option value="admin">{t('settings.role.admin')}</option>
@@ -340,7 +340,7 @@ export default function SettingsPage() {
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={() => setShowAddUserModal(false)}
-                className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-700 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+                className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-700 shape-sm hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
               >
                 {t('common.cancel')}
               </button>
@@ -349,7 +349,7 @@ export default function SettingsPage() {
                   // TODO: Implement add user logic
                   setShowAddUserModal(false)
                 }}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white shape-sm transition-colors"
               >
                 {t('settings.team.addUser')}
               </button>
@@ -361,7 +361,7 @@ export default function SettingsPage() {
       {/* New Organization Modal */}
       {showNewOrgModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-slate-800 rounded-lg p-6 w-full max-w-md mx-4">
+          <div className="bg-white dark:bg-slate-800 shape-sm p-6 w-full max-w-md mx-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">
               {t('settings.modal.createOrg')}
             </h3>
@@ -372,11 +372,11 @@ export default function SettingsPage() {
                 </label>
                 <input
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 shape-sm focus:ring-2 focus:ring-violet-500 focus:border-transparent dark:bg-slate-700 dark:text-slate-100"
                   placeholder={t('settings.modal.orgNamePlaceholder')}
                 />
               </div>
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 shape-sm p-4">
                 <div className="flex items-start space-x-3">
                   <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                   <div>
@@ -393,7 +393,7 @@ export default function SettingsPage() {
             <div className="flex justify-end space-x-3 mt-6">
               <button
                 onClick={() => setShowNewOrgModal(false)}
-                className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-700 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+                className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-slate-700 shape-sm hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
               >
                 {t('common.cancel')}
               </button>
@@ -402,7 +402,7 @@ export default function SettingsPage() {
                   // TODO: Implement new organization creation with subscription
                   setShowNewOrgModal(false)
                 }}
-                className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg transition-colors"
+                className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white shape-sm transition-colors"
               >
                 {t('settings.modal.createAndSubscribe')}
               </button>

@@ -1,5 +1,6 @@
 
 import React from 'react'
+import { Archivo, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
 import { LocaleProvider } from './lib/locale'
 import { ThemeProvider } from './lib/theme'
@@ -9,6 +10,22 @@ import SiteFooter from './components/SiteFooter'
 import PageTransition from './components/PageTransition'
 
 
+// Archivo carries a width axis, which the .display classes use to stretch
+// headlines; IBM Plex Mono is reserved for labels and figures.
+const archivo = Archivo({
+  subsets: ['latin', 'latin-ext'],
+  axes: ['wdth'],
+  variable: '--font-archivo',
+  display: 'swap',
+})
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-plex-mono',
+  display: 'swap',
+})
+
 export const metadata = {
 title: 'My Suite',
 description: 'CRM + Time Tracking Suite',
@@ -17,8 +34,8 @@ description: 'CRM + Time Tracking Suite',
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 return (
-<html lang="en" suppressHydrationWarning className="light">
-<body className="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100">
+<html lang="en" suppressHydrationWarning className={`light ${archivo.variable} ${plexMono.variable}`}>
+<body className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
 <ThemeProvider>
 <AuthProvider>
 <LocaleProvider>

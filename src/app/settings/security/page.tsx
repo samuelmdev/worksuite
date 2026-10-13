@@ -28,7 +28,7 @@ export default function SecuritySettingsPage() {
             </SettingsField>
             <button
               type="submit"
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white shape-sm font-medium transition-colors"
             >
               {t('settings.security.updatePassword')}
             </button>
@@ -43,7 +43,7 @@ export default function SecuritySettingsPage() {
             onChange={setTwoFactor}
           />
           {twoFactor && (
-            <div className="mt-4 p-4 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 flex items-center gap-3">
+            <div className="mt-4 p-4 shape-sm bg-slate-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-600 flex items-center gap-3">
               <Smartphone className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0" />
               <p className="text-sm text-gray-600 dark:text-gray-300">{t('settings.security.2faSetupHint')}</p>
             </div>
@@ -58,7 +58,7 @@ export default function SecuritySettingsPage() {
             onChange={setLoginAlerts}
           />
           <div className="mt-4 space-y-3">
-            <div className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-slate-600">
+            <div className="flex items-center justify-between p-3 shape-sm border border-gray-200 dark:border-slate-600">
               <div className="flex items-center gap-3">
                 <Monitor className="w-5 h-5 text-gray-400" />
                 <div>
